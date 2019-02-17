@@ -2,13 +2,11 @@ export class NavigationTab {
 
     private title : String;
     private URL : String;
-    private renderBody : String;
     private content : String;
 
-    constructor(title, url, renderBody, content) {
+    constructor(title, url, content) {
         this.title = title;
         this.URL = url;
-        this.renderBody = renderBody;
         this.content = content;
     }
 
@@ -18,10 +16,6 @@ export class NavigationTab {
 
     public getURL() : String {
         return this.URL;
-    }
-
-    public getRenderBody() : String {
-        return this.renderBody;
     }
 
     public setContent(content){
