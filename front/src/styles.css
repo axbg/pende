@@ -10,3 +10,13 @@ html, body {
 .ui-tabview-panels {
     display: none;
 }
+
+.ui-tabview-nav {
+    display: grid;
+}
+
+.ui-state-default {
+    text-align: center;
+    width: 1fr;
+    grid-row: 1;
+}
