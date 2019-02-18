@@ -13,6 +13,9 @@ import { TabViewModule } from 'primeng/tabview';
 import { MenubarModule } from 'primeng/menubar';
 import {InputTextModule} from 'primeng/inputtext';
 
+import { AceEditorModule } from 'ng2-ace-editor';
+import { AceEditorComponent } from './ace-editor/ace-editor.component';
+
 
 @NgModule({
   declarations: [
@@ -20,14 +23,16 @@ import {InputTextModule} from 'primeng/inputtext';
     LayoutComponent,
     TabRibbonComponent,
     ControlTabComponent,
-    MenuRibbonComponent
+    MenuRibbonComponent,
+    AceEditorComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     TabViewModule,
     MenubarModule,
-    InputTextModule
+    InputTextModule,
+    AceEditorModule
   ],
   providers: [],
   bootstrap: [AppComponent]
