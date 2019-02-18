@@ -1,13 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NavigationTab } from '../../classes/NavigationTab';
-import { toBase64String } from '@angular/compiler/src/output/source_map';
-import { TargetLocator } from 'selenium-webdriver';
+import { TabEditingServiceService } from '../tab-editing-service.service';
 
 
 @Component({
   selector: 'app-tab-ribbon',
   templateUrl: './tab-ribbon.component.html',
-  styleUrls: ['./tab-ribbon.component.css']
+  styleUrls: ['./tab-ribbon.component.css'],
 })
 export class TabRibbonComponent implements OnInit {
 
@@ -16,7 +15,12 @@ export class TabRibbonComponent implements OnInit {
   @Input() closable: number;
   currentIndex: number;
 
-  constructor() {
+  constructor(private tabEditingService: TabEditingServiceService) {
+    if (this.closable === 1) {
+      this.tabEditingService.tabClosed$.subscribe(tab => {
+        this.tabs[tab.getIndex()] = tab;
+      })
+    }
   }
 
   ngOnInit() {
@@ -25,9 +29,7 @@ export class TabRibbonComponent implements OnInit {
   }
 
   renderTab() {
-    let selectedTab = this.tabs[this.currentIndex];
-    let targetElement = document.getElementById(this.target.toString());
-    targetElement.textContent = selectedTab.getContent().toString();
+    this.tabEditingService.renderTabSource(this.tabs[this.currentIndex]);
   }
 
   clearTarget() {
@@ -41,7 +43,7 @@ export class TabRibbonComponent implements OnInit {
   }
 
   closeTab(index) {
-
+    console.log('called');
     if (this.tabs.length > 1) {
 
       if (this.currentIndex === index && index !== 0) {
