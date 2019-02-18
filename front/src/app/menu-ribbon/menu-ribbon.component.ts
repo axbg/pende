@@ -16,17 +16,14 @@ export class MenuRibbonComponent implements OnInit {
     this.items = [
       {
         label: 'Settings',
-        icon: 'pi pi-fw pi-pencil',
         command: (event) => { this.itemClick(event);}
       }, 
       {
         label: 'Contact',
-        icon: 'pi pi-fw pi-pencil',
         command: (event) => { this.itemClick(event);}
       },
       {
         label: 'Logout',
-        icon: 'pi pi-fw pi-pencil',
         command: (event) => { this.itemClick(event);}
       }
     ]
