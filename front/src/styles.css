@@ -20,3 +20,12 @@ html, body {
     width: 1fr !important;
     grid-row: 1;
 }
+
+.ui-menubar:after{
+    content: none !important;
+}
+
+.ui-tabview-close {
+    float: right;
+    margin: 10px 0.5em 0 0 !important; 
+}

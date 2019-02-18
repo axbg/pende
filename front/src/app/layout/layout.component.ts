@@ -10,6 +10,7 @@ export class LayoutComponent implements OnInit {
 
   fileTabs : Array<NavigationTab> = [];
   projectTabs : Array<NavigationTab> = [];
+  menuItems : [];
 
   constructor() {
     this.initFileTabs();
