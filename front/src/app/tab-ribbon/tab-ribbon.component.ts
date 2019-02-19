@@ -42,8 +42,7 @@ export class TabRibbonComponent implements OnInit {
     this.renderTab();
   }
 
-  closeTab(index) {
-    console.log('called');
+  closeTabProcedure(index) {
     if (this.tabs.length > 1) {
 
       if (this.currentIndex === index && index !== 0) {
@@ -70,7 +69,16 @@ export class TabRibbonComponent implements OnInit {
       this.tabs.splice(index, 1);
       this.clearTarget();
     }
+  }
 
+  closeTab(index) {
+    if (confirm("Do you want to close this file?")) {
+      if (confirm("Do you want to save the file before leaving?")) {
+        //api call to save file
+        console.log('yas save');
+      }
+      this.closeTabProcedure(index);
+    }
   }
 
 }
