@@ -29,7 +29,11 @@ export class TabRibbonComponent implements OnInit {
   }
 
   renderTab() {
-    this.tabEditingService.renderTabSource(this.tabs[this.currentIndex]);
+    if(this.closable){
+      this.tabEditingService.renderTabSource(this.tabs[this.currentIndex]);
+    } else {
+      console.log("da");
+    }
   }
 
   clearTarget() {
@@ -39,6 +43,7 @@ export class TabRibbonComponent implements OnInit {
 
   tabChange(index) {
     this.currentIndex = index;
+    
     this.renderTab();
   }
 

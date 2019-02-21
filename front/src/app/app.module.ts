@@ -15,6 +15,7 @@ import {InputTextModule} from 'primeng/inputtext';
 
 import { AceEditorModule } from 'ng2-ace-editor';
 import { AceEditorComponent } from './ace-editor/ace-editor.component';
+import { PanelHolderComponent } from './panel-holder/panel-holder.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { AceEditorComponent } from './ace-editor/ace-editor.component';
     TabRibbonComponent,
     ControlTabComponent,
     MenuRibbonComponent,
-    AceEditorComponent
+    AceEditorComponent,
+    PanelHolderComponent
   ],
   imports: [
     BrowserModule,
