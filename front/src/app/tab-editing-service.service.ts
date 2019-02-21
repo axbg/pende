@@ -8,17 +8,17 @@ import { Subject } from 'rxjs';
 export class TabEditingServiceService {
 
   private currentFileSource = new Subject<NavigationTab>();
-  private modifiedFileSurce = new Subject<NavigationTab>();
+  private modifiedFileSource = new Subject<NavigationTab>();
 
   tabOpened$ = this.currentFileSource.asObservable();
-  tabClosed$ = this.modifiedFileSurce.asObservable();
+  tabClosed$ = this.modifiedFileSource.asObservable();
 
   renderTabSource(tab : NavigationTab){
     this.currentFileSource.next(tab);
   }
 
   saveTabSource(tab : NavigationTab){
-    this.modifiedFileSurce.next(tab);
+    this.modifiedFileSource.next(tab);
   }
 
 }
