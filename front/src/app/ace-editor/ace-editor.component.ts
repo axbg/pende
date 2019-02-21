@@ -36,7 +36,6 @@ export class AceEditorComponent implements OnInit {
   ngAfterViewInit() {
     this.editor.setTheme("dracula");
     this.editor.setMode("c_cpp");
-    this.editor.getEditor().setValue("//Happy Hacking");
 
     this.editor.getEditor().setOptions({
       enableLiveAutocompletion: true,

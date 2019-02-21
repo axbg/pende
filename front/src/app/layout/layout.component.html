@@ -6,6 +6,6 @@
   <div class="menu-layout">
     <app-menu-ribbon class="menu-ribbon"></app-menu-ribbon>
     <app-tab-ribbon [tabs]="projectTabs" target="menu-panel"></app-tab-ribbon>
-    <div id="menu-panel" class="code-editor">saluut</div>
+    <app-panel-holder id="menu-panel" class="code-editor" [template]="TabRibbonComponent"></app-panel-holder>
   </div>
 </div>
