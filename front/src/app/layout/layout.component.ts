@@ -28,8 +28,9 @@ export class LayoutComponent implements OnInit {
   }
 
   initprojectTabs() {
-    this.projectTabs.push(new NavigationTab("test1", "url1", "content1", 0));
-    this.projectTabs.push(new NavigationTab("test2", "url2", "content2", 1));
+    this.projectTabs.push(new NavigationTab("Files", "url1", "", 0));
+    this.projectTabs.push(new NavigationTab("Execute", "url2", "", 1));
+    this.projectTabs.push(new NavigationTab("Settings", "url3", "", 2));
   }
 
 }

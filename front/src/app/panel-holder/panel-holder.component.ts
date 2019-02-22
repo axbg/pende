@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ContentChild, Input } from '@angular/core';
+import { TabEditingServiceService } from '../tab-editing-service.service';
 
 @Component({
   selector: 'app-panel-holder',
@@ -7,12 +8,15 @@ import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 })
 export class PanelHolderComponent implements OnInit {
 
-  @Input() private template : TemplateRef<any>;
+  @Input() panel: String;
 
-  constructor() { }
+  constructor(private tabEditingService: TabEditingServiceService) {
+    this.tabEditingService.menuPanel$.subscribe(payload => {
+      this.panel = payload;
+    })
+  }
 
   ngOnInit() {
-    console.log(this.template);
   }
 
 }

@@ -32,7 +32,7 @@ export class TabRibbonComponent implements OnInit {
     if(this.closable){
       this.tabEditingService.renderTabSource(this.tabs[this.currentIndex]);
     } else {
-      console.log("da");
+      this.tabEditingService.renderMenuPanel(this.tabs[this.currentIndex].getTitle());
     }
   }
 
