@@ -1,0 +1,9 @@
+<div class="settings">
+  <h4 class="panel-title">Settings</h4>
+  <div class="settings-holder">
+    <span class="property-label">Theme</span>
+    <p-dropdown class="property" [options]="themes" [(ngModel)]="selectedProperty"  optionLabel="label"
+      (onChange)="handlePropertyChange(this)">
+    </p-dropdown>
+  </div>
+</div>
