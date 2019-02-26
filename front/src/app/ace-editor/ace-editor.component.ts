@@ -2,6 +2,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { TabEditingServiceService } from '../tab-editing-service.service';
 import { NavigationTab } from '../../classes/NavigationTab';
 import { of } from 'rxjs';
+import { SettingsEditingServiceService } from '../settings-editing-service.service';
 
 @Component({
   selector: 'app-ace-editor',
@@ -12,7 +13,8 @@ export class AceEditorComponent implements OnInit {
   @ViewChild('editor') editor;
   currentTab: NavigationTab;
 
-  constructor(private tabEditingService: TabEditingServiceService) {
+  constructor(private tabEditingService: TabEditingServiceService,
+    private settingsEditingService: SettingsEditingServiceService) {
     this.tabEditingService.tabOpened$.subscribe(
       tab => {
 
@@ -24,9 +26,20 @@ export class AceEditorComponent implements OnInit {
 
         this.currentTab = tab;
         this.editor.getEditor().setValue(this.currentTab.getContent());
-        //get the cursor from object and position it
+        //gets the cursor from object and position it
       }
     )
+
+    this.settingsEditingService.modifiedSettings$.subscribe(
+      setting => {
+        switch (setting.getProperty()) {
+          case "theme":
+            this.editor.setTheme(setting.getValue())
+            break;
+          default:
+            console.log('nothing known');
+        }
+      })
   }
 
   ngOnInit() {
