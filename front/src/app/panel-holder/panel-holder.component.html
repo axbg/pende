@@ -1,6 +1,6 @@
 <div class="container" [ngSwitch]="panel">
   <!-- render specific Panels for each ngSwitchCase option -->
-  <div *ngSwitchCase="'Files'">hai fisiere</div>
+  <app-settings-panel *ngSwitchCase="'Files'"></app-settings-panel>
   <div *ngSwitchCase="'Execute'">hai execute</div>
   <div *ngSwitchCase="'Settings'">hai setari</div>
 </div>
