@@ -5,13 +5,19 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { LayoutComponent } from './layout/layout.component';
 import { TabRibbonComponent } from './tab-ribbon/tab-ribbon.component';
-import { ControlTabComponent } from './control-tab/control-tab.component';
 import { MenuRibbonComponent } from './menu-ribbon/menu-ribbon.component';
 
 //primeng components import
 import { TabViewModule } from 'primeng/tabview';
 import { MenubarModule } from 'primeng/menubar';
-import {InputTextModule} from 'primeng/inputtext';
+import { InputTextModule } from 'primeng/inputtext';
+
+import { AceEditorModule } from 'ng2-ace-editor';
+import { AceEditorComponent } from './ace-editor/ace-editor.component';
+import { PanelHolderComponent } from './panel-holder/panel-holder.component';
+import { SettingsPanelComponent } from './settings-panel/settings-panel.component';
+import { FormsModule } from '@angular/forms'
+import { DropdownModule } from 'primeng/dropdown'
 
 
 @NgModule({
@@ -19,15 +25,20 @@ import {InputTextModule} from 'primeng/inputtext';
     AppComponent,
     LayoutComponent,
     TabRibbonComponent,
-    ControlTabComponent,
-    MenuRibbonComponent
+    MenuRibbonComponent,
+    AceEditorComponent,
+    PanelHolderComponent,
+    SettingsPanelComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     TabViewModule,
     MenubarModule,
-    InputTextModule
+    InputTextModule,
+    AceEditorModule,
+    DropdownModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
