@@ -52,3 +52,7 @@ body {
 li[role="presentation"] {
   cursor: pointer;
 }
+
+.ui-slider-handle {
+  cursor: pointer !important;
+}
