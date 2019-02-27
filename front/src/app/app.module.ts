@@ -16,9 +16,11 @@ import { AceEditorModule } from 'ng2-ace-editor';
 import { AceEditorComponent } from './ace-editor/ace-editor.component';
 import { PanelHolderComponent } from './panel-holder/panel-holder.component';
 import { SettingsPanelComponent } from './settings-panel/settings-panel.component';
-import { FormsModule } from '@angular/forms'
-import { DropdownModule } from 'primeng/dropdown'
-
+import { FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
+import { SliderModule } from 'primeng/slider';
+import { InputSwitchModule } from 'primeng/inputswitch';
+ 
 
 @NgModule({
   declarations: [
@@ -38,7 +40,9 @@ import { DropdownModule } from 'primeng/dropdown'
     InputTextModule,
     AceEditorModule,
     DropdownModule,
-    FormsModule
+    FormsModule,
+    SliderModule,
+    InputSwitchModule
   ],
   providers: [],
   bootstrap: [AppComponent]

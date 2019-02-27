@@ -34,7 +34,17 @@ export class AceEditorComponent implements OnInit {
       setting => {
         switch (setting.getProperty()) {
           case "theme":
-            this.editor.setTheme(setting.getValue())
+            this.editor.setTheme(setting.getValue());
+            break;
+          case "cursor":
+            this.editor.getEditor().setOptions({
+              keyboardHandler: setting.getValue()
+            })
+            break;
+          case "fontSize":
+            this.editor.getEditor().setOptions({
+              fontSize: setting.getValue() + "px"
+            })
             break;
           default:
             console.log('nothing known');
@@ -49,7 +59,7 @@ export class AceEditorComponent implements OnInit {
   ngAfterViewInit() {
     this.editor.setTheme("dracula");
     this.editor.setMode("c_cpp");
-
+  
     this.editor.getEditor().setOptions({
       enableLiveAutocompletion: true,
       copyWithEmptySelection: true
