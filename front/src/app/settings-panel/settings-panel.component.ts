@@ -15,6 +15,7 @@ export class SettingsPanelComponent implements OnInit {
   selectedTheme: DoubleData;
   selectedCursor: DoubleData;
   fontSize: number = 24;
+  gutter: boolean = true;
 
   constructor(private settingsService: SettingsEditingServiceService) {
     this.themes = SettingsConstants.getThemes();
@@ -26,12 +27,13 @@ export class SettingsPanelComponent implements OnInit {
   }
 
   transformSliderData(event) {
-    let property: String = event.event.target.parentNode.parentNode.getAttribute("property")
+    let property: String = event.event.target.parentNode.parentNode.getAttribute("property");
     this.handlePropertyChange({ value: new DoubleData(event.value, "", property) });
   }
 
-  transformSwitchData(event){
-    console.log(event);
+  transformSwitchData(event) {
+    let property: String = event.originalEvent.target.parentNode.parentNode.getAttribute("property");
+    this.handlePropertyChange({ value: new DoubleData(event.checked, "", property) });
   }
 
   handlePropertyChange(event) {
