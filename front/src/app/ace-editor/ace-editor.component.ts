@@ -46,6 +46,11 @@ export class AceEditorComponent implements OnInit {
               fontSize: setting.getValue() + "px"
             })
             break;
+          case "gutter":
+            this.editor.getEditor().setOptions({
+              showGutter: setting.getValue()
+            })
+            break;
           default:
             console.log('nothing known');
         }
@@ -59,7 +64,7 @@ export class AceEditorComponent implements OnInit {
   ngAfterViewInit() {
     this.editor.setTheme("dracula");
     this.editor.setMode("c_cpp");
-  
+
     this.editor.getEditor().setOptions({
       enableLiveAutocompletion: true,
       copyWithEmptySelection: true

@@ -15,12 +15,12 @@
     </div>
     <div class="setting-wrapper">
       <p class="property-label">Font Size {{fontSize}}</p>
-      <p-slider [(ngModel)]="fontSize" [min]="10" [max]="70" property="fontSize"
+      <p-slider property="fontSize" [(ngModel)]="fontSize" [min]="10" [max]="70"
         (onChange)="transformSliderData($event)"></p-slider>
     </div>
     <div class="setting-wrapper">
       <span class="property-label">Gutter</span>
-      <p-inputSwitch></p-inputSwitch>
+      <p-inputSwitch property="gutter" [(ngModel)]="gutter" (onChange)="transformSwitchData($event)"></p-inputSwitch>
     </div>
   </div>
 </div>
