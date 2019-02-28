@@ -1,6 +1,5 @@
-<p-tabView (onChange)="tabChange($event.index)" [activeIndex]="currentIndex" 
-    [controlClose]="true" (onClose)="closeTab($event.index)">
+<p-tabView (onChange)="tabChange($event.index)" [activeIndex]="currentIndex" [controlClose]="true"
+    (onClose)="closeTab($event.index)">
     <p-tabPanel *ngFor="let tab of tabs; let i = index" [selected]="i == currentIndex" [header]="tab.getTitle()"
-     [closable]="closable"
-    ></p-tabPanel>
+        [closable]="closable"></p-tabPanel>
 </p-tabView>

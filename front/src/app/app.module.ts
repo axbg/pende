@@ -20,7 +20,7 @@ import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { SliderModule } from 'primeng/slider';
 import { InputSwitchModule } from 'primeng/inputswitch';
- 
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [
@@ -42,7 +42,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
     DropdownModule,
     FormsModule,
     SliderModule,
-    InputSwitchModule
+    InputSwitchModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
