@@ -66,14 +66,14 @@ export class AceEditorComponent implements OnInit {
 
     function addOrRemoveBreakpoint(e) {
       
-      //this will get the line number
-      //inject a service and send it to the execute panel where it will be stored
-      console.log(e.target.innerText);
+      let line = e.target.innerText;
 
-      if (e.target.style.backgroundColor === "red") {
-        e.target.style.backgroundColor = "transparent";
+      if (e.target.classList.contains("breakpoint")) {
+        //service to remove breakpoint
+        e.target.classList.remove("breakpoint");
       } else {
-        e.target.style.backgroundColor = "red";
+        //service to add breakpoint
+        e.target.classList.add("breakpoint");
       }
     }
 

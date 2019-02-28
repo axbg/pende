@@ -56,3 +56,13 @@ li[role="presentation"] {
 .ui-slider-handle {
   cursor: pointer !important;
 }
+
+.ace_gutter-cell {
+  cursor: pointer;
+}
+
+.breakpoint {
+  background-image: url("./assets/breakpoint.png");
+  background-position: left;
+  background-repeat: no-repeat;
+}
