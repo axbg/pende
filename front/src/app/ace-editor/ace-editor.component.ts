@@ -58,7 +58,29 @@ export class AceEditorComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.generateBreakPoints();
+  }
 
+  generateBreakPoints() {
+    const gutt = document.querySelector(".ace_layer");
+
+    function addOrRemoveBreakpoint(e) {
+      
+      //this will get the line number
+      //inject a service and send it to the execute panel where it will be stored
+      console.log(e.target.innerText);
+
+      if (e.target.style.backgroundColor === "red") {
+        e.target.style.backgroundColor = "transparent";
+      } else {
+        e.target.style.backgroundColor = "red";
+      }
+    }
+
+    gutt.addEventListener("DOMNodeInserted", function (e) {
+      e.target.removeEventListener("click", addOrRemoveBreakpoint);
+      e.target.addEventListener("click", addOrRemoveBreakpoint);
+    });
   }
 
   ngAfterViewInit() {
