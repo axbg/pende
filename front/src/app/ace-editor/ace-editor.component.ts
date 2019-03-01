@@ -1,7 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { TabEditingServiceService } from '../tab-editing-service.service';
 import { NavigationTab } from '../../classes/NavigationTab';
-import { of } from 'rxjs';
 import { SettingsEditingServiceService } from '../settings-editing-service.service';
 
 @Component({
@@ -52,7 +51,6 @@ export class AceEditorComponent implements OnInit {
             })
             break;
           default:
-            console.log('nothing known');
         }
       })
   }
@@ -65,7 +63,7 @@ export class AceEditorComponent implements OnInit {
     const gutt = document.querySelector(".ace_layer");
 
     function addOrRemoveBreakpoint(e) {
-      
+
       let line = e.target.innerText;
 
       if (e.target.classList.contains("breakpoint")) {
