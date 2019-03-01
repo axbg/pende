@@ -11,26 +11,56 @@
 }
 
 .icon {
-    font-size: 2.5vw;
-    margin: 10px;
-    cursor: pointer;
-    color: #007ad9;
-    transition: .5s ease;
+  font-size: 2.5vw;
+  margin: 10px;
+  cursor: pointer;
+  color: #007ad9;
+  transition: 0.5s ease;
 }
 
 .icon:hover {
-    color: black;
+  color: black;
 }
 
 .output-wrapper {
-    width: 90%;
-    margin: 0 auto;
+  width: 90%;
+  margin: 0 auto;
+  height: 80%;
+}
+
+.debug-wrapper {
+  width: 90%;
+  margin: 0 auto;
+  height: 30%;
+}
+
+.debug-extra-wrapper {
+  width: 90%;
+  margin: 0 auto;
+  height: 20%;
+  margin-top: 30px;
+}
+
+.debug-extra-container {
+  border: 1px solid #c8c8c8;
+  height: 100%;
+  margin-top: -20px;
 }
 
 .section-name {
-    text-align: left;
+  text-align: left;
 }
 
 .terminal {
-    text-align: left;
+  text-align: left;
+}
+
+hr {
+  margin: 0;
+}
+
+.line {
+  margin: 0;
+  text-align: left;
+  margin-left: 5px;
 }
