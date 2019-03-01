@@ -7,7 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ExecutionPanelComponent implements OnInit {
 
-  constructor() { }
+  private isDebugging: boolean = true;
+  private variables: Map<string, string> = new Map<string, string>();
+  private callstack: String[] = [];
+
+  constructor() {
+    this.variables.set("a", "5");
+    this.variables.set("b", "bco");
+    this.callstack.push("line 2");
+    this.callstack.push("line 3");
+  }
 
   ngOnInit() {
   }
