@@ -20,7 +20,10 @@ import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { SliderModule } from 'primeng/slider';
 import { InputSwitchModule } from 'primeng/inputswitch';
-import { DialogModule } from 'primeng/dialog';
+import { TooltipModule } from 'primeng/tooltip';
+import { ExecutionPanelComponent } from './execution-panel/execution-panel.component';
+import { TerminalComponent } from './terminal/terminal.component';
+import { PrimeTerminalComponent } from './prime-terminal/prime-terminal.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +33,10 @@ import { DialogModule } from 'primeng/dialog';
     MenuRibbonComponent,
     AceEditorComponent,
     PanelHolderComponent,
-    SettingsPanelComponent
+    SettingsPanelComponent,
+    ExecutionPanelComponent,
+    TerminalComponent,
+    PrimeTerminalComponent
   ],
   imports: [
     BrowserModule,
@@ -43,6 +49,7 @@ import { DialogModule } from 'primeng/dialog';
     FormsModule,
     SliderModule,
     InputSwitchModule,
+    TooltipModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
