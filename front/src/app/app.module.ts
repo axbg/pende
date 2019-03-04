@@ -24,6 +24,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ExecutionPanelComponent } from './execution-panel/execution-panel.component';
 import { TerminalComponent } from './terminal/terminal.component';
 import { PrimeTerminalComponent } from './prime-terminal/prime-terminal.component';
+import { FilesPanelComponent } from './files-panel/files-panel.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { PrimeTerminalComponent } from './prime-terminal/prime-terminal.componen
     SettingsPanelComponent,
     ExecutionPanelComponent,
     TerminalComponent,
-    PrimeTerminalComponent
+    PrimeTerminalComponent,
+    FilesPanelComponent
   ],
   imports: [
     BrowserModule,
