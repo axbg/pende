@@ -14,6 +14,7 @@ export class ExecutionPanelComponent implements OnInit {
   constructor() {
     this.variables.set("a", "5");
     this.variables.set("b", "bco");
+    this.variables.set("c", "proba proba");
     this.callstack.push("line 2");
     this.callstack.push("line 3");
   }

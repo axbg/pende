@@ -25,7 +25,7 @@ export class TerminalComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    
   }
 
   // will be called using a service from other components
