@@ -6,6 +6,7 @@ import { TreeModel, Ng2TreeSettings } from 'ng2-tree';
   templateUrl: './files-panel.component.html',
   styleUrls: ['./files-panel.component.css']
 })
+
 export class FilesPanelComponent implements OnInit {
 
   private dynamicChildrenExample = [
@@ -41,11 +42,14 @@ export class FilesPanelComponent implements OnInit {
   }
 
   constructor() {
-
   }
 
   ngOnInit() {
     this.tree.children = this.dynamicChildrenExample;
+
+    this.tree.children.forEach(child => {
+      console.log(child);
+    })
   }
 
   public handleSelected(event) {
@@ -53,6 +57,7 @@ export class FilesPanelComponent implements OnInit {
   }
 
   public handleRemoved(event) {
+    console.log(event);
     let currentNode = event.node;
     if (confirm("Do you want to delete this element?")) {
       console.log('deleted ' + event.node.value);
@@ -62,7 +67,7 @@ export class FilesPanelComponent implements OnInit {
   }
 
   public handleRename(event) {
-    console.log("want to rename");
+    console.log("want to rename " + event.node.value);
   }
 
   public handleCreate(event) {
@@ -73,8 +78,8 @@ export class FilesPanelComponent implements OnInit {
     }
   }
 
-  public handleMoved(event){
-    console.log('moved');
+  public handleMoved(event) {
+    console.log('moved ' + event.node.value);
   }
 
 }
