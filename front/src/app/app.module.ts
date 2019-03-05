@@ -25,6 +25,7 @@ import { ExecutionPanelComponent } from './execution-panel/execution-panel.compo
 import { TerminalComponent } from './terminal/terminal.component';
 import { PrimeTerminalComponent } from './prime-terminal/prime-terminal.component';
 import { FilesPanelComponent } from './files-panel/files-panel.component';
+import { TreeModule } from 'ng2-tree'
 
 @NgModule({
   declarations: [
@@ -38,7 +39,7 @@ import { FilesPanelComponent } from './files-panel/files-panel.component';
     ExecutionPanelComponent,
     TerminalComponent,
     PrimeTerminalComponent,
-    FilesPanelComponent
+    FilesPanelComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,6 +53,7 @@ import { FilesPanelComponent } from './files-panel/files-panel.component';
     SliderModule,
     InputSwitchModule,
     TooltipModule,
+    TreeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,3 +1,6 @@
-<p>
-  files-panel works!
-</p>
+<div class="files-container">
+  <h3>Your files</h3>
+  <tree [tree]="tree" (nodeSelected)="handleSelected($event)" (nodeRemoved)="handleRemoved($event)"
+  (nodeRenamed)="handleRename($event)" (nodeCreated)="handleCreate($event)"
+  (nodeMoved)="handleMoved($event)"></tree>
+</div>
