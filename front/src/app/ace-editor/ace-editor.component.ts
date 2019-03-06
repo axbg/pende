@@ -1,7 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { TabEditingServiceService } from '../tab-editing-service.service';
 import { NavigationTab } from '../../classes/NavigationTab';
-import { of } from 'rxjs';
 import { SettingsEditingServiceService } from '../settings-editing-service.service';
 
 @Component({
@@ -34,16 +33,52 @@ export class AceEditorComponent implements OnInit {
       setting => {
         switch (setting.getProperty()) {
           case "theme":
-            this.editor.setTheme(setting.getValue())
+            this.editor.setTheme(setting.getValue());
+            break;
+          case "cursor":
+            this.editor.getEditor().setOptions({
+              keyboardHandler: setting.getValue()
+            })
+            break;
+          case "fontSize":
+            this.editor.getEditor().setOptions({
+              fontSize: setting.getValue() + "px"
+            })
+            break;
+          case "gutter":
+            this.editor.getEditor().setOptions({
+              showGutter: setting.getValue()
+            })
             break;
           default:
-            console.log('nothing known');
         }
       })
   }
 
   ngOnInit() {
+    this.generateBreakPoints();
+  }
 
+  generateBreakPoints() {
+    const gutt = document.querySelector(".ace_layer");
+
+    function addOrRemoveBreakpoint(e) {
+
+      let line = e.target.innerText;
+
+      if (e.target.classList.contains("breakpoint")) {
+        //service to remove breakpoint
+        e.target.classList.remove("breakpoint");
+      } else {
+        //service to add breakpoint
+        e.target.classList.add("breakpoint");
+      }
+    }
+
+    gutt.addEventListener("DOMNodeInserted", function (e) {
+      e.target.removeEventListener("click", addOrRemoveBreakpoint);
+      e.target.addEventListener("click", addOrRemoveBreakpoint);
+    });
   }
 
   ngAfterViewInit() {

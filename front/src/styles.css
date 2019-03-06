@@ -52,3 +52,35 @@ body {
 li[role="presentation"] {
   cursor: pointer;
 }
+
+.ui-slider-handle {
+  cursor: pointer !important;
+}
+
+.ace_gutter-cell {
+  cursor: pointer;
+}
+
+.breakpoint {
+  background-image: url("./assets/breakpoint.png");
+  background-position: left;
+  background-repeat: no-repeat;
+}
+
+.margin {
+  margin-right: 20px;
+  font-size: 1.5em;
+  user-select: none;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.node-menu-content{
+  font-size: 15px;
+}
+
+.node-name {
+  cursor: pointer;
+}
