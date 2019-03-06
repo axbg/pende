@@ -7,6 +7,8 @@ import { AppComponent } from './app.component';
 import { LayoutComponent } from './layout/layout.component';
 import { TabRibbonComponent } from './tab-ribbon/tab-ribbon.component';
 import { MenuRibbonComponent } from './menu-ribbon/menu-ribbon.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTPInterceptorService } from '../app/httpinterceptor.service';
 
 //primeng components import
 import { TabViewModule } from 'primeng/tabview';
@@ -57,7 +59,13 @@ import { TreeModule } from 'ng2-tree'
     TreeModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HTTPInterceptorService,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

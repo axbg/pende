@@ -9,7 +9,6 @@ export class HTTPManagerService {
 
   constructor(private http: HttpClient) { }
 
-
   public apiCall(URL: String, METHOD: String, BODY?: any) {
     let body;
 
@@ -25,7 +24,7 @@ export class HTTPManagerService {
       case Constants.PUT_METHOD:
         return this.http.put(Constants.BASE_URL + URL, { body: body });
       case Constants.DELETE_METHOD:
-        return this.http.delete(Constants.BASE_URL + URL, { body: body });
+        return this.http.delete(Constants.BASE_URL + URL);
     }
   }
 
