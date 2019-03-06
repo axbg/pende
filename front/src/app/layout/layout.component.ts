@@ -21,10 +21,7 @@ export class LayoutComponent implements OnInit {
   }
 
   initFileTabs() {
-    this.fileTabs.push(new NavigationTab("test1", "url1", "content1", 0));
-    this.fileTabs.push(new NavigationTab("test2", "url2", "content2", 1));
-    this.fileTabs.push(new NavigationTab("test3", "url3", "content3", 2));
-    this.fileTabs.push(new NavigationTab("test4", "url3", "content4", 3));
+    this.fileTabs.push(new NavigationTab("Hack with passion!", "nourl", "Welcome to webide", 0));
   }
 
   initprojectTabs() {
