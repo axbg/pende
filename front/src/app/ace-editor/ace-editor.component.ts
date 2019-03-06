@@ -28,6 +28,9 @@ export class AceEditorComponent implements OnInit {
         this.editor.getEditor().setValue(this.currentTab.getContent());
         this.editor.getEditor().selection.moveTo(this.currentTab.getCursorLine(), this.currentTab.getCursorColumn());
         this.editor.getEditor().focus();
+
+        //make a switch to determine which language syntax to load
+        let language = this.currentTab.getTitle().split(".")[1];
       }
     )
 
@@ -94,12 +97,19 @@ export class AceEditorComponent implements OnInit {
 
     this.editor.getEditor().commands.addCommand({
       name: "showOtherCompletions",
-      bindKey: "Ctrl-.",
+      bindKey: "Ctrl-s",
       exec: function (editor) {
-        console.log(editor.getValue());
+        console.log("this will call api and will set modified to false in the callback");
       }
     })
+
+    //if one or multiple letters are introduced a tab will be marked as modified
+    //the modified property is set to false after it's saved in the back-end
+    let tab = this.currentTab;
+    this.editor.getEditor().session.on('change', function (delta) {
+      if (delta.lines[0].length === 1) {
+        tab.setModified(true);
+      }
+    });
   }
-
-
 }

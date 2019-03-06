@@ -6,6 +6,9 @@ export class NavigationTab {
     private index: number;
     private cursorLine: number;
     private cursorColumn: number;
+    private modified: boolean;
+
+    //will have to keep a list of breakpoints here as well...
 
     constructor(title, url, content, index) {
         this.title = title;
@@ -14,6 +17,7 @@ export class NavigationTab {
         this.index = index;
         this.cursorLine = 0;
         this.cursorColumn = 0;
+        this.modified = false;
     }
 
     public getTitle(): String {
@@ -51,5 +55,13 @@ export class NavigationTab {
     public setCursor(line: number, column: number) {
         this.cursorLine = line;
         this.cursorColumn = column;
+    }
+
+    public getModified(): boolean {
+        return this.modified;
+    }
+
+    public setModified(modified: boolean){
+        this.modified = modified;
     }
 }
