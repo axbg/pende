@@ -1,9 +1,26 @@
 <div class="settings">
   <h4 class="panel-title">Settings</h4>
   <div class="settings-holder">
-    <span class="property-label">Theme</span>
-    <p-dropdown class="property" [options]="themes" [(ngModel)]="selectedProperty"  optionLabel="label"
-      (onChange)="handlePropertyChange(this)">
-    </p-dropdown>
+    <div class="setting-wrapper">
+      <span class="property-label">Theme</span>
+      <p-dropdown class="property" [options]="themes" [(ngModel)]="selectedTheme" optionLabel="label"
+        (onChange)="handlePropertyChange($event)">
+      </p-dropdown>
+    </div>
+    <div class="setting-wrapper">
+      <span class="property-label">Cursor</span>
+      <p-dropdown class="property" [options]="cursors" [(ngModel)]="selectedCursor" optionLabel="label"
+        (onChange)="handlePropertyChange($event)">
+      </p-dropdown>
+    </div>
+    <div class="setting-wrapper">
+      <p class="property-label">Font Size {{fontSize}}</p>
+      <p-slider property="fontSize" [(ngModel)]="fontSize" [min]="10" [max]="70"
+        (onChange)="transformSliderData($event)"></p-slider>
+    </div>
+    <div class="setting-wrapper">
+      <span class="property-label">Gutter</span>
+      <p-inputSwitch property="gutter" [(ngModel)]="gutter" (onChange)="transformSwitchData($event)"></p-inputSwitch>
+    </div>
   </div>
 </div>
