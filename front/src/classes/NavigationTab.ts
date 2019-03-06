@@ -1,11 +1,11 @@
 export class NavigationTab {
 
-    private title : String;
-    private URL : String;
-    private content : String;
-    private index : number;
-    private cursorLine : number;
-    private cursorColumn : number;
+    private title: String;
+    private URL: String;
+    private content: String;
+    private index: number;
+    private cursorLine: number;
+    private cursorColumn: number;
 
     constructor(title, url, content, index) {
         this.title = title;
@@ -14,23 +14,23 @@ export class NavigationTab {
         this.index = index;
     }
 
-    public getTitle() : String{
+    public getTitle(): String {
         return this.title;
     }
 
-    public getURL() : String {
+    public getURL(): String {
         return this.URL;
     }
 
-    public setContent(content){
+    public setContent(content) {
         this.content = content;
     }
 
-    public getContent() : String {
+    public getContent(): String {
         return this.content;
     }
 
-    public getIndex() : number {
+    public getIndex(): number {
         return this.index;
     }
 }

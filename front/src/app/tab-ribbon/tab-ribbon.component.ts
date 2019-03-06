@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { NavigationTab } from '../../classes/NavigationTab';
 import { TabEditingServiceService } from '../tab-editing-service.service';
 
-
 @Component({
   selector: 'app-tab-ribbon',
   templateUrl: './tab-ribbon.component.html',
@@ -29,7 +28,7 @@ export class TabRibbonComponent implements OnInit {
   }
 
   renderTab() {
-    if(this.closable){
+    if (this.closable) {
       this.tabEditingService.renderTabSource(this.tabs[this.currentIndex]);
     } else {
       this.tabEditingService.renderMenuPanel(this.tabs[this.currentIndex].getTitle());
@@ -43,7 +42,7 @@ export class TabRibbonComponent implements OnInit {
 
   tabChange(index) {
     this.currentIndex = index;
-    
+
     this.renderTab();
   }
 
