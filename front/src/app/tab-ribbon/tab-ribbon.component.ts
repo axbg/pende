@@ -39,8 +39,7 @@ export class TabRibbonComponent implements OnInit {
   }
 
   clearTarget() {
-    let targetElement = document.getElementById(this.target.toString());
-    targetElement.textContent = "Open something";
+    this.tabEditingService.renderTabSource(new NavigationTab("", "", "", 0));
   }
 
   tabChange(index) {
@@ -78,6 +77,7 @@ export class TabRibbonComponent implements OnInit {
   }
 
   closeTab(index) {
+    console.log(this.tabs[index].getModified());
     if (this.tabs[index].getModified()) {
       if (confirm("Do you want to close this file?")) {
         if (confirm("Do you want to save the file before leaving?")) {
