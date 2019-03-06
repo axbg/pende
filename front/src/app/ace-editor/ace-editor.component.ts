@@ -14,18 +14,20 @@ export class AceEditorComponent implements OnInit {
 
   constructor(private tabEditingService: TabEditingServiceService,
     private settingsEditingService: SettingsEditingServiceService) {
+
     this.tabEditingService.tabOpened$.subscribe(
       tab => {
 
         if (this.currentTab) {
           this.currentTab.setContent(this.editor.getEditor().getValue());
+          this.currentTab.setCursor(this.editor.getEditor().selection.getCursor().row, this.editor.getEditor().selection.getCursor().column);
           this.tabEditingService.saveTabSource(this.currentTab);
-          //sends the new cursor position
         }
 
         this.currentTab = tab;
         this.editor.getEditor().setValue(this.currentTab.getContent());
-        //gets the cursor from object and position it
+        this.editor.getEditor().selection.moveTo(this.currentTab.getCursorLine(), this.currentTab.getCursorColumn());
+        this.editor.getEditor().focus();
       }
     )
 
