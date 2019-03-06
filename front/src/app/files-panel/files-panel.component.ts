@@ -77,6 +77,7 @@ export class FilesPanelComponent implements OnInit {
       console.log("created new folder with parent: " + event.node.parent.value);
     } else {
       console.log("created new file with parent: " + event.node.parent.value);
+      //if it doesnt contain a known extension remove it
     }
   }
 

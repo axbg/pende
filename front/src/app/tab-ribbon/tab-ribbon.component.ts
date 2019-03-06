@@ -78,11 +78,15 @@ export class TabRibbonComponent implements OnInit {
   }
 
   closeTab(index) {
-    if (confirm("Do you want to close this file?")) {
-      if (confirm("Do you want to save the file before leaving?")) {
-        //api call to save file
-        console.log('yas save');
+    if (this.tabs[index].getModified()) {
+      if (confirm("Do you want to close this file?")) {
+        if (confirm("Do you want to save the file before leaving?")) {
+          //api call to save file
+          console.log('yas save');
+        }
+        this.closeTabProcedure(index);
       }
+    } else {
       this.closeTabProcedure(index);
     }
   }
