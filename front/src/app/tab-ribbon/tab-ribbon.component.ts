@@ -15,16 +15,19 @@ export class TabRibbonComponent implements OnInit {
   currentIndex: number;
 
   constructor(private tabEditingService: TabEditingServiceService) {
-    if (this.closable === 1) {
-      this.tabEditingService.tabClosed$.subscribe(tab => {
-        this.tabs[tab.getIndex()] = tab;
-      })
-    }
   }
 
   ngOnInit() {
     this.currentIndex = 0;
     this.renderTab();
+
+    if (this.closable) {
+      this.tabEditingService.newTab$.subscribe(tab => {
+        tab.setIndex(this.tabs.length);
+        this.tabs.push(tab);
+        this.tabChange(tab.getIndex());
+      })
+    }
   }
 
   renderTab() {
@@ -42,7 +45,6 @@ export class TabRibbonComponent implements OnInit {
 
   tabChange(index) {
     this.currentIndex = index;
-
     this.renderTab();
   }
 

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TreeModel, Ng2TreeSettings } from 'ng2-tree';
+import { NavigationTab } from '../../classes/NavigationTab';
+import { TabEditingServiceService } from '../tab-editing-service.service';
 
 @Component({
   selector: 'app-files-panel',
@@ -10,11 +12,12 @@ import { TreeModel, Ng2TreeSettings } from 'ng2-tree';
 export class FilesPanelComponent implements OnInit {
 
   private dynamicChildrenExample = [
-    { value: 'first_children', id: 1 },
+    { value: 'first_children', id: 1, URL: 'url1' },
     {
-      value: 'second_children', range: 3, children: [
+      value: 'second_children', range: 3, URL: 'url2', children: [
         {
-          value: 'asd'
+          value: 'asd',
+          URL: 'url3'
         }
       ]
     }
@@ -41,19 +44,18 @@ export class FilesPanelComponent implements OnInit {
     }
   }
 
-  constructor() {
+  constructor(private tabEditingService: TabEditingServiceService) {
   }
 
   ngOnInit() {
     this.tree.children = this.dynamicChildrenExample;
-
-    this.tree.children.forEach(child => {
-      console.log(child);
-    })
   }
 
   public handleSelected(event) {
     console.log("selected " + event.node.value);
+    if(!event.node.children){
+      this.tabEditingService.openNewTab(event.node.node.URL);
+    }
   }
 
   public handleRemoved(event) {

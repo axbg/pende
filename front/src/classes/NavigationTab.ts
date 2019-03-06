@@ -12,6 +12,8 @@ export class NavigationTab {
         this.URL = url;
         this.content = content;
         this.index = index;
+        this.cursorLine = 0;
+        this.cursorColumn = 0;
     }
 
     public getTitle(): String {
@@ -32,5 +34,22 @@ export class NavigationTab {
 
     public getIndex(): number {
         return this.index;
+    }
+
+    public setIndex(index: number) {
+        this.index = index;
+    }
+
+    public getCursorLine(): number {
+        return this.cursorLine;
+    }
+
+    public getCursorColumn(): number {
+        return this.cursorColumn;
+    }
+
+    public setCursor(line: number, column: number) {
+        this.cursorLine = line;
+        this.cursorColumn = column;
     }
 }
