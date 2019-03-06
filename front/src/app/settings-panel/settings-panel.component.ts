@@ -40,4 +40,8 @@ export class SettingsPanelComponent implements OnInit {
     this.settingsService.modifySettings(event.value);
   }
 
+  saveSettings(){
+    console.log('here will be an api call');
+  }
+
 }

@@ -28,6 +28,8 @@ import { ExecutionPanelComponent } from './execution-panel/execution-panel.compo
 import { TerminalComponent } from './terminal/terminal.component';
 import { PrimeTerminalComponent } from './prime-terminal/prime-terminal.component';
 import { FilesPanelComponent } from './files-panel/files-panel.component';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
 import { TreeModule } from 'ng2-tree'
 
 @NgModule({
@@ -57,7 +59,9 @@ import { TreeModule } from 'ng2-tree'
     InputSwitchModule,
     TooltipModule,
     TreeModule,
-    HttpClientModule
+    HttpClientModule,
+    ButtonModule,
+    DialogModule
   ],
   providers: [
     {
