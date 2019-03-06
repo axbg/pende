@@ -105,10 +105,10 @@ export class AceEditorComponent implements OnInit {
 
     //if one or multiple letters are introduced a tab will be marked as modified
     //the modified property is set to false after it's saved in the back-end
-    let tab = this.currentTab;
+    let ref = this;
     this.editor.getEditor().session.on('change', function (delta) {
       if (delta.lines[0].length === 1) {
-        tab.setModified(true);
+        ref.currentTab.setModified(true);
       }
     });
   }
