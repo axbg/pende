@@ -7,8 +7,7 @@ export class NavigationTab {
     private cursorLine: number;
     private cursorColumn: number;
     private modified: boolean;
-
-    //will have to keep a list of breakpoints here as well...
+    private breakpoints: number[] = [];
 
     constructor(id, title, content, index) {
         this.id = id;
@@ -63,5 +62,21 @@ export class NavigationTab {
 
     public setModified(modified: boolean) {
         this.modified = modified;
+    }
+    
+    public getBreakpoints() : number[]{
+        return this.breakpoints;
+    }
+
+    public setBreakpoints(breakpoints: number[]){
+        this.breakpoints = breakpoints;
+    }
+
+    public addBreakpoint(breakpoint: number){
+        this.breakpoints.push(breakpoint);
+    }
+
+    public removeBreakpoint(breakpoint: number){
+        this.breakpoints.splice(this.breakpoints.indexOf(breakpoint), 1);
     }
 }
