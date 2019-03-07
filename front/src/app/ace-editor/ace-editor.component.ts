@@ -2,6 +2,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { TabEditingServiceService } from '../tab-editing-service.service';
 import { NavigationTab } from '../../classes/NavigationTab';
 import { SettingsEditingServiceService } from '../settings-editing-service.service';
+import { ExecutionService } from '../execution.service';
 
 @Component({
   selector: 'app-ace-editor',
@@ -11,21 +12,37 @@ import { SettingsEditingServiceService } from '../settings-editing-service.servi
 export class AceEditorComponent implements OnInit {
   @ViewChild('editor') editor;
   currentTab: NavigationTab;
+  showBreakpoints: boolean = false;
 
   constructor(private tabEditingService: TabEditingServiceService,
-    private settingsEditingService: SettingsEditingServiceService) {
+    private settingsEditingService: SettingsEditingServiceService,
+    private executionService: ExecutionService) {
+
     this.tabEditingService.tabOpened$.subscribe(
       tab => {
 
         if (this.currentTab) {
           this.currentTab.setContent(this.editor.getEditor().getValue());
+          this.currentTab.setCursor(this.editor.getEditor().selection.getCursor().row, this.editor.getEditor().selection.getCursor().column);
           this.tabEditingService.saveTabSource(this.currentTab);
-          //sends the new cursor position
         }
 
         this.currentTab = tab;
         this.editor.getEditor().setValue(this.currentTab.getContent());
-        //gets the cursor from object and position it
+        this.editor.getEditor().selection.moveTo(this.currentTab.getCursorLine(), this.currentTab.getCursorColumn());
+        this.editor.getEditor().focus();
+
+        this.showBreakpoints = false;
+        this.executionService.sendExecutionBreakpoints(this.currentTab.getBreakpoints());
+
+        let language = this.currentTab.getTitle().split(".")[1];
+        switch (language) {
+          case 'c':
+            this.editor.setMode("c_cpp");
+            break;
+          default:
+            console.log("not supported yet");
+        }
       }
     )
 
@@ -53,6 +70,19 @@ export class AceEditorComponent implements OnInit {
           default:
         }
       })
+
+    this.executionService.beforeExecutionFileStatusCheck$.subscribe(data => {
+      if (this.currentTab.getModified()) {
+        //api call to save file
+        //will be done with async await so the service down below will be executed after
+      }
+      this.executionService.sendCurrentFileId(this.currentTab.getId(), this.currentTab.getTitle());
+    })
+
+    this.executionService.detectExecutionBreakpoints$.subscribe((data) => {
+      this.drawBreakpoints(true);
+      this.executionService.sendExecutionBreakpoints(this.currentTab.getBreakpoints());
+    })
   }
 
   ngOnInit() {
@@ -61,21 +91,30 @@ export class AceEditorComponent implements OnInit {
 
   generateBreakPoints() {
     const gutt = document.querySelector(".ace_layer");
+    const ref = this;
 
     function addOrRemoveBreakpoint(e) {
-
       let line = e.target.innerText;
-
       if (e.target.classList.contains("breakpoint")) {
-        //service to remove breakpoint
         e.target.classList.remove("breakpoint");
+        ref.currentTab.removeBreakpoint(line);
+        //service to send list to tabRibbon at every modification
+        ref.executionService.sendExecutionBreakpoints(this.currentTab.getBreakpoints());
       } else {
-        //service to add breakpoint
         e.target.classList.add("breakpoint");
+        if (ref.currentTab.getBreakpoints().indexOf(parseInt(line)) === -1) {
+          ref.currentTab.addBreakpoint(parseInt(line));
+          //service to send list to tabRibbon at every modification
+          ref.executionService.sendExecutionBreakpoints(ref.currentTab.getBreakpoints());
+        }
+
+        if (!ref.showBreakpoints) {
+          ref.drawBreakpoints(true);
+        }
       }
     }
 
-    gutt.addEventListener("DOMNodeInserted", function (e) {
+    gutt.addEventListener("DOMNodeInserted", (e) => {
       e.target.removeEventListener("click", addOrRemoveBreakpoint);
       e.target.addEventListener("click", addOrRemoveBreakpoint);
     });
@@ -91,13 +130,54 @@ export class AceEditorComponent implements OnInit {
     });
 
     this.editor.getEditor().commands.addCommand({
-      name: "showOtherCompletions",
-      bindKey: "Ctrl-.",
-      exec: function (editor) {
-        console.log(editor.getValue());
+      name: "save",
+      bindKey: "Ctrl-s",
+      exec: (editor) => {
+        this.saveFile();
+        console.log("this will call api and will set modified to false in the callback");
       }
     })
+
+    this.editor.getEditor().commands.addCommand({
+      name: "showBreakpoints",
+      bindKey: "Ctrl-b",
+      exec: (editor) => {
+        this.showBreakpoints = !this.showBreakpoints;
+        if (this.showBreakpoints) {
+          this.drawBreakpoints(true);
+        } else {
+          this.drawBreakpoints(false);
+        }
+      }
+    })
+
+    this.editor.getEditor().session.on('change', (delta) => {
+      if (delta.lines[0].length === 1) {
+        this.currentTab.setModified(true);
+      }
+    });
   }
 
+  //will display breakpoints on ctrl + b
+  //when clicking Execute a service will invoke this method to draw breakpoints
+  drawBreakpoints(show: boolean) {
+    const gutters = document.querySelectorAll(".ace_gutter-cell");
 
+    for (let i: number = 0; i < gutters.length; i++) {
+      if (this.currentTab.getBreakpoints().includes(parseInt(gutters[i].textContent))) {
+        if (show) {
+          gutters[i].classList.add("breakpoint");
+        } else {
+          gutters[i].classList.remove("breakpoint");
+        }
+      }
+    }
+  }
+
+  saveFile() {
+    //rest call to save file
+    //in the callback set modified to false
+    console.log('ya');
+    //this.currentTab.setModified(false);
+  }
 }
