@@ -17,10 +17,9 @@ export class TabEditingServiceService {
   tabClosed$ = this.modifiedFileSource.asObservable();
   menuPanel$ = this.modifiedMenuPanel.asObservable();
 
-  openNewTab(URL: string) {
+  openNewTab(id: number, title: string) {
     //here a rest call should be performed to get the content
-    //also should include the back-end id in navigation tab
-    let tab = new NavigationTab("dynamic_file", URL, 'this tha content', 0);
+    let tab = new NavigationTab(id, title, 'this tha content', 0);
     this.newFileSource.next(tab);
   }
 
