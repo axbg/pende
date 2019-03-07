@@ -23,9 +23,18 @@ export class TabRibbonComponent implements OnInit {
 
     if (this.closable) {
       this.tabEditingService.newTab$.subscribe(tab => {
-        tab.setIndex(this.tabs.length);
-        this.tabs.push(tab);
-        this.tabChange(tab.getIndex());
+        if (!this.tabs.some(existingTab => {
+          if (existingTab.getId() === tab.getId()) {
+            this.currentIndex = existingTab.getIndex();
+            return true;
+          }
+        })) {
+          tab.setIndex(this.tabs.length);
+          this.tabs.push(tab);
+          this.tabChange(tab.getIndex());
+        } else {
+          this.renderTab();
+        }
       })
     }
   }

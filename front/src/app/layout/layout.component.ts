@@ -21,13 +21,13 @@ export class LayoutComponent implements OnInit {
   }
 
   initFileTabs() {
-    this.fileTabs.push(new NavigationTab("Hack with passion!", "nourl", "Welcome to webide", 0));
+    this.fileTabs.push(new NavigationTab(0, "Hack with passion!", "Welcome to webide", 0));
   }
 
   initprojectTabs() {
-    this.projectTabs.push(new NavigationTab("Files", "url1", "", 0));
-    this.projectTabs.push(new NavigationTab("Execute", "url2", "", 1));
-    this.projectTabs.push(new NavigationTab("Settings", "url3", "", 2));
+    this.projectTabs.push(new NavigationTab(0, "Files", "", 0));
+    this.projectTabs.push(new NavigationTab(0, "Execute", "", 1));
+    this.projectTabs.push(new NavigationTab(0, "Settings", "", 2));
   }
 
 }

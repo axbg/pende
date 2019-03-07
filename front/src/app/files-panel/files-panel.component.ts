@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TreeModel, Ng2TreeSettings } from 'ng2-tree';
-import { NavigationTab } from '../../classes/NavigationTab';
+import { TreeModel } from 'ng2-tree';
 import { TabEditingServiceService } from '../tab-editing-service.service';
 
 @Component({
@@ -14,8 +13,9 @@ export class FilesPanelComponent implements OnInit {
   private dynamicChildrenExample = [
     { value: 'first_children', id: 1, URL: 'url1' },
     {
-      value: 'second_children', range: 3, URL: 'url2', children: [
+      value: 'second_children', id: 3, URL: 'url2', children: [
         {
+          id: 15,
           value: 'asd',
           URL: 'url3'
         }
@@ -53,18 +53,19 @@ export class FilesPanelComponent implements OnInit {
 
   public handleSelected(event) {
     console.log("selected " + event.node.value);
-    if(!event.node.children){
-      this.tabEditingService.openNewTab(event.node.node.URL);
+    if (!event.node.children) {
+      this.tabEditingService.openNewTab(event.node.node.id, event.node.value);
     }
   }
 
   public handleRemoved(event) {
-    console.log(event);
-    let currentNode = event.node;
-    if (confirm("Do you want to delete this element?")) {
-      console.log('deleted ' + event.node.value);
-    } else {
-      currentNode.parent.addChild(currentNode);
+    if (event.node.value) {
+      let currentNode = event.node;
+      if (confirm("Do you want to delete this element?")) {
+        console.log('deleted ' + event.node.value);
+      } else {
+        currentNode.parent.addChild(currentNode);
+      }
     }
   }
 
@@ -73,11 +74,23 @@ export class FilesPanelComponent implements OnInit {
   }
 
   public handleCreate(event) {
+    let [filename, extension] = event.node.value.split(".");
+    let parentId = event.node.parent.node.id;
+
+    if (!filename) {
+      alert("File name could not be empty");
+      return;
+    }
+
     if (event.node.children) {
-      console.log("created new folder with parent: " + event.node.parent.value);
+      //rest call with parentId
     } else {
-      console.log("created new file with parent: " + event.node.parent.value);
-      //if it doesnt contain a known extension remove it
+      if (!extension || extension !== 'c') {
+        alert("Extension not valid - could be: c");
+        event.node.parent.removeChild(event.node);
+        return;
+      }
+      //rest call with parentId
     }
   }
 
