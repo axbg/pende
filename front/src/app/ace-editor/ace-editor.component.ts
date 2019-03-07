@@ -2,6 +2,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { TabEditingServiceService } from '../tab-editing-service.service';
 import { NavigationTab } from '../../classes/NavigationTab';
 import { SettingsEditingServiceService } from '../settings-editing-service.service';
+import { ExecutionService } from '../execution.service';
 
 @Component({
   selector: 'app-ace-editor',
@@ -13,7 +14,8 @@ export class AceEditorComponent implements OnInit {
   currentTab: NavigationTab;
 
   constructor(private tabEditingService: TabEditingServiceService,
-    private settingsEditingService: SettingsEditingServiceService) {
+    private settingsEditingService: SettingsEditingServiceService,
+    private executionService: ExecutionService) {
 
     this.tabEditingService.tabOpened$.subscribe(
       tab => {
@@ -58,6 +60,14 @@ export class AceEditorComponent implements OnInit {
           default:
         }
       })
+
+    this.executionService.beforeExecutionFileStatusCheck$.subscribe(data => {
+      if (this.currentTab.getModified()) {
+        //api call to save file
+        //will be done with async await so the service down below will be executed after
+      }
+      this.executionService.sendCurrentFileId(this.currentTab.getId(), this.currentTab.getTitle());
+    })
   }
 
   ngOnInit() {
@@ -68,9 +78,6 @@ export class AceEditorComponent implements OnInit {
     const gutt = document.querySelector(".ace_layer");
 
     function addOrRemoveBreakpoint(e) {
-
-      let line = e.target.innerText;
-
       if (e.target.classList.contains("breakpoint")) {
         //service to remove breakpoint
         e.target.classList.remove("breakpoint");
@@ -98,18 +105,25 @@ export class AceEditorComponent implements OnInit {
     this.editor.getEditor().commands.addCommand({
       name: "showOtherCompletions",
       bindKey: "Ctrl-s",
-      exec: function (editor) {
+      exec: (editor) => {
+        this.saveFile();
         console.log("this will call api and will set modified to false in the callback");
       }
     })
 
     //if one or multiple letters are introduced a tab will be marked as modified
     //the modified property is set to false after it's saved in the back-end
-    let ref = this;
-    this.editor.getEditor().session.on('change', function (delta) {
+    this.editor.getEditor().session.on('change', (delta) => {
       if (delta.lines[0].length === 1) {
-        ref.currentTab.setModified(true);
+        this.currentTab.setModified(true);
       }
     });
+  }
+
+  saveFile() {
+    //rest call to save file
+    //in the callback set modified to false
+    console.log('ya');
+    //this.currentTab.setModified(false);
   }
 }
