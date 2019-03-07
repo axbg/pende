@@ -11,11 +11,12 @@ import { ExecutionService } from '../execution.service';
 })
 export class ExecutionPanelComponent implements OnInit {
 
-  private isDebugging: boolean = true;
+  private isDebugging: boolean = false;
   private variables: Map<string, string> = new Map<string, string>();
   private callstack: String[] = [];
   private fileId: number = 0;
   private fileName: string = "";
+  private breakpoints: number[];
 
   constructor(private executionService: ExecutionService) {
     this.variables.set("a", "5");
@@ -28,22 +29,31 @@ export class ExecutionPanelComponent implements OnInit {
       this.fileId = data[0];
       this.fileName = data[1];
     })
+
+    this.executionService.getExecutionBreakpoints$.subscribe(breakpoints => {
+      this.breakpoints = breakpoints;
+      console.log(breakpoints);
+    })
   }
 
   ngOnInit() {
+    this.executionService.showExecutionBreakpoints();
   }
 
   runCode() {
+    this.isDebugging = false;
     this.executionService.checkCurrentFileStatus();
     TerminalComponent.writeTerminalCommand("run " + this.fileName, this.fileId);
   }
 
   debugCode() {
-    //kinda same like runCode
+    this.isDebugging = true;
+    this.executionService.checkCurrentFileStatus();
+    TerminalComponent.writeTerminalCommand("debug " + this.fileName, this.fileId);
   }
 
   stopExec() {
-    //kinda same like run and debug
+    TerminalComponent.writeTerminalCommand("stop", 0);
   }
 
 }
