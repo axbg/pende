@@ -1,11 +1,14 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { LayoutComponent } from './layout/layout.component';
 import { TabRibbonComponent } from './tab-ribbon/tab-ribbon.component';
 import { MenuRibbonComponent } from './menu-ribbon/menu-ribbon.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTPInterceptorService } from '../app/httpinterceptor.service';
 
 //primeng components import
 import { TabViewModule } from 'primeng/tabview';
@@ -25,6 +28,8 @@ import { ExecutionPanelComponent } from './execution-panel/execution-panel.compo
 import { TerminalComponent } from './terminal/terminal.component';
 import { PrimeTerminalComponent } from './prime-terminal/prime-terminal.component';
 import { FilesPanelComponent } from './files-panel/files-panel.component';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
 import { TreeModule } from 'ng2-tree'
 
 @NgModule({
@@ -53,9 +58,18 @@ import { TreeModule } from 'ng2-tree'
     SliderModule,
     InputSwitchModule,
     TooltipModule,
-    TreeModule
+    TreeModule,
+    HttpClientModule,
+    ButtonModule,
+    DialogModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HTTPInterceptorService,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

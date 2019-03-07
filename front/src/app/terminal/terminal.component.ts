@@ -25,13 +25,13 @@ export class TerminalComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+
   }
 
   // will be called using a service from other components
   // so, when you click on a button, such as run, a command will be launched
   // and the command will be processed in the commandHandler defined above
-  writeTerminalCommand(command: String) {
+  static writeTerminalCommand(command: String, id: number) {
     let terminalInput = <HTMLInputElement>document.querySelector(".ui-terminal-input");
     let keyboardEvent = new KeyboardEvent("keydown", { code: "enter" });
     terminalInput.value = command.toString();
