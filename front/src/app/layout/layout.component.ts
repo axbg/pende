@@ -11,6 +11,7 @@ export class LayoutComponent implements OnInit {
   fileTabs: Array<NavigationTab> = [];
   projectTabs: Array<NavigationTab> = [];
   menuItems: [];
+  loaded: boolean = true;
 
   constructor() {
     this.initFileTabs();
@@ -18,19 +19,19 @@ export class LayoutComponent implements OnInit {
   }
 
   ngOnInit() {
+    //api calls to load all data
+    //call services to inject data in the components that need it
+    //when data is loaded, loaded becomes true and layout is displayed
   }
 
   initFileTabs() {
-    this.fileTabs.push(new NavigationTab("test1", "url1", "content1", 0));
-    this.fileTabs.push(new NavigationTab("test2", "url2", "content2", 1));
-    this.fileTabs.push(new NavigationTab("test3", "url3", "content3", 2));
-    this.fileTabs.push(new NavigationTab("test4", "url3", "content4", 3));
+    this.fileTabs.push(new NavigationTab(0, "Hack with passion!", "Welcome to webide", 0));
   }
 
   initprojectTabs() {
-    this.projectTabs.push(new NavigationTab("Files", "url1", "", 0));
-    this.projectTabs.push(new NavigationTab("Execute", "url2", "", 1));
-    this.projectTabs.push(new NavigationTab("Settings", "url3", "", 2));
+    this.projectTabs.push(new NavigationTab(0, "Files", "", 0));
+    this.projectTabs.push(new NavigationTab(0, "Execute", "", 1));
+    this.projectTabs.push(new NavigationTab(0, "Settings", "", 2));
   }
 
 }

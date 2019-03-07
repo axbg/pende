@@ -15,16 +15,28 @@ export class TabRibbonComponent implements OnInit {
   currentIndex: number;
 
   constructor(private tabEditingService: TabEditingServiceService) {
-    if (this.closable === 1) {
-      this.tabEditingService.tabClosed$.subscribe(tab => {
-        this.tabs[tab.getIndex()] = tab;
-      })
-    }
   }
 
   ngOnInit() {
     this.currentIndex = 0;
     this.renderTab();
+
+    if (this.closable) {
+      this.tabEditingService.newTab$.subscribe(tab => {
+        if (!this.tabs.some(existingTab => {
+          if (existingTab.getId() === tab.getId()) {
+            this.currentIndex = existingTab.getIndex();
+            return true;
+          }
+        })) {
+          tab.setIndex(this.tabs.length);
+          this.tabs.push(tab);
+          this.tabChange(tab.getIndex());
+        } else {
+          this.renderTab();
+        }
+      })
+    }
   }
 
   renderTab() {
@@ -36,13 +48,11 @@ export class TabRibbonComponent implements OnInit {
   }
 
   clearTarget() {
-    let targetElement = document.getElementById(this.target.toString());
-    targetElement.textContent = "Open something";
+    this.tabEditingService.renderTabSource(new NavigationTab("", "", "", 0));
   }
 
   tabChange(index) {
     this.currentIndex = index;
-
     this.renderTab();
   }
 
@@ -76,11 +86,16 @@ export class TabRibbonComponent implements OnInit {
   }
 
   closeTab(index) {
-    if (confirm("Do you want to close this file?")) {
-      if (confirm("Do you want to save the file before leaving?")) {
-        //api call to save file
-        console.log('yas save');
+    console.log(this.tabs[index].getModified());
+    if (this.tabs[index].getModified()) {
+      if (confirm("Do you want to close this file?")) {
+        if (confirm("Do you want to save the file before leaving?")) {
+          //api call to save file
+          console.log('yas save');
+        }
+        this.closeTabProcedure(index);
       }
+    } else {
       this.closeTabProcedure(index);
     }
   }
