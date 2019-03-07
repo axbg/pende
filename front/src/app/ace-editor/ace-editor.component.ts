@@ -12,7 +12,7 @@ import { ExecutionService } from '../execution.service';
 export class AceEditorComponent implements OnInit {
   @ViewChild('editor') editor;
   currentTab: NavigationTab;
-  breakPoints: number[] = [];
+  showBreakpoints: boolean = false;
 
   constructor(private tabEditingService: TabEditingServiceService,
     private settingsEditingService: SettingsEditingServiceService,
@@ -31,6 +31,9 @@ export class AceEditorComponent implements OnInit {
         this.editor.getEditor().setValue(this.currentTab.getContent());
         this.editor.getEditor().selection.moveTo(this.currentTab.getCursorLine(), this.currentTab.getCursorColumn());
         this.editor.getEditor().focus();
+
+        this.showBreakpoints = false;
+        this.executionService.sendExecutionBreakpoints(this.currentTab.getBreakpoints());
 
         let language = this.currentTab.getTitle().split(".")[1];
         switch (language) {
@@ -75,33 +78,45 @@ export class AceEditorComponent implements OnInit {
       }
       this.executionService.sendCurrentFileId(this.currentTab.getId(), this.currentTab.getTitle());
     })
+
+    this.executionService.detectExecutionBreakpoints$.subscribe((data) => {
+      this.drawBreakpoints(true);
+      this.executionService.sendExecutionBreakpoints(this.currentTab.getBreakpoints());
+    })
   }
 
   ngOnInit() {
     this.generateBreakPoints();
   }
 
-  //bug: on new line, breakpoints are removed
-  //find a way to handle them
-  //probably in the execution panel
-  //send them one by one through a service and display them there
-  addOrRemoveBreakpoint(e) {
-    let line = e.target.innerText;
-    console.log(line);
-    if (e.target.classList.contains("breakpoint")) {
-      //service to remove breakpoint
-      e.target.classList.remove("breakpoint");
-    } else {
-      //service to add breakpoint
-      e.target.classList.add("breakpoint");
-    }
-  }
-
   generateBreakPoints() {
     const gutt = document.querySelector(".ace_layer");
+    const ref = this;
+
+    function addOrRemoveBreakpoint(e) {
+      let line = e.target.innerText;
+      if (e.target.classList.contains("breakpoint")) {
+        e.target.classList.remove("breakpoint");
+        ref.currentTab.removeBreakpoint(line);
+        //service to send list to tabRibbon at every modification
+        ref.executionService.sendExecutionBreakpoints(this.currentTab.getBreakpoints());
+      } else {
+        e.target.classList.add("breakpoint");
+        if (ref.currentTab.getBreakpoints().indexOf(parseInt(line)) === -1) {
+          ref.currentTab.addBreakpoint(parseInt(line));
+          //service to send list to tabRibbon at every modification
+          ref.executionService.sendExecutionBreakpoints(ref.currentTab.getBreakpoints());
+        }
+
+        if (!ref.showBreakpoints) {
+          ref.drawBreakpoints(true);
+        }
+      }
+    }
+
     gutt.addEventListener("DOMNodeInserted", (e) => {
-      e.target.removeEventListener("click", this.addOrRemoveBreakpoint);
-      e.target.addEventListener("click", this.addOrRemoveBreakpoint);
+      e.target.removeEventListener("click", addOrRemoveBreakpoint);
+      e.target.addEventListener("click", addOrRemoveBreakpoint);
     });
   }
 
@@ -115,7 +130,7 @@ export class AceEditorComponent implements OnInit {
     });
 
     this.editor.getEditor().commands.addCommand({
-      name: "showOtherCompletions",
+      name: "save",
       bindKey: "Ctrl-s",
       exec: (editor) => {
         this.saveFile();
@@ -123,13 +138,40 @@ export class AceEditorComponent implements OnInit {
       }
     })
 
-    //if one or multiple letters are introduced a tab will be marked as modified
-    //the modified property is set to false after it's saved in the back-end
+    this.editor.getEditor().commands.addCommand({
+      name: "showBreakpoints",
+      bindKey: "Ctrl-b",
+      exec: (editor) => {
+        this.showBreakpoints = !this.showBreakpoints;
+        if (this.showBreakpoints) {
+          this.drawBreakpoints(true);
+        } else {
+          this.drawBreakpoints(false);
+        }
+      }
+    })
+
     this.editor.getEditor().session.on('change', (delta) => {
       if (delta.lines[0].length === 1) {
         this.currentTab.setModified(true);
       }
     });
+  }
+
+  //will display breakpoints on ctrl + b
+  //when clicking Execute a service will invoke this method to draw breakpoints
+  drawBreakpoints(show: boolean) {
+    const gutters = document.querySelectorAll(".ace_gutter-cell");
+
+    for (let i: number = 0; i < gutters.length; i++) {
+      if (this.currentTab.getBreakpoints().includes(parseInt(gutters[i].textContent))) {
+        if (show) {
+          gutters[i].classList.add("breakpoint");
+        } else {
+          gutters[i].classList.remove("breakpoint");
+        }
+      }
+    }
   }
 
   saveFile() {

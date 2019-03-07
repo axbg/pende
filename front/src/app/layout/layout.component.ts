@@ -11,6 +11,7 @@ export class LayoutComponent implements OnInit {
   fileTabs: Array<NavigationTab> = [];
   projectTabs: Array<NavigationTab> = [];
   menuItems: [];
+  loaded: boolean = true;
 
   constructor() {
     this.initFileTabs();
@@ -18,6 +19,9 @@ export class LayoutComponent implements OnInit {
   }
 
   ngOnInit() {
+    //api calls to load all data
+    //call services to inject data in the components that need it
+    //when data is loaded, loaded becomes true and layout is displayed
   }
 
   initFileTabs() {

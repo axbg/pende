@@ -1,4 +1,9 @@
 <div class="web-layout">
+  <ng-template *ngIf="loaded;then layout; else loading">
+  </ng-template>
+</div>
+
+<ng-template #layout>
   <div class="code-layout">
     <app-tab-ribbon [tabs]="fileTabs" target="code-editor" closable=1></app-tab-ribbon>
     <app-ace-editor id="code-editor" class="code-editor" contenteditable="true">integrate ace here</app-ace-editor>
@@ -8,4 +13,8 @@
     <app-tab-ribbon [tabs]="projectTabs" target="menu-panel"></app-tab-ribbon>
     <app-panel-holder id="menu-panel" class="code-editor" panel="Files"></app-panel-holder>
   </div>
-</div>
+</ng-template>
+
+<ng-template #loading>
+  <!--ngx-spinner down there-->
+</ng-template>
