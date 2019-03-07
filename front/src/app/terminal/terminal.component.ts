@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TerminalService } from '../prime-terminal/terminalservice'
 import { Subscription } from 'rxjs/Subscription';
-import { NavigationTab } from 'src/classes/NavigationTab';
 
 @Component({
   selector: 'app-terminal',

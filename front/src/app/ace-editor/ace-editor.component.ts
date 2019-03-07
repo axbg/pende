@@ -12,6 +12,7 @@ import { ExecutionService } from '../execution.service';
 export class AceEditorComponent implements OnInit {
   @ViewChild('editor') editor;
   currentTab: NavigationTab;
+  breakPoints: number[] = [];
 
   constructor(private tabEditingService: TabEditingServiceService,
     private settingsEditingService: SettingsEditingServiceService,
@@ -31,8 +32,14 @@ export class AceEditorComponent implements OnInit {
         this.editor.getEditor().selection.moveTo(this.currentTab.getCursorLine(), this.currentTab.getCursorColumn());
         this.editor.getEditor().focus();
 
-        //make a switch to determine which language syntax to load
         let language = this.currentTab.getTitle().split(".")[1];
+        switch (language) {
+          case 'c':
+            this.editor.setMode("c_cpp");
+            break;
+          default:
+            console.log("not supported yet");
+        }
       }
     )
 
@@ -74,22 +81,27 @@ export class AceEditorComponent implements OnInit {
     this.generateBreakPoints();
   }
 
+  //bug: on new line, breakpoints are removed
+  //find a way to handle them
+  //probably in the execution panel
+  //send them one by one through a service and display them there
+  addOrRemoveBreakpoint(e) {
+    let line = e.target.innerText;
+    console.log(line);
+    if (e.target.classList.contains("breakpoint")) {
+      //service to remove breakpoint
+      e.target.classList.remove("breakpoint");
+    } else {
+      //service to add breakpoint
+      e.target.classList.add("breakpoint");
+    }
+  }
+
   generateBreakPoints() {
     const gutt = document.querySelector(".ace_layer");
-
-    function addOrRemoveBreakpoint(e) {
-      if (e.target.classList.contains("breakpoint")) {
-        //service to remove breakpoint
-        e.target.classList.remove("breakpoint");
-      } else {
-        //service to add breakpoint
-        e.target.classList.add("breakpoint");
-      }
-    }
-
-    gutt.addEventListener("DOMNodeInserted", function (e) {
-      e.target.removeEventListener("click", addOrRemoveBreakpoint);
-      e.target.addEventListener("click", addOrRemoveBreakpoint);
+    gutt.addEventListener("DOMNodeInserted", (e) => {
+      e.target.removeEventListener("click", this.addOrRemoveBreakpoint);
+      e.target.addEventListener("click", this.addOrRemoveBreakpoint);
     });
   }
 
