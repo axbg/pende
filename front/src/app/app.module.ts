@@ -31,6 +31,7 @@ import { FilesPanelComponent } from './files-panel/files-panel.component';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TreeModule } from 'ng2-tree'
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { TreeModule } from 'ng2-tree'
     TreeModule,
     HttpClientModule,
     ButtonModule,
-    DialogModule
+    DialogModule,
+    NgxSpinnerModule
   ],
   providers: [
     {
