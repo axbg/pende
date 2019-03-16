@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationTab } from '../../classes/NavigationTab';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-layout',
@@ -8,28 +9,36 @@ import { NavigationTab } from '../../classes/NavigationTab';
 })
 export class LayoutComponent implements OnInit {
 
-  fileTabs : Array<NavigationTab> = [];
-  projectTabs : Array<NavigationTab> = [];
-  menuItems : [];
+  fileTabs: Array<NavigationTab> = [];
+  projectTabs: Array<NavigationTab> = [];
+  menuItems: [];
 
-  constructor() {
+  constructor(private spinner: NgxSpinnerService) {
     this.initFileTabs();
     this.initprojectTabs();
-   }
+  }
 
   ngOnInit() {
+    //api calls to load all data
+    //call services to inject data in the components that need it
+    //when data is loaded, loaded becomes true and layout is displayed
+    this.spinner.show();
+
+    setTimeout(() => {
+      //the spinner will be disabled when data is loaded
+      //this is just an example of displaying
+      this.spinner.hide();
+    }, 2000);
   }
 
-  initFileTabs(){
-    this.fileTabs.push(new NavigationTab("test1", "url1", "content1"));
-    this.fileTabs.push(new NavigationTab("test2", "url2", "content2"));
-    this.fileTabs.push(new NavigationTab("test3", "url3", "content3"));
-    this.fileTabs.push(new NavigationTab("test4", "url3", "content4"));
+  initFileTabs() {
+    this.fileTabs.push(new NavigationTab(0, "Hack with passion!", "Welcome to webide", 0));
   }
 
-  initprojectTabs(){
-    this.projectTabs.push(new NavigationTab("test1", "url1", "content1"));
-    this.projectTabs.push(new NavigationTab("test2", "url2", "content2"));
+  initprojectTabs() {
+    this.projectTabs.push(new NavigationTab(0, "Files", "", 0));
+    this.projectTabs.push(new NavigationTab(0, "Execute", "", 1));
+    this.projectTabs.push(new NavigationTab(0, "Settings", "", 2));
   }
 
 }

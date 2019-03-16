@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ControlTabComponent } from './control-tab.component';
+import { PanelHolderComponent } from './panel-holder.component';
 
-describe('ControlTabComponent', () => {
-  let component: ControlTabComponent;
-  let fixture: ComponentFixture<ControlTabComponent>;
+describe('PanelHolderComponent', () => {
+  let component: PanelHolderComponent;
+  let fixture: ComponentFixture<PanelHolderComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ControlTabComponent ]
+      declarations: [ PanelHolderComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ControlTabComponent);
+    fixture = TestBed.createComponent(PanelHolderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

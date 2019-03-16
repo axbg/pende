@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {MenuItem} from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-menu-ribbon',
@@ -8,6 +8,8 @@ import {MenuItem} from 'primeng/api';
 })
 export class MenuRibbonComponent implements OnInit {
 
+  private shortVisible: boolean = false;
+  private contactVisible: boolean = false;
   items: MenuItem[];
   constructor() { }
 
@@ -15,24 +17,29 @@ export class MenuRibbonComponent implements OnInit {
 
     this.items = [
       {
-        label: 'Settings',
-        command: (event) => { this.itemClick(event);}
-      }, 
+        label: 'Shortcuts',
+        command: (event) => { this.showDialog("short"); }
+      },
       {
         label: 'Contact',
-        command: (event) => { this.itemClick(event);}
+        command: (event) => { this.showDialog("contact"); }
       },
       {
         label: 'Logout',
-        command: (event) => { this.itemClick(event);}
+        command: (event) => { this.logout(); }
       }
     ]
   }
 
-  itemClick(event){
-    let item = event.item;
-
-    console.log("clicked on " + item.label);
+  showDialog(modal) {
+    if (modal === "short") {
+      this.shortVisible = true;
+    } else {
+      this.contactVisible = true;
+    }
   }
 
+  logout() {
+    console.log('implement logout');
+  }
 }
