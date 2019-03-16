@@ -7,7 +7,8 @@ import { Constants } from '../classes/Constants';
 })
 export class HTTPManagerService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   public apiCall(URL: String, METHOD: String, BODY?: any) {
     let body;
