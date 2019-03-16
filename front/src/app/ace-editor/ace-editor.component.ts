@@ -3,6 +3,7 @@ import { TabEditingServiceService } from '../tab-editing-service.service';
 import { NavigationTab } from '../../classes/NavigationTab';
 import { SettingsEditingServiceService } from '../settings-editing-service.service';
 import { ExecutionService } from '../execution.service';
+import { LayoutService } from '../layout.service';
 
 @Component({
   selector: 'app-ace-editor',
@@ -16,7 +17,8 @@ export class AceEditorComponent implements OnInit {
 
   constructor(private tabEditingService: TabEditingServiceService,
     private settingsEditingService: SettingsEditingServiceService,
-    private executionService: ExecutionService) {
+    private executionService: ExecutionService,
+    private layoutService: LayoutService) {
 
     this.tabEditingService.tabOpened$.subscribe(
       tab => {
@@ -51,6 +53,7 @@ export class AceEditorComponent implements OnInit {
         switch (setting.getProperty()) {
           case "theme":
             this.editor.setTheme(setting.getValue());
+            this.layoutService.changeThemeColor(setting.getValue());
             break;
           case "cursor":
             this.editor.getEditor().setOptions({

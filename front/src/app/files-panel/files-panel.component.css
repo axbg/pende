@@ -2,6 +2,12 @@
   font-size: 25px;
 }
 
+.files {
+  background-color: white;
+  height: 100%;
+  text-align: center;
+}
+
 .files-holder {
   margin: 0 auto;
   padding-top: 30px;
@@ -11,8 +17,8 @@
   font-size: 1.2em;
 }
 
-.tree-holder{
-    margin-left: 10%;
+.tree-holder {
+  margin-left: 10%;
 }
 
 h3 {
