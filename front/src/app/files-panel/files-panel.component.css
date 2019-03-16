@@ -1,0 +1,26 @@
+.panel-title {
+  font-size: 25px;
+}
+
+.files {
+  background-color: white;
+  height: 100%;
+  text-align: center;
+}
+
+.files-holder {
+  margin: 0 auto;
+  padding-top: 30px;
+  text-align: left;
+  overflow-y: scroll;
+  height: 80%;
+  font-size: 1.2em;
+}
+
+.tree-holder {
+  margin-left: 10%;
+}
+
+h3 {
+  text-align: center;
+}

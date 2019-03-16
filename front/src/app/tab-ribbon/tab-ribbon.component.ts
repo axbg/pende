@@ -1,13 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NavigationTab } from '../../classes/NavigationTab';
-import { toBase64String } from '@angular/compiler/src/output/source_map';
-import { TargetLocator } from 'selenium-webdriver';
-
+import { TabEditingServiceService } from '../tab-editing-service.service';
 
 @Component({
   selector: 'app-tab-ribbon',
   templateUrl: './tab-ribbon.component.html',
-  styleUrls: ['./tab-ribbon.component.css']
+  styleUrls: ['./tab-ribbon.component.css'],
 })
 export class TabRibbonComponent implements OnInit {
 
@@ -16,23 +14,41 @@ export class TabRibbonComponent implements OnInit {
   @Input() closable: number;
   currentIndex: number;
 
-  constructor() {
+  constructor(private tabEditingService: TabEditingServiceService) {
   }
 
   ngOnInit() {
     this.currentIndex = 0;
     this.renderTab();
+
+    if (this.closable) {
+      this.tabEditingService.newTab$.subscribe(tab => {
+        if (!this.tabs.some(existingTab => {
+          if (existingTab.getId() === tab.getId()) {
+            this.currentIndex = existingTab.getIndex();
+            return true;
+          }
+        })) {
+          tab.setIndex(this.tabs.length);
+          this.tabs.push(tab);
+          this.tabChange(tab.getIndex());
+        } else {
+          this.renderTab();
+        }
+      })
+    }
   }
 
   renderTab() {
-    let selectedTab = this.tabs[this.currentIndex];
-    let targetElement = document.getElementById(this.target.toString());
-    targetElement.textContent = selectedTab.getContent().toString();
+    if (this.closable) {
+      this.tabEditingService.renderTabSource(this.tabs[this.currentIndex]);
+    } else {
+      this.tabEditingService.renderMenuPanel(this.tabs[this.currentIndex].getTitle());
+    }
   }
 
   clearTarget() {
-    let targetElement = document.getElementById(this.target.toString());
-    targetElement.textContent = "Open something";
+    this.tabEditingService.renderTabSource(new NavigationTab("", "", "", 0));
   }
 
   tabChange(index) {
@@ -40,8 +56,7 @@ export class TabRibbonComponent implements OnInit {
     this.renderTab();
   }
 
-  closeTab(index) {
-
+  closeTabProcedure(index) {
     if (this.tabs.length > 1) {
 
       if (this.currentIndex === index && index !== 0) {
@@ -68,7 +83,21 @@ export class TabRibbonComponent implements OnInit {
       this.tabs.splice(index, 1);
       this.clearTarget();
     }
+  }
 
+  closeTab(index) {
+    console.log(this.tabs[index].getModified());
+    if (this.tabs[index].getModified()) {
+      if (confirm("Do you want to close this file?")) {
+        if (confirm("Do you want to save the file before leaving?")) {
+          //api call to save file
+          console.log('yas save');
+        }
+        this.closeTabProcedure(index);
+      }
+    } else {
+      this.closeTabProcedure(index);
+    }
   }
 
 }
