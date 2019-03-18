@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Constants } from '../classes/Constants';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LayoutService {
+
+  private newThemeColor = new Subject<String>();
+  themeColor$ = this.newThemeColor.asObservable();
 
   constructor() {
   }
@@ -26,6 +30,7 @@ export class LayoutService {
         (<HTMLElement>elem).style.color = "black";
       });
       document.getElementById("menu-panel").style.backgroundColor = "whitesmoke";
+      this.changeGeneralThemeColor("white");
     } else {
       document.body.style.backgroundColor = "black";
       (<HTMLElement>document.querySelector(".code-editor")).style.backgroundColor = "black";
@@ -36,7 +41,12 @@ export class LayoutService {
         (<HTMLElement>elem).style.color = "white";
       });
       document.getElementById("menu-panel").style.backgroundColor = "black";
+      this.changeGeneralThemeColor("black");
     }
+  }
+
+  changeGeneralThemeColor(color: String){
+    this.newThemeColor.next(color);
   }
 
 }
