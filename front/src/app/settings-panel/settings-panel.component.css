@@ -25,3 +25,18 @@
 .setting-wrapper {
   margin: 20px;
 }
+
+.white {
+  background-color: white;
+  color: black;
+}
+
+.black {
+  background-color: black;
+  color: white;
+}
+
+.black > label {
+  background-color: black;
+  color: white;
+}
