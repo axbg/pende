@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DoubleData } from 'src/classes/DoubleData';
 import { SettingsEditingServiceService } from '../settings-editing-service.service';
 import { SettingsConstants } from './constants';
+import { LayoutService } from '../layout.service';
 
 @Component({
   selector: 'app-settings-panel',
@@ -16,11 +17,15 @@ export class SettingsPanelComponent implements OnInit {
   selectedCursor: DoubleData;
   fontSize: number = 24;
   gutter: boolean = true;
+  hasWhiteTheme: boolean = false;
 
-  constructor(private settingsService: SettingsEditingServiceService) {
+  constructor(private settingsService: SettingsEditingServiceService, private layoutService: LayoutService) {
     this.themes = SettingsConstants.getThemes();
     this.cursors = SettingsConstants.getCursors();
 
+    this.layoutService.themeColor$.subscribe(color => {
+      this.hasWhiteTheme = color === "white" ? true : false;
+    })
   }
 
   ngOnInit() {
