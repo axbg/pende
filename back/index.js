@@ -13,43 +13,42 @@ app.get("/", (req, res) => {
 })
 
 app.get("/main", (req, res) => {
-    res.sendFile(__dirname + "/index.html");
+    res.sendFile(__dirname + "/run.html");
 });
 
-app.get("/secondary", (req, res) => {
-    res.sendFile(__dirname + "/index2.html");
+app.get("/debug", (req, res) => {
+    res.sendFile(__dirname + "/debug.html");
 })
 
 io.on("connection", (socket) => {
     let executable;
-    //create directory structure if doesn't exist
-    //create physical file in the specified directory
+
+    //run & debug
     socket.on("structure", (payload) => {
         let dirStructure = filesPath + "/" + payload.user
             + "/" + (payload.path ? (payload.path) : "");
 
         fs.exists(dirStructure, async (result) => {
-            if(!result){
-                await fs.mkdir(dirStructure, {recursive: true}, () => {});
+            if (!result) {
+                await fs.mkdir(dirStructure, { recursive: true }, () => { });
             }
             socket.emit("structured", payload);
         });
 
     })
 
+    //run & debug
     socket.on("save", async (payload) => {
         let dirStructure = filesPath + "/" + payload.user
-        + "/" + (payload.path ? (payload.path) : "");
+            + "/" + (payload.path ? (payload.path) : "");
 
         let path = dirStructure + "/" + payload.name;
-        await fs.writeFile(path, payload.content, () => {});
-        
+        await fs.writeFile(path, payload.content, () => { });
+
         socket.emit("saved", payload);
     })
 
-    //compiles the c source code to a.out executable
-    //runs the program
-    //attaches event handlers
+    //run
     socket.on("run", async (payload) => {
         let filepath = filesPath + "/" + payload.user
             + "/" + (payload.path ? (payload.path) : "");
@@ -59,55 +58,79 @@ io.on("connection", (socket) => {
             + "/" + payload.name;
 
         execute_cli.exec("gcc " + path + " -o " + filepath + "/a.out", (result) => {
-        executable = spawn("./files/" + payload.user + "/" + payload.path + "/a.out");
+            executable = spawn("./files/" + payload.user + "/" + payload.path + "/a.out");
 
-        executable.on('error', function (err) {
-            console.log("Error" + err);
-            socket.emit("error", err);
-        });
+            executable.on('error', function (err) {
+                socket.emit("error", err);
+            });
 
-        executable.stdout.on('data', function (data) {
-            socket.emit("output", data.toString());
-        });
+            executable.stdout.on('data', function (data) {
+                socket.emit("output", data.toString());
+            });
 
-        executable.stderr.on('data', function (data) {
-            socket.emit("error", data);
-        });
+            executable.stderr.on('data', function (data) {
+                socket.emit("error", data);
+            });
 
-        executable.on('close', function (code) {
-            if (code != 0) {
-                socket.emit("error", code);
-            } else {
-                socket.emit("finished");
-            }
-        });
+            executable.on('close', function (code) {
+                if (code != 0) {
+                    socket.emit("error", code);
+                } else {
+                    socket.emit("finished");
+                }
+            });
         })
     })
 
-    //when input is received send it to the running process
-    //there can be a problem: hopefully, node isolates each instance so we will
-    //hold the same reference to executable as we defined it above
+    //run
     socket.on("input", payload => {
-        try{
+        try {
             executable.stdin.write(payload + "\n");
-        } catch(err){
+        } catch (err) {
             executable.kill();
         }
     });
 
-
-    /*
-    //compiles the source code
-    //starts gdb 
-    //attaches handlers
     socket.on("debug", (payload) => {
-        console.log("debugging program");
+        let filepath = filesPath + "/" + payload.user
+            + "/" + (payload.path ? (payload.path) : "");
+
+        let path = filesPath + "/" + payload.user
+            + "/" + (payload.path ? (payload.path) : "")
+            + "/" + payload.name;
+
+        execute_cli.exec("gcc -g " + path + " -o " + filepath + "/a.out", (result) => {
+            executable = spawn("gdb", ['--quiet']);
+            executable.stdin.write("file " + filepath + "/a.out\n");
+
+            payload.breakpoints.forEach(bp => {
+                executable.stdin.write("b " + bp + "\n");
+            })
+
+            executable.stdin.write("run\n");
+
+            executable.stdout.on('data', function (data) {
+                if (data.toString().includes("#")) {
+                    socket.emit("debug-stack", data.toString());
+                } else if (data.toString().includes("=")) {
+                    socket.emit("debug-variables", data.toString());
+                } else if (data.toString().includes("Breakpoint") && data.toString().includes("()")) {
+                    socket.emit("debug-output", data.toString());
+                    executable.stdin.write("info locals \n");
+                    setTimeout(() => executable.stdin.write("backtrace \n"), 10);
+                } else if (data.toString().includes("[Inferior 1")) {
+                    socket.emit("debug-finish");
+                    executable.kill();
+                } else if (!data.toString().includes("gdb")) {
+                    socket.emit("debug-output", data.toString());
+                }
+            });
+        });
     });
 
-    socket.on("continue", (payload) => {
-        console.log("continue");
+    socket.on("debug-input", message => {
+        executable.stdin.write(message + "\n");
     })
-    */
 
     socket.on("close", (payload) => {
         console.log("closing program");

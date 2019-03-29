@@ -1,0 +1,78 @@
+<html>
+
+<body>
+    <input id="ws" type="text">
+    <button onclick="saveFile()">click</button>
+    <button type="text" onclick="sendInput()">input</button>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+<script>
+
+    let socket = io();
+
+    function sendInput() {
+        socket.emit("debug-input", document.getElementById("ws").value);
+    }
+
+
+    function saveFile() {
+        let fileContent = `#include<stdio.h>
+
+int main() {
+setbuf(stdout, NULL);
+
+int x, y;
+
+printf("Enter x : ");
+//fflush(stdout);
+
+scanf("%d", &x);
+
+printf("Enter y : ");
+//fflush(stdout);
+
+scanf("%d", &y);
+
+printf("Value entered y is %d\\n", y);
+printf("Value entered x is %d\\n", x);
+
+return 0;
+}`;
+        let file = {
+            "user": "axbg",
+            "path": "asdbd",
+            "name": "debug.c",
+            "content": fileContent,
+            "breakpoints": []
+        }
+
+        socket.emit("structure", file);
+    }
+
+    socket.on("structured", (message) => {
+        socket.emit("save", message);
+    })
+
+    socket.on("saved", (message) => {
+        socket.emit("debug", message)
+    })
+
+    socket.on("debug-output", (message) => {
+        console.log(message);
+    })
+
+    socket.on("debug-stack", (message) => {
+        console.log(message);
+    })
+
+    socket.on("debug-variables", (message) =>{
+        console.log(message);
+    })
+
+    socket.on("debug-finish", () => {
+        console.log("finished");
+    })
+
+</script>
+
+</html>
