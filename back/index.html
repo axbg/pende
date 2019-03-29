@@ -26,6 +26,7 @@ scanf("%d", &y);
 
 printf("Value entered y is %d\\n", y);
 printf("Value entered x is %d\\n", x);
+
 return 0;
 }`;
         let file = {
@@ -35,13 +36,26 @@ return 0;
             "content": fileContent
         }
 
-        socket.emit("save", file);
+        socket.emit("structure", file);
     }
 
     let socket = io();
 
+    socket.on("structured", (message) => {
+        socket.emit("save", message);
+    })
+
     socket.on("saved", (message) => {
         socket.emit("run", message);
+    })
+
+    socket.on("output", (message) => {
+        console.log(message);
+        socket.emit("input", 5);
+    })
+
+    socket.on("finished", () => {
+        console.log("finished");
     })
 
 </script>

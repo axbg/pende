@@ -6,7 +6,7 @@ const io = require('socket.io')(server);
 const fs = require("fs");
 const filesPath = __dirname + "/files";
 const execute_cli = require('child_process');
-var spawn = require('child_process').spawn;
+const spawn = require('child_process').spawn;
 
 app.get("/", (req, res) => {
     res.send({ "message": "welcome to back" })
@@ -24,20 +24,27 @@ io.on("connection", (socket) => {
     let executable;
     //create directory structure if doesn't exist
     //create physical file in the specified directory
-    socket.on("save", (payload) => {
+    socket.on("structure", (payload) => {
         let dirStructure = filesPath + "/" + payload.user
             + "/" + (payload.path ? (payload.path) : "");
 
-        if (!fs.existsSync(dirStructure)) {
-            fs.mkdirSync(dirStructure, { recursive: true },
-                (err) => {
-                });
-        }
+        fs.exists(dirStructure, async (result) => {
+            if(!result){
+                await fs.mkdir(dirStructure, {recursive: true}, () => {});
+            }
+            socket.emit("structured", payload);
+        });
+
+    })
+
+    socket.on("save", async (payload) => {
+        let dirStructure = filesPath + "/" + payload.user
+        + "/" + (payload.path ? (payload.path) : "");
 
         let path = dirStructure + "/" + payload.name;
-        fs.writeFile(path, payload.content, (result) => {
-            socket.emit("saved", payload);
-        });
+        await fs.writeFile(path, payload.content, () => {});
+        
+        socket.emit("saved", payload);
     })
 
     //compiles the c source code to a.out executable
@@ -50,14 +57,9 @@ io.on("connection", (socket) => {
         let path = filesPath + "/" + payload.user
             + "/" + (payload.path ? (payload.path) : "")
             + "/" + payload.name;
-        await execute_cli.exec("gcc " + path + " -o" +  filepath + "/a.out");
 
-        try{
-            console.log(filepath);
-        executable = spawn("." + filepath + '/a.out');
-        } catch(e){
-            console.log(e)
-        }
+        execute_cli.exec("gcc " + path + " -o " + filepath + "/a.out", (result) => {
+        executable = spawn("./files/" + payload.user + "/" + payload.path + "/a.out");
 
         executable.on('error', function (err) {
             console.log("Error" + err);
@@ -65,31 +67,32 @@ io.on("connection", (socket) => {
         });
 
         executable.stdout.on('data', function (data) {
-            socket.emit("input", data.toString());
+            socket.emit("output", data.toString());
         });
 
         executable.stderr.on('data', function (data) {
-            console.log("in stderr.on.data : " + data);
             socket.emit("error", data);
         });
 
         executable.on('close', function (code) {
             if (code != 0) {
-                console.log("Program ended with a error code : " + code);
                 socket.emit("error", code);
             } else {
-                console.log('\nended');
                 socket.emit("finished");
             }
         });
+        })
     })
 
     //when input is received send it to the running process
     //there can be a problem: hopefully, node isolates each instance so we will
     //hold the same reference to executable as we defined it above
     socket.on("input", payload => {
-        console.log(payload);
-        executable.stdin.write(payload + "\n");
+        try{
+            executable.stdin.write(payload + "\n");
+        } catch(err){
+            executable.kill();
+        }
     });
 
 

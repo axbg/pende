@@ -17,5 +17,9 @@ scanf("%d", &y);
 
 printf("Value entered y is %d\n", y);
 printf("Value entered x is %d\n", x);
+
+for(int i=0; i<10;i++){
+    printf("%d", i);
+}
 return 0;
 }
