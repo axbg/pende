@@ -48,7 +48,7 @@ export class TabRibbonComponent implements OnInit {
   }
 
   clearTarget() {
-    this.tabEditingService.renderTabSource(new NavigationTab("", "", "", 0));
+    this.tabEditingService.renderTabSource(new NavigationTab("", "", "", "", 0));
   }
 
   tabChange(index) {
