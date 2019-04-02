@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { DoubleData } from 'src/classes/DoubleData';
 import { SettingsEditingServiceService } from '../settings-editing-service.service';
 import { SettingsConstants } from './constants';
@@ -19,6 +19,9 @@ export class SettingsPanelComponent implements OnInit {
   gutter: boolean = true;
   hasWhiteTheme: boolean = false;
 
+  @Input()
+  settings: DoubleData[];
+
   constructor(private settingsService: SettingsEditingServiceService, private layoutService: LayoutService) {
     this.themes = SettingsConstants.getThemes();
     this.cursors = SettingsConstants.getCursors();
@@ -29,6 +32,13 @@ export class SettingsPanelComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadSettings();
+  }
+
+  loadSettings(){
+    this.fontSize = this.settings["fontSize"].getValue();
+    this.selectedTheme = this.settings["theme"];
+    this.gutter = this.settings["gutter"].getValue();
   }
 
   transformSliderData(event) {
@@ -44,9 +54,4 @@ export class SettingsPanelComponent implements OnInit {
   handlePropertyChange(event) {
     this.settingsService.modifySettings(event.value);
   }
-
-  saveSettings(){
-    console.log('here will be an api call');
-  }
-
 }
