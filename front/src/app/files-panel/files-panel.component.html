@@ -2,7 +2,7 @@
   <div class="files-holder">
     <h3 class="panel-title">Your files</h3>
     <div class="tree-holder">
-      <tree [tree]="tree" (nodeSelected)="handleSelected($event)" (nodeRemoved)="handleRemoved($event)"
+      <tree #treeComponent [tree]="tree" (nodeSelected)="handleSelect($event)" (nodeRemoved)="handleRemove($event)"
         (nodeRenamed)="handleRename($event)" (nodeCreated)="handleCreate($event)" (nodeMoved)="handleMoved($event)">
       </tree>
     </div>
