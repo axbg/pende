@@ -19,6 +19,7 @@ export class LayoutComponent implements OnInit {
   }
 
   ngOnInit() {
+    /*
     //api calls to load all data
     //call services to inject data in the components that need it
     //when data is loaded, loaded becomes true and layout is displayed
@@ -29,6 +30,7 @@ export class LayoutComponent implements OnInit {
       //this is just an example of displaying
       this.spinner.hide();
     }, 2000);
+    */
   }
 
   initFileTabs() {
