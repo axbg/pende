@@ -11,15 +11,15 @@ export class TabEditingServiceService {
   private currentFileSource = new Subject<NavigationTab>();
   private modifiedFileSource = new Subject<NavigationTab>();
   private modifiedMenuPanel = new Subject<String>();
+  private fileSourceModified = new Subject<Object>();
 
   newTab$ = this.newFileSource.asObservable();
   tabOpened$ = this.currentFileSource.asObservable();
   tabClosed$ = this.modifiedFileSource.asObservable();
   menuPanel$ = this.modifiedMenuPanel.asObservable();
+  getFileSource$ = this.fileSourceModified.asObservable();
 
-  openNewTab(id: number, title: string) {
-    //here a rest call should be performed to get the content
-    let tab = new NavigationTab(id, title, 'this tha content', 0);
+  openNewTab(tab: NavigationTab) {
     this.newFileSource.next(tab);
   }
 
@@ -33,6 +33,10 @@ export class TabEditingServiceService {
 
   renderMenuPanel(panel: String) {
     this.modifiedMenuPanel.next(panel);
+  }
+
+  notifyFileStore(file: Object){
+    this.fileSourceModified.next(file);
   }
 
 }

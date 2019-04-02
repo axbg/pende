@@ -2,6 +2,8 @@ import { Component, OnInit, TemplateRef, ContentChild, Input } from '@angular/co
 import { TabEditingServiceService } from '../tab-editing-service.service';
 import { DoubleData } from 'src/classes/DoubleData';
 import { SettingsEditingServiceService } from '../settings-editing-service.service';
+import { NavigationTab } from 'src/classes/NavigationTab';
+import { FilesEditingService } from '../files-editing.service';
 
 @Component({
   selector: 'app-panel-holder',
@@ -11,10 +13,9 @@ import { SettingsEditingServiceService } from '../settings-editing-service.servi
 export class PanelHolderComponent implements OnInit {
 
   @Input() panel: String;
+
   settings: Object = {};
-
-  files: [];
-
+  files: any;
 
   //va reprezenta sursa de adevar pentru toate panel-urile copil
   //cand un copil va modifica ceva, va apela un serviciu ce va reflecta schimbarile aici, 
@@ -23,7 +24,10 @@ export class PanelHolderComponent implements OnInit {
 
   //aici se va instantia si websocket-ul
   constructor(private tabEditingService: TabEditingServiceService,
-    private settingsEditingService: SettingsEditingServiceService) {
+    private settingsEditingService: SettingsEditingServiceService,
+    private filesEditingService: FilesEditingService) {
+
+    this.initWS();
 
     this.tabEditingService.menuPanel$.subscribe(payload => {
       this.panel = payload;
@@ -35,7 +39,37 @@ export class PanelHolderComponent implements OnInit {
       this.saveSettings();
     })
 
-    this.initWS();
+    this.tabEditingService.getFileSource$.subscribe(file => {
+      //call websocket event
+
+      //content will be populated on a websocket event
+      //so everything down there will have to be moved in the callback 
+      let content = "asd";
+      let navTab = new NavigationTab(file["id"], file["title"], content, file["path"], 0);
+      this.tabEditingService.openNewTab(navTab);
+    })
+
+    this.filesEditingService.actionFired$.subscribe(action => {
+      switch(action["type"]){
+        case "create":
+          console.log("creating");
+          //fire event for create
+          //after the event is created, update the id in the filesPanel using the following service
+          this.filesEditingService.fireUpdateFileId({newId: 250, oldId: action["oldId"]});
+          break;
+        case "delete":
+          //fire event for delete
+          console.log("deleting " + action["node"]["value"]);
+          break;
+        case "rename": 
+          //fire event for rename
+          console.log("renaming" + action["node"]["value"]);
+          break;
+        case "moving":
+          break;
+      }
+    })
+
     this.loadData();
 
   }
@@ -58,6 +92,19 @@ export class PanelHolderComponent implements OnInit {
     Object.keys(loadedSettings).forEach(element => {
       Object.assign(this.settings, { ...this.settings, [element]: loadedSettings[element] });
     })
+
+    this.files = [
+      { value: 'project1', id: 1, path: '/axbg' },
+      {
+        value: 'project2', id: 3, path: '/axbg', children: [
+          {
+            id: 15,
+            value: 'asd',
+            path: '/axbg/project2'
+          }
+        ]
+      }
+    ];
 
     this.loadSettings();
   }

@@ -4,15 +4,17 @@ export class NavigationTab {
     private title: String;
     private content: String;
     private index: number;
+    private path: String;
     private cursorLine: number;
     private cursorColumn: number;
     private modified: boolean;
     private breakpoints: number[] = [];
 
-    constructor(id, title, content, index) {
+    constructor(id, title, content, path, index) {
         this.id = id;
         this.title = title;
         this.content = content;
+        this.path = path;
         this.index = index;
         this.cursorLine = 0;
         this.cursorColumn = 0;
@@ -37,6 +39,10 @@ export class NavigationTab {
 
     public getIndex(): number {
         return this.index;
+    }
+
+    public getPath(): String {
+        return this.path;
     }
 
     public setIndex(index: number) {
