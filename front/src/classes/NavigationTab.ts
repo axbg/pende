@@ -69,20 +69,24 @@ export class NavigationTab {
     public setModified(modified: boolean) {
         this.modified = modified;
     }
-    
-    public getBreakpoints() : number[]{
+
+    public getBreakpoints(): number[] {
         return this.breakpoints;
     }
 
-    public setBreakpoints(breakpoints: number[]){
+    public setBreakpoints(breakpoints: number[]) {
         this.breakpoints = breakpoints;
     }
 
-    public addBreakpoint(breakpoint: number){
+    public addBreakpoint(breakpoint: number) {
         this.breakpoints.push(breakpoint);
     }
 
-    public removeBreakpoint(breakpoint: number){
+    public removeBreakpoint(breakpoint: number) {
         this.breakpoints.splice(this.breakpoints.indexOf(breakpoint), 1);
+    }
+
+    public getEssentialData(): Object {
+        return { id: this.id, title: this.title, content: this.content, path: this.path }
     }
 }
