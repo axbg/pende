@@ -31,11 +31,6 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
     this.callstack.push("line 2");
     this.callstack.push("line 3");
 
-    this.getExecutedFileIdSubscription = this.executionService.getExecutedFileId$.subscribe(data => {
-      this.fileId = data[0];
-      this.fileName = data[1];
-    })
-
     this.getExecutionBreakpointtsSubscription =
       this.executionService.getExecutionBreakpoints$.subscribe(breakpoints => {
         this.breakpoints = breakpoints;
@@ -64,7 +59,6 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.getExecutedFileIdSubscription.unsubscribe();
     this.getExecutionBreakpointtsSubscription.unsubscribe();
   }
 

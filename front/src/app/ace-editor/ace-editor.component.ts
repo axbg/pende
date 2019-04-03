@@ -76,10 +76,10 @@ export class AceEditorComponent implements OnInit {
 
     this.executionService.beforeExecutionFileStatusCheck$.subscribe(data => {
       if (this.currentTab.getModified()) {
-        //api call to save file
-        //will be done with async await so the service down below will be executed after
+        this.executionService.sendModifiedFile(this.currentTab);
+      } else {
+        this.executionService.sendUnmodifiedFile(this.currentTab);
       }
-      this.executionService.sendCurrentFileId(this.currentTab.getId(), this.currentTab.getTitle());
     })
 
     this.executionService.detectExecutionBreakpoints$.subscribe((data) => {
