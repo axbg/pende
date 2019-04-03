@@ -4,6 +4,10 @@ import { DoubleData } from 'src/classes/DoubleData';
 import { SettingsEditingServiceService } from '../settings-editing-service.service';
 import { NavigationTab } from 'src/classes/NavigationTab';
 import { FilesEditingService } from '../files-editing.service';
+import { LayoutService } from '../layout.service';
+import { Constants } from 'src/classes/Constants';
+import { ExecutionService } from '../execution.service';
+import { Socket } from 'ngx-socket-io';
 
 @Component({
   selector: 'app-panel-holder',
@@ -16,6 +20,8 @@ export class PanelHolderComponent implements OnInit {
 
   settings: Object = {};
   files: any;
+  hasWhiteTheme: boolean;
+
 
   //va reprezenta sursa de adevar pentru toate panel-urile copil
   //cand un copil va modifica ceva, va apela un serviciu ce va reflecta schimbarile aici, 
@@ -25,9 +31,10 @@ export class PanelHolderComponent implements OnInit {
   //aici se va instantia si websocket-ul
   constructor(private tabEditingService: TabEditingServiceService,
     private settingsEditingService: SettingsEditingServiceService,
-    private filesEditingService: FilesEditingService) {
-
-    this.initWS();
+    private filesEditingService: FilesEditingService,
+    private executionService: ExecutionService,
+    private layoutService: LayoutService,
+    private socket: Socket) {
 
     this.tabEditingService.menuPanel$.subscribe(payload => {
       this.panel = payload;
@@ -79,24 +86,27 @@ export class PanelHolderComponent implements OnInit {
       this.files = files;
     })
 
+    this.layoutService.themeColor$.subscribe(color => {
+      this.hasWhiteTheme = color === "white" ? true : false;
+    })
+
     this.loadData();
 
   }
 
   ngOnInit() {
-  }
 
-  initWS() {
-    //init ws here
   }
 
   loadData() {
     //retrieving data from back-end using websocket connection
     let loadedSettings = {
       "fontSize": new DoubleData(26, "Font-Size", "fontSize"),
-      "theme": new DoubleData("eclipse", "Theme", "theme"),
+      "theme": new DoubleData("eclipse", "Eclipse", "theme"),
       "gutter": new DoubleData(true, "Gutter", "gutter")
     };
+
+    this.hasWhiteTheme = Constants.WHITE_THEMES.includes(loadedSettings["theme"].getValue()) ? true : false;
 
     Object.keys(loadedSettings).forEach(element => {
       Object.assign(this.settings, { ...this.settings, [element]: loadedSettings[element] });

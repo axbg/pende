@@ -4,12 +4,14 @@
 
 .files {
   background-color: white;
+  margin: 10px;
   height: 100%;
   text-align: center;
 }
 
 .files-holder {
   margin: 0 auto;
+
   padding-top: 30px;
   text-align: left;
   overflow-y: scroll;
@@ -23,4 +25,19 @@
 
 h3 {
   text-align: center;
+}
+
+.white {
+  background-color: white !important;
+  color: black !important;
+}
+
+.black {
+  background-color: #282A36 !important;
+  color: white !important;
+}
+
+.black > label {
+  background-color: #282A36;
+  color: white;
 }
