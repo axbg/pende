@@ -39,19 +39,20 @@ return 0;
         socket.emit("structure", file);
     }
 
-    let socket = io();
+    let token = "something";
+    let socket = io("http://localhost:8000", { query: { token: token } });
 
     socket.on("structured", (message) => {
         socket.emit("save", message);
     })
 
     socket.on("saved", (message) => {
-        socket.emit("run", message);
+        socket.emit("c-run", message);
     })
 
-    socket.on("output", (message) => {
+    socket.on("c-output", (message) => {
         console.log(message);
-        socket.emit("input", 5);
+        socket.emit("c-input", 5);
     })
 
     socket.on("finished", () => {

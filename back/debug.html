@@ -8,10 +8,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
 <script>
 
-    let socket = io();
+    let token = "something";
+    let socket = io("http://localhost:8000", {query: {token: token}});
 
     function sendInput() {
-        socket.emit("debug-input", document.getElementById("ws").value);
+        socket.emit("c-debug-input", document.getElementById("ws").value);
     }
 
 
@@ -54,22 +55,22 @@ return 0;
     })
 
     socket.on("saved", (message) => {
-        socket.emit("debug", message)
+        socket.emit("c-debug", message)
     })
 
-    socket.on("debug-output", (message) => {
+    socket.on("c-debug-output", (message) => {
         console.log(message);
     })
 
-    socket.on("debug-stack", (message) => {
+    socket.on("c-debug-stack", (message) => {
         console.log(message);
     })
 
-    socket.on("debug-variables", (message) =>{
+    socket.on("c-debug-variables", (message) =>{
         console.log(message);
     })
 
-    socket.on("debug-finish", () => {
+    socket.on("c-debug-finish", () => {
         console.log("finished");
     })
 
