@@ -51,7 +51,27 @@ export class PanelHolderComponent implements OnInit {
 
       //content will be populated on a websocket event
       //so everything down there will have to be moved in the callback 
-      let content = "asd";
+      let content = `#include<stdio.h>
+
+int main() {
+  setbuf(stdout, NULL);
+      
+  int x, y;
+      
+  printf("Enter x : ");
+      
+  scanf("%d", &x);
+      
+  printf("Enter y : ");
+
+      
+  scanf("%d", &y);
+      
+  printf("Value entered y is %d\\n", y);
+  printf("Value entered x is %d\\n", x);
+      
+  return 0;
+}`;
       let navTab = new NavigationTab(file["id"], file["title"], content, file["path"], 0);
       this.tabEditingService.openNewTab(navTab);
     })
@@ -90,18 +110,47 @@ export class PanelHolderComponent implements OnInit {
       this.hasWhiteTheme = color === "white" ? true : false;
     })
 
-    this.loadData();
+    this.executionService.getModifiedFile$.subscribe(file => {
+      this.socket.emit("structure", { ...file.getEssentialData(), needToSave: true });
+    });
 
+    this.executionService.getUnmodifiedFile$.subscribe(file => {
+      this.socket.emit("structure", { ...file.getEssentialData(), needToSave: false });
+    })
+
+    this.wsHandlers();
+    this.loadData();
+ 
   }
 
   ngOnInit() {
 
   }
 
+  wsHandlers() {
+
+    this.socket.fromEvent("structured").subscribe(data => {
+      if (data["needToSave"] === true) {
+        this.socket.emit("save", data);
+      } else {
+        this.socket.emit("c-run", data);
+      }
+    })
+
+    this.socket.fromEvent("saved").subscribe(data => {
+      this.socket.emit("c-run", data);
+    })
+
+    this.socket.fromEvent("c-output").subscribe(data => {
+      //call a method in executionService to send data to executionPanel
+      console.log(data);
+    })
+  }
+
   loadData() {
     //retrieving data from back-end using websocket connection
     let loadedSettings = {
-      "fontSize": new DoubleData(26, "Font-Size", "fontSize"),
+      "fontSize": new DoubleData(20, "Font-Size", "fontSize"),
       "theme": new DoubleData("eclipse", "Eclipse", "theme"),
       "gutter": new DoubleData(true, "Gutter", "gutter")
     };
@@ -113,13 +162,13 @@ export class PanelHolderComponent implements OnInit {
     })
 
     this.files = [
-      { value: 'project1', id: 1, path: '/axbg' },
+      { value: 'project1', id: 1, path: '/' },
       {
-        value: 'project2', id: 3, path: '/axbg', children: [
+        value: 'project2', id: 3, path: '/', children: [
           {
             id: 15,
-            value: 'asd',
-            path: '/axbg/project2'
+            value: 'test.c',
+            path: '/project2'
           }
         ]
       }
