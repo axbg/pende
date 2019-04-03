@@ -32,11 +32,11 @@
 }
 
 .black {
-  background-color: black;
+  background-color: #282A36;
   color: white;
 }
 
 .black > label {
-  background-color: black;
+  background-color: #282A36;
   color: white;
 }

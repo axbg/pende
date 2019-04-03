@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, ViewChild, ChangeDetectorRef, OnDestroy, AfterViewInit } from '@angular/core';
 import { TreeModel, TreeComponent } from 'ng2-tree';
 import { TabEditingServiceService } from '../tab-editing-service.service';
 import { FilesEditingService } from '../files-editing.service';
@@ -10,7 +10,7 @@ import { ISubscription } from 'rxjs/Subscription';
   styleUrls: ['./files-panel.component.css']
 })
 
-export class FilesPanelComponent implements OnInit, OnDestroy {
+export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private tree: TreeModel = {
     value: 'projects',
@@ -36,6 +36,9 @@ export class FilesPanelComponent implements OnInit, OnDestroy {
   @Input()
   files: any;
 
+  @Input()
+  hasWhiteTheme: boolean;
+
   @ViewChild("treeComponent")
   treeComponent
 
@@ -54,6 +57,27 @@ export class FilesPanelComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.tree.children = this.files;
   }
+
+  ngAfterViewInit() {
+    let stopDrag: any = document.querySelectorAll(".value-container");
+    let changeColorIcon: any = document.querySelectorAll(".node-template");
+    let changeColorText: any = document.querySelectorAll(".node-name");
+
+    for(let index = 0; index < changeColorIcon.length; index++){
+      let icon: HTMLElement = changeColorIcon[index];
+      let text: HTMLElement = changeColorText[index];
+
+      icon.style.color = this.hasWhiteTheme ? "black" : "white";
+      text.style.color = this.hasWhiteTheme ? "black" : "white";
+    }
+
+    stopDrag.forEach(node => {
+      let n: HTMLElement = node;
+      n.setAttribute("draggable", "false");
+      n.style.userSelect = "none";
+    })
+  }
+
 
   public handleSelect(event) {
     if (!event.node.children) {
@@ -142,7 +166,7 @@ export class FilesPanelComponent implements OnInit, OnDestroy {
     })
   }
 
-  updateStore(){
+  updateStore() {
     this.files = this.updateTreeModel(this.treeComponent.tree).children;
     this.filesEditingService.fireUpdateStore(this.files);
   }
@@ -166,7 +190,6 @@ export class FilesPanelComponent implements OnInit, OnDestroy {
   }
 
   public handleMoved(event) {
-    console.log('moved ' + event.node.value);
   }
 
   ngOnDestroy() {

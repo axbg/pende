@@ -17,6 +17,8 @@ export class SettingsPanelComponent implements OnInit {
   selectedCursor: DoubleData;
   fontSize: number = 24;
   gutter: boolean = true;
+
+  @Input()
   hasWhiteTheme: boolean = false;
 
   @Input()
@@ -25,10 +27,6 @@ export class SettingsPanelComponent implements OnInit {
   constructor(private settingsService: SettingsEditingServiceService, private layoutService: LayoutService) {
     this.themes = SettingsConstants.getThemes();
     this.cursors = SettingsConstants.getCursors();
-
-    this.layoutService.themeColor$.subscribe(color => {
-      this.hasWhiteTheme = color === "white" ? true : false;
-    })
   }
 
   ngOnInit() {
@@ -53,5 +51,9 @@ export class SettingsPanelComponent implements OnInit {
 
   handlePropertyChange(event) {
     this.settingsService.modifySettings(event.value);
+  }
+
+  saveSettings(){
+    console.log("save settings");
   }
 }

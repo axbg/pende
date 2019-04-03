@@ -66,3 +66,18 @@ hr {
   margin-left: 5px;
   cursor: default;
 }
+
+.white {
+  background-color: white !important;
+  color: black !important;
+}
+
+.black {
+  background-color: #282A36 !important;
+  color: white !important;
+}
+
+.black > label {
+  background-color: #282A36;
+  color: white;
+}
