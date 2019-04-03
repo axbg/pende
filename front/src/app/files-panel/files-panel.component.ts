@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, OnChanges, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { TreeModel, TreeComponent } from 'ng2-tree';
 import { TabEditingServiceService } from '../tab-editing-service.service';
 import { FilesEditingService } from '../files-editing.service';
+import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-files-panel',
@@ -9,7 +10,7 @@ import { FilesEditingService } from '../files-editing.service';
   styleUrls: ['./files-panel.component.css']
 })
 
-export class FilesPanelComponent implements OnInit {
+export class FilesPanelComponent implements OnInit, OnDestroy {
 
   private tree: TreeModel = {
     value: 'projects',
@@ -38,12 +39,15 @@ export class FilesPanelComponent implements OnInit {
   @ViewChild("treeComponent")
   treeComponent
 
+  updateFileIdFiredSubscription: ISubscription;
+
   constructor(private tabEditingService: TabEditingServiceService,
     private filesEditingService: FilesEditingService) {
 
-    this.filesEditingService.updateFileIdFired$.subscribe(file => {
+    this.updateFileIdFiredSubscription = this.filesEditingService.updateFileIdFired$.subscribe(file => {
       let controller = this.treeComponent.getControllerByNodeId(file['oldId']);
       controller.changeNodeId(file['newId']);
+      this.updateStore();
     });
   }
 
@@ -65,6 +69,7 @@ export class FilesPanelComponent implements OnInit {
       let currentNode = event.node;
       if (confirm("Do you want to delete this element?")) {
         this.filesEditingService.fireFileAction({ type: "delete", node: event.node })
+        this.updateStore();
       } else {
         currentNode.parent.addChild(currentNode);
       }
@@ -86,6 +91,7 @@ export class FilesPanelComponent implements OnInit {
     }
 
     this.filesEditingService.fireFileAction({ type: "rename", node: event.node.node });
+    this.updateStore();
   }
 
   public handleCreate(event) {
@@ -132,13 +138,39 @@ export class FilesPanelComponent implements OnInit {
 
     this.filesEditingService.fireFileAction({
       type: "create", node: event.node.value, parent: parentId,
-      directory: isDirectory, tree: this.files, path: path,
-      oldId: event.node.id
+      directory: isDirectory, path: path, oldId: event.node.id
     })
+  }
+
+  updateStore(){
+    this.files = this.updateTreeModel(this.treeComponent.tree).children;
+    this.filesEditingService.fireUpdateStore(this.files);
+  }
+
+  updateTreeModel(tree) {
+    const model: TreeModel = {
+      value: '',
+    };
+
+    model.value = tree.node.value;
+    model["path"] = tree.node["path"];
+    model["id"] = tree.node['id'];
+    if (tree.children) {
+      model["children"] = [];
+      tree.children.forEach(child => {
+        model["children"].push(this.updateTreeModel(child));
+      });
+    }
+
+    return model;
   }
 
   public handleMoved(event) {
     console.log('moved ' + event.node.value);
+  }
+
+  ngOnDestroy() {
+    this.updateFileIdFiredSubscription.unsubscribe();
   }
 
 }
