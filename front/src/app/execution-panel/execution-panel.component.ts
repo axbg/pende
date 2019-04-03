@@ -1,15 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TerminalComponent } from '../terminal/terminal.component';
-import { NavigationTab } from 'src/classes/NavigationTab';
-import { TabEditingServiceService } from '../tab-editing-service.service';
 import { ExecutionService } from '../execution.service';
+import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-execution-panel',
   templateUrl: './execution-panel.component.html',
   styleUrls: ['./execution-panel.component.css']
 })
-export class ExecutionPanelComponent implements OnInit {
+export class ExecutionPanelComponent implements OnInit, OnDestroy {
 
   private isDebugging: boolean = false;
   private variables: Map<string, string> = new Map<string, string>();
@@ -18,6 +17,9 @@ export class ExecutionPanelComponent implements OnInit {
   private fileName: string = "";
   private breakpoints: number[];
 
+  private getExecutedFileIdSubscription: ISubscription;
+  private getExecutionBreakpointtsSubscription: ISubscription;
+
   constructor(private executionService: ExecutionService) {
     this.variables.set("a", "5");
     this.variables.set("b", "bco");
@@ -25,15 +27,16 @@ export class ExecutionPanelComponent implements OnInit {
     this.callstack.push("line 2");
     this.callstack.push("line 3");
 
-    this.executionService.getExecutedFileId$.subscribe(data => {
+    this.getExecutedFileIdSubscription = this.executionService.getExecutedFileId$.subscribe(data => {
       this.fileId = data[0];
       this.fileName = data[1];
     })
 
-    this.executionService.getExecutionBreakpoints$.subscribe(breakpoints => {
-      this.breakpoints = breakpoints;
-      console.log(breakpoints);
-    })
+    this.getExecutionBreakpointtsSubscription =
+      this.executionService.getExecutionBreakpoints$.subscribe(breakpoints => {
+        this.breakpoints = breakpoints;
+        console.log(breakpoints);
+      })
   }
 
   ngOnInit() {
@@ -54,6 +57,11 @@ export class ExecutionPanelComponent implements OnInit {
 
   stopExec() {
     TerminalComponent.writeTerminalCommand("stop", 0);
+  }
+
+  ngOnDestroy() {
+    this.getExecutedFileIdSubscription.unsubscribe();
+    this.getExecutionBreakpointtsSubscription.unsubscribe();
   }
 
 }

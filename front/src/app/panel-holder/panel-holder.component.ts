@@ -50,24 +50,33 @@ export class PanelHolderComponent implements OnInit {
     })
 
     this.filesEditingService.actionFired$.subscribe(action => {
-      switch(action["type"]){
+      switch (action["type"]) {
         case "create":
           console.log("creating");
+
           //fire event for create
           //after the event is created, update the id in the filesPanel using the following service
-          this.filesEditingService.fireUpdateFileId({newId: 250, oldId: action["oldId"]});
+          this.filesEditingService.fireUpdateFileId({
+            newId: 250, oldId: action["oldId"],
+            value: action["value"], path: action["path"], parentId: action['parentId'],
+            isDirectory: action["isDirectory"]
+          });
           break;
         case "delete":
           //fire event for delete
           console.log("deleting " + action["node"]["value"]);
           break;
-        case "rename": 
+        case "rename":
           //fire event for rename
-          console.log("renaming" + action["node"]["value"]);
+          console.log("renaming " + action["node"]["value"]);
           break;
         case "moving":
           break;
       }
+    })
+
+    this.filesEditingService.updateStoreFired$.subscribe(files => {
+      this.files = files;
     })
 
     this.loadData();
