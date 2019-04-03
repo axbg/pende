@@ -1,25 +1,25 @@
-<div class="execution">
+<div [ngClass]="(hasWhiteTheme===true)?'execution white':'execution black'">
   <ng-template *ngIf="!isDebugging;then running; else debugging">
   </ng-template>
 </div>
 
 <ng-template #running>
   <div class="commands-wrapper" *ngIf="!isDebugging; else debugging">
-    <i class="pi pi-caret-right icon" pTooltip="Run" tooltipPosition="bottom" (click)="runCode()"></i>
-    <i class="pi pi-eye icon" pTooltip="Debug" tooltipPosition="bottom" (click)="debugCode()"></i>
-    <i class="pi pi-ban icon" pTooltip="Stop" tooltipPosition="bottom" (click)="stopExec()"></i>
+    <i [ngClass]="(hasWhiteTheme===true)?'pi pi-caret-right icon white':'pi pi-caret-right icon black'" pTooltip="Run" tooltipPosition="bottom" (click)="runCode()"></i>
+    <i [ngClass]="(hasWhiteTheme===true)?'pi pi-eye icon white':'pi pi-eye icon icon black'" pTooltip="Debug" tooltipPosition="bottom" (click)="debugCode()"></i>
+    <i [ngClass]="(hasWhiteTheme===true)?'pi pi-ban icon icon white':'pi pi-ban icon icon black'" pTooltip="Stop" tooltipPosition="bottom" (click)="stopExec()"></i>
   </div>
   <div class="output-wrapper">
     <h3 class="section-name">Output</h3>
-    <app-terminal class="terminal"></app-terminal>
+    <app-terminal class="terminal black"></app-terminal>
   </div>
 </ng-template>
 
 <ng-template #debugging>
   <div class="commands-wrapper">
-    <i class="pi pi-caret-right icon" pTooltip="Run" tooltipPosition="bottom" (click)="runCode()"></i>
-    <i class="pi pi-eye icon" pTooltip="Debug" tooltipPosition="bottom" (click)="debugCode()"></i>
-    <i class="pi pi-ban icon" pTooltip="Stop" tooltipPosition="bottom" (click)="stopExec()"></i>
+    <i [ngClass]="(hasWhiteTheme===true)?'pi pi-caret-right icon white':'pi pi-caret-right icon black'" pTooltip="Run" tooltipPosition="bottom" (click)="runCode()"></i>
+    <i [ngClass]="(hasWhiteTheme===true)?'pi pi-eye icon white':'pi pi-eye icon icon black'" pTooltip="Debug" tooltipPosition="bottom" (click)="debugCode()"></i>
+    <i [ngClass]="(hasWhiteTheme===true)?'pi pi-ban icon icon white':'pi pi-ban icon icon black'" pTooltip="Stop" tooltipPosition="bottom" (click)="stopExec()"></i>
   </div>
   <div class="debug-wrapper">
     <h3 class="section-name">Debugging</h3>

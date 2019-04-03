@@ -1,7 +1,7 @@
-<div class="files">
-  <div class="files-holder">
-    <h3 class="panel-title">Your files</h3>
-    <div class="tree-holder">
+<div [ngClass]="(hasWhiteTheme===true)?'files white':'files black'">
+  <div [ngClass]="(hasWhiteTheme===true)?'files-holder white':'files-holder black'">
+    <h3 [ngClass]="(hasWhiteTheme===true)?'panel-title white':'panel-title black'">Your files</h3>
+    <div [ngClass]="(hasWhiteTheme===true)?'tree-holder white':'tree-holder black'">
       <tree #treeComponent [tree]="tree" (nodeSelected)="handleSelect($event)" (nodeRemoved)="handleRemove($event)"
         (nodeRenamed)="handleRename($event)" (nodeCreated)="handleCreate($event)" (nodeMoved)="handleMoved($event)">
       </tree>

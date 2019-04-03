@@ -32,15 +32,15 @@ export class LayoutService {
       document.getElementById("menu-panel").style.backgroundColor = "whitesmoke";
       this.changeGeneralThemeColor("white");
     } else {
-      document.body.style.backgroundColor = "black";
-      (<HTMLElement>document.querySelector(".code-editor")).style.backgroundColor = "black";
+      document.body.style.backgroundColor = "#101010";
+      (<HTMLElement>document.querySelector(".code-editor")).style.backgroundColor = "#101010";
       document.querySelectorAll(".ui-menuitem").forEach(elem => {
-        (<HTMLElement>elem).style.backgroundColor = "black";
+        (<HTMLElement>elem).style.backgroundColor = "#101010";
       });
       document.querySelectorAll(".ui-menuitem-text").forEach(elem => {
         (<HTMLElement>elem).style.color = "white";
       });
-      document.getElementById("menu-panel").style.backgroundColor = "black";
+      document.getElementById("menu-panel").style.backgroundColor = "#101010";
       this.changeGeneralThemeColor("black");
     }
   }

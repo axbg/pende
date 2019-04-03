@@ -1,7 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { TerminalComponent } from '../terminal/terminal.component';
 import { ExecutionService } from '../execution.service';
 import { ISubscription } from 'rxjs/Subscription';
+import { LayoutService } from '../layout.service';
 
 @Component({
   selector: 'app-execution-panel',
@@ -17,10 +18,13 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   private fileName: string = "";
   private breakpoints: number[];
 
+  @Input()
+  private hasWhiteTheme: boolean;
+
   private getExecutedFileIdSubscription: ISubscription;
   private getExecutionBreakpointtsSubscription: ISubscription;
 
-  constructor(private executionService: ExecutionService) {
+  constructor(private executionService: ExecutionService, private layoutService: LayoutService) {
     this.variables.set("a", "5");
     this.variables.set("b", "bco");
     this.variables.set("c", "proba proba");

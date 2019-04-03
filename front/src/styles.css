@@ -40,6 +40,10 @@ body {
   grid-row: 1;
 }
 
+.ui-menuitem :hover{
+  background-color: #989898 !important;
+}
+
 .ui-menubar:after {
   content: none !important;
 }

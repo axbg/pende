@@ -32,6 +32,9 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TreeModule } from 'ng2-tree'
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+const config: SocketIoConfig = { url: "http://localhost:8000", options:{query:{token: "something"}}};
 
 @NgModule({
   declarations: [
@@ -63,7 +66,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     HttpClientModule,
     ButtonModule,
     DialogModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    SocketIoModule.forRoot(config)
   ],
   providers: [
     {
