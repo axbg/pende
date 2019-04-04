@@ -47,35 +47,40 @@ module.exports.handleWS = (socket) => {
     //c-specific
     //run
     socket.on("c-run", async (payload) => {
-        let filepath = filesPath + "/" + username
-            + payload.path;
+        try {
+            let filepath = filesPath + "/" + username
+                + payload.path;
 
-        let path = filesPath + "/" + username
-            + payload.path + "/" + payload.title;
+            let path = filesPath + "/" + username
+                + payload.path + "/" + payload.title;
 
-        execute_cli.exec("gcc " + path + " -o " + filepath + "/a.out", (result) => {
-            executable = spawn("./files/" + username + payload.path + "/a.out");
+            execute_cli.exec("gcc " + path + " -o " + filepath + "/a.out", (result) => {
+                executable = spawn("./files/" + username + payload.path + "/a.out");
 
-            executable.on('error', function (err) {
-                socket.emit("error", err);
+                executable.on('error', function (err) {
+                    socket.emit("c-error", err);
+                });
+
+                executable.stdout.on('data', function (data) {
+                    socket.emit("c-output", data.toString());
+                });
+
+                executable.stderr.on('data', function (data) {
+                    socket.emit("c-error", data);
+                });
+
+                executable.on('close', function (code) {
+                    if (code != 0) {
+                        console.log("error");
+                    } else {
+                        socket.emit("c-finished");
+                    }
+                });
             });
+        } catch (error) {
+            socket.emit("c-error");
+        }
 
-            executable.stdout.on('data', function (data) {
-                socket.emit("c-output", data.toString());
-            });
-
-            executable.stderr.on('data', function (data) {
-                socket.emit("error", data);
-            });
-
-            executable.on('close', function (code) {
-                if (code != 0) {
-                    socket.emit("error", code);
-                } else {
-                    socket.emit("finished");
-                }
-            });
-        })
     })
 
     //run
@@ -83,7 +88,7 @@ module.exports.handleWS = (socket) => {
         try {
             executable.stdin.write(payload + "\n");
         } catch (err) {
-            executable.kill();
+            //executable.kill();
         }
     });
 
