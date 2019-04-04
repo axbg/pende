@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TerminalService } from '../prime-terminal/terminalservice'
 import { Subscription } from 'rxjs/Subscription';
+import { ExecutionService } from '../execution.service';
 
 @Component({
   selector: 'app-terminal',
@@ -11,16 +12,24 @@ import { Subscription } from 'rxjs/Subscription';
 export class TerminalComponent implements OnInit {
 
   private subscription: Subscription;
+  prompt: string = "";
 
-  constructor(private terminalService: TerminalService) {
+  constructor(private terminalService: TerminalService, private executionService: ExecutionService) {
     this.terminalService.commandHandler.subscribe(command => {
-      let response = (command === 'date') ? new Date().toDateString() : 'Unknown command: ' + command;
 
-      //here commands and inputs will be read and sent to backend
-      //the result will be retrieved
-      //and it will be displayed 
-
-      this.terminalService.sendResponse(response);
+      if (command.includes("　")) {
+        let c = command.replace("　", "");
+        switch (c) {
+          case "run":
+            break;
+          case "debug":
+            break;
+          case "stop":
+            break;
+        }
+      } else {
+        this.executionService.sendInput(command);
+      }
     });
   }
 
@@ -31,7 +40,7 @@ export class TerminalComponent implements OnInit {
   // will be called using a service from other components
   // so, when you click on a button, such as run, a command will be launched
   // and the command will be processed in the commandHandler defined above
-  static writeTerminalCommand(command: String, id: number) {
+  static writeTerminalCommand(command: any) {
     let terminalInput = <HTMLInputElement>document.querySelector(".ui-terminal-input");
     let keyboardEvent = new KeyboardEvent("keydown", { code: "enter" });
     terminalInput.value = command.toString();

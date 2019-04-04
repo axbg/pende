@@ -13,6 +13,7 @@
   width: 75%;
   outline: none;
   vertical-align: baseline;
+  word-break: break-word;
 }
 
 .ui-terminal-command {
