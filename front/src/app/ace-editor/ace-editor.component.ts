@@ -155,7 +155,7 @@ export class AceEditorComponent implements OnInit {
     })
 
     this.editor.getEditor().session.on('change', (delta) => {
-      if (delta.lines[0].length === 1) {
+      if (!(delta.start.row === 0 && delta.end.row === delta.lines.length -1)) {
         this.currentTab.setModified(true);
       }
     });
