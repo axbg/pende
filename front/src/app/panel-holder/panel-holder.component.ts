@@ -21,6 +21,7 @@ export class PanelHolderComponent implements OnInit {
   settings: Object = {};
   files: any;
   hasWhiteTheme: boolean;
+  isDebugging: boolean = false;
 
 
   //va reprezenta sursa de adevar pentru toate panel-urile copil
@@ -118,9 +119,17 @@ int main() {
       this.socket.emit("structure", { ...file.getEssentialData(), needToSave: false });
     })
 
+    this.executionService.newDataInput$.subscribe(input => {
+      this.socket.emit("c-input", input);
+    })
+
+    this.executionService.runOrDebugState$.subscribe(state => {
+      this.isDebugging = <boolean>state;
+    })
+
     this.wsHandlers();
     this.loadData();
- 
+
   }
 
   ngOnInit() {
@@ -130,21 +139,39 @@ int main() {
   wsHandlers() {
 
     this.socket.fromEvent("structured").subscribe(data => {
-      if (data["needToSave"] === true) {
-        this.socket.emit("save", data);
+      if (!this.isDebugging) {
+        if (data["needToSave"]) {
+          this.socket.emit("save", data);
+        } else {
+          this.socket.emit("c-run", data);
+        }
       } else {
-        this.socket.emit("c-run", data);
+        console.log("debugging");
       }
     })
 
     this.socket.fromEvent("saved").subscribe(data => {
+      console.log("saved");
+      //check file extension to call different endpoints
       this.socket.emit("c-run", data);
     })
 
+    //c-run related
     this.socket.fromEvent("c-output").subscribe(data => {
-      //call a method in executionService to send data to executionPanel
-      console.log(data);
+      let stg = <string>data;
+      stg = stg.replace(new RegExp('\r?\n', 'g'), 'ᚠ');
+      this.executionService.renderOutput(stg + "　");
     })
+
+    this.socket.fromEvent("c-error").subscribe(data => {
+      alert("Error happened. Please try again.");
+    })
+
+    this.socket.fromEvent("c-finished").subscribe(data => {
+      this.executionService.renderOutput("finished　");
+    })
+
+    //c-debug-related
   }
 
   loadData() {

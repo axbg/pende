@@ -21,8 +21,8 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   @Input()
   private hasWhiteTheme: boolean;
 
-  private getExecutedFileIdSubscription: ISubscription;
   private getExecutionBreakpointtsSubscription: ISubscription;
+  private newDataSubscription: ISubscription;
 
   constructor(private executionService: ExecutionService, private layoutService: LayoutService) {
     this.variables.set("a", "5");
@@ -36,6 +36,10 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
         this.breakpoints = breakpoints;
         console.log(breakpoints);
       })
+
+    this.newDataSubscription = this.executionService.newDataReceived$.subscribe(data => {
+      this.renderOutput(data);
+    })
   }
 
   ngOnInit() {
@@ -43,23 +47,34 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   }
 
   runCode() {
+    if (!this.isDebugging) {
+      this.executionService.checkCurrentFileStatus();
+      TerminalComponent.writeTerminalCommand("run　");
+    }
     this.isDebugging = false;
-    this.executionService.checkCurrentFileStatus();
-    TerminalComponent.writeTerminalCommand("run " + this.fileName, this.fileId);
+    this.executionService.changeRunOrDebug(false);
   }
 
   debugCode() {
+    if (this.isDebugging) {
+      this.executionService.checkCurrentFileStatus();
+      TerminalComponent.writeTerminalCommand("debug　");
+    }
     this.isDebugging = true;
-    this.executionService.checkCurrentFileStatus();
-    TerminalComponent.writeTerminalCommand("debug " + this.fileName, this.fileId);
+    this.executionService.changeRunOrDebug(true);
   }
 
   stopExec() {
-    TerminalComponent.writeTerminalCommand("stop", 0);
+    TerminalComponent.writeTerminalCommand("stop　");
+  }
+
+  renderOutput(data) {
+    TerminalComponent.writeTerminalCommand(data);
   }
 
   ngOnDestroy() {
     this.getExecutionBreakpointtsSubscription.unsubscribe();
+    this.newDataSubscription.unsubscribe();
   }
 
 }
