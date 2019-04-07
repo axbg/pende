@@ -18,7 +18,7 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
 
   @Input()
   private callstack: string[] = [];
-  
+
   private fileId: number = 0;
   private fileName: string = "";
 
@@ -38,19 +38,17 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   }
 
   runCode() {
-    if (!this.isDebugging) {
-      this.executionService.checkCurrentFileStatus();
-      TerminalComponent.writeTerminalCommand("run　");
-    }
+    this.executionService.stopExecution();
+    this.executionService.checkCurrentFileStatus();
+    TerminalComponent.writeTerminalCommand("run　");
     this.isDebugging = false;
     this.executionService.changeRunOrDebug(false);
   }
 
   debugCode() {
-    if (this.isDebugging) {
-      this.executionService.checkCurrentFileStatus();
-      TerminalComponent.writeTerminalCommand("debug　");
-    }
+    this.executionService.stopExecution();
+    this.executionService.checkCurrentFileStatus();
+    TerminalComponent.writeTerminalCommand("debug　");
     this.isDebugging = true;
     this.executionService.changeRunOrDebug(true);
   }
@@ -60,19 +58,19 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
     this.executionService.stopExecution();
   }
 
-  continueDebug(){
+  continueDebug() {
     this.executionService.debugOptions("c");
   }
 
-  stepOverDebug(){
+  stepOverDebug() {
     this.executionService.debugOptions("next");
   }
 
-  stepIntoDebug(){
+  stepIntoDebug() {
     this.executionService.debugOptions("step");
   }
 
-  stepOutDebug(){
+  stepOutDebug() {
     this.executionService.debugOptions("finish");
   }
 
