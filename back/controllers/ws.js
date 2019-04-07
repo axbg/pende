@@ -40,7 +40,6 @@ module.exports.handleWS = (socket) => {
 
             socket.emit("saved", payload);
         } catch (err) {
-            console.log(err);
         }
     })
 
@@ -54,7 +53,16 @@ module.exports.handleWS = (socket) => {
             let path = filesPath + "/" + username
                 + payload.path + "/" + payload.title;
 
-            execute_cli.exec("gcc " + path + " -o " + filepath + "/a.out", (result) => {
+            execute_cli.exec("gcc " + path + " -fmax-errors=1 -o " + filepath + "/a.out", (result) => {
+
+                if (result != null) {
+                    let newResult = result.toString().split(path);
+                    let finalResult = [newResult[newResult.length - 2], newResult[newResult.length - 1].split("^")[0]];
+                    socket.emit("c-compilation-error", finalResult);
+                    socket.emit("c-finished");
+                    return;
+                }
+
                 executable = spawn("./files/" + username + payload.path + "/a.out");
 
                 executable.on('error', function (err) {
@@ -72,7 +80,7 @@ module.exports.handleWS = (socket) => {
 
                 executable.on('close', function (code) {
                     if (code != 0) {
-                        console.log("error");
+                        socket.emit("c-error");
                     } else {
                         socket.emit("c-finished");
                     }
@@ -100,8 +108,17 @@ module.exports.handleWS = (socket) => {
         let path = filesPath + "/" + username
             + payload.path + "/" + payload.title;
 
-        execute_cli.exec("gcc -g " + path + " -o " + filepath + "/a.out", (result) => {
+        execute_cli.exec("gcc -g " + path + " -fmax-errors=1 -o " + filepath + "/a.out", (result) => {
             executable = spawn("gdb", ['--quiet']);
+
+            if (result != null) {
+                let newResult = result.toString().split(path);
+                let finalResult = [newResult[newResult.length - 2], newResult[newResult.length - 1].split("^")[0]];
+                socket.emit("c-compilation-error", finalResult);
+                socket.emit("c-finished");
+                return;
+            }
+
             executable.stdin.write("file " + filepath + "/a.out\n");
 
             payload.breakpoints.forEach(bp => {
