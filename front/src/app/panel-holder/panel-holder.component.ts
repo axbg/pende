@@ -247,7 +247,7 @@ int main() {
     })
 
     this.socket.fromEvent("c-debug-finish").subscribe(data => {
-      this.executionService.renderOutput("Finished");
+      this.executionService.renderOutput("finished");
       this.callstack = [];
       this.variables.clear();
     })
