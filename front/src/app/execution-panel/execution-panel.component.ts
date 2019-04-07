@@ -25,7 +25,6 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   @Input()
   private hasWhiteTheme: boolean;
 
-  private getExecutionBreakpointtsSubscription: ISubscription;
   private newDataSubscription: ISubscription;
 
   constructor(private executionService: ExecutionService, private layoutService: LayoutService) {
