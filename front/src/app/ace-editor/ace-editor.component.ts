@@ -30,7 +30,7 @@ export class AceEditorComponent implements OnInit {
         }
 
         this.currentTab = tab;
-        this.editor.getEditor().setValue(this.currentTab.getContent());
+        this.editor.getEditor().setValue(this.currentTab.getContentForDisplay());
         this.editor.getEditor().selection.moveTo(this.currentTab.getCursorLine(), this.currentTab.getCursorColumn());
         this.editor.getEditor().focus();
 
@@ -79,11 +79,14 @@ export class AceEditorComponent implements OnInit {
       })
 
     this.executionService.beforeExecutionFileStatusCheck$.subscribe(data => {
+      /*
       if (this.currentTab.getModified()) {
         this.executionService.sendModifiedFile(this.currentTab);
       } else {
         this.executionService.sendUnmodifiedFile(this.currentTab);
       }
+      */
+     this.executionService.sendModifiedFile(this.currentTab);
     })
 
     this.executionService.detectExecutionBreakpoints$.subscribe((data) => {
@@ -162,12 +165,12 @@ export class AceEditorComponent implements OnInit {
 
     let doneTyping = () => {
       console.log("called");
-      this.currentTab.setModified(true);
       this.drawBreakpoints(true);
     }
 
     this.editor.getEditor().session.on('change', (delta) => {
       if (!(delta.start.row === 0 && delta.end.row === delta.lines.length - 1)) {
+        this.currentTab.setModified(true);
         clearTimeout(typingTimer);
         typingTimer = setTimeout(doneTyping, typingInterval);
       }

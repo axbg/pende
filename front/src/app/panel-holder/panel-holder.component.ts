@@ -21,7 +21,7 @@ export class PanelHolderComponent implements OnInit {
   settings: Object = {};
   files: any;
   hasWhiteTheme: boolean;
-  isDebugging: boolean;
+  isDebugging: boolean = false;
   breakpoints: number[];
   debugInitMessages = 0;
   variables: Map<string, string> = new Map<string, string>();
@@ -57,7 +57,7 @@ void salut(int x){
 
 int main() {
       
-  int x, y
+  int x, y;
       
   printf("Enter x : ");
       
@@ -142,6 +142,10 @@ int main() {
       this.socket.emit("c-debug-input", { command: data });
     })
 
+    this.executionService.invokeExecutionStop$.subscribe(() => {
+      this.socket.emit("c-stop");
+    });
+
     this.wsHandlers();
     this.loadData();
 
@@ -196,7 +200,7 @@ int main() {
 
     this.socket.fromEvent("c-compilation-error").subscribe(data => {
       (<Array<any>>data).forEach((element, index) => {
-        if(index === 0){
+        if (index === 0) {
           element = "error" + element;
         }
         this.executionService.renderOutput(element);
@@ -219,17 +223,17 @@ int main() {
         this.executionService.renderOutput("\n　");
         this.executionService.renderOutput("\nbreakpoint hit:　line " + stg.split("\n")[3] + "\n");
         this.executionService.renderOutput("\n　");
-      } else if(stg.includes("(")) {
-        console.log(stg);
+      } else if (stg.includes("(")) {
+        /*
         let nw = stg.split("\n");
-        console.log(nw);
         this.executionService.renderOutput("\n　");
-        
         this.executionService.renderOutput("\n　");
+        */
       }
     })
 
     this.socket.fromEvent("c-debug-stack").subscribe(data => {
+      console.log(data);
       (<Array<any>>data).forEach(element => {
         this.callstack.push(<string>element);
       });
@@ -237,7 +241,6 @@ int main() {
 
     this.socket.fromEvent("c-debug-variables").subscribe(data => {
       let splitted: string[] = (<string>data).split(/=|\n/).filter(element => element !== " " && element !== "");
-      console.log(splitted);
       for (let i = 0; i < splitted.length; i += 2) {
         this.variables.set(splitted[i], splitted[i + 1]);
       }
