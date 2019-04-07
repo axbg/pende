@@ -152,10 +152,25 @@ int main() {
   }
 
   ngOnInit() {
-
   }
 
   wsHandlers() {
+
+    this.socket.fromEvent("loaded-initial-data").subscribe(data => {
+
+      console.log(data);
+      //load data into variables
+      //add a little timeout
+      //call the following service that will hide the loading display
+      this.layoutService.initialData();
+
+      /*
+      setTimeout(() => {
+        this.layoutService.initialData();
+      }, 200)
+      */
+
+    });
 
     this.socket.fromEvent("structured").subscribe(data => {
       if (!this.isDebugging) {
@@ -255,7 +270,7 @@ int main() {
 
 
   loadData() {
-    //retrieving data from back-end using websocket connection
+    //move to loaded-initial-data handler
     let loadedSettings = {
       "fontSize": new DoubleData(20, "Font-Size", "fontSize"),
       "theme": new DoubleData("eclipse", "Eclipse", "theme"),

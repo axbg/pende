@@ -8,7 +8,10 @@ import { Subject } from 'rxjs';
 export class LayoutService {
 
   private newThemeColor = new Subject<String>();
+  private loadInitialData = new Subject<Object>();
+
   themeColor$ = this.newThemeColor.asObservable();
+  loadedInitialData$ = this.loadInitialData.asObservable();
 
   constructor() {
   }
@@ -45,8 +48,12 @@ export class LayoutService {
     }
   }
 
-  changeGeneralThemeColor(color: String){
+  changeGeneralThemeColor(color: String) {
     this.newThemeColor.next(color);
+  }
+
+  initialData() {
+    this.loadInitialData.next();
   }
 
 }
