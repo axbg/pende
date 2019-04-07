@@ -42,9 +42,6 @@ export class TerminalComponent implements OnInit {
 
   }
 
-  // will be called using a service from other components
-  // so, when you click on a button, such as run, a command will be launched
-  // and the command will be processed in the commandHandler defined above
   static writeTerminalCommand(command: any) {
     let terminalInput = <HTMLInputElement>document.querySelector(".ui-terminal-input");
     let keyboardEvent = new KeyboardEvent("keydown", { code: "enter" });
