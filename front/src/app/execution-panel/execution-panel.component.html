@@ -5,25 +5,39 @@
 
 <ng-template #running>
   <div class="commands-wrapper" *ngIf="!isDebugging; else debugging">
-    <i [ngClass]="(hasWhiteTheme===true)?'pi pi-caret-right icon white':'pi pi-caret-right icon black'" pTooltip="Run" tooltipPosition="bottom" (click)="runCode()"></i>
-    <i [ngClass]="(hasWhiteTheme===true)?'pi pi-eye icon white':'pi pi-eye icon icon black'" pTooltip="Debug" tooltipPosition="bottom" (click)="debugCode()"></i>
-    <i [ngClass]="(hasWhiteTheme===true)?'pi pi-ban icon icon white':'pi pi-ban icon icon black'" pTooltip="Stop" tooltipPosition="bottom" (click)="stopExec()"></i>
+    <i [ngClass]="(hasWhiteTheme===true)?'pi pi-caret-right icon white':'pi pi-caret-right icon black'" pTooltip="Run"
+      tooltipPosition="bottom" (click)="runCode()"></i>
+    <i [ngClass]="(hasWhiteTheme===true)?'pi pi-eye icon white':'pi pi-eye icon icon black'" pTooltip="Debug"
+      tooltipPosition="bottom" (click)="debugCode()"></i>
+    <i [ngClass]="(hasWhiteTheme===true)?'pi pi-ban icon icon white':'pi pi-ban icon icon black'" pTooltip="Stop"
+      tooltipPosition="bottom" (click)="stopExec()"></i>
   </div>
   <div class="output-wrapper">
     <h3 class="section-name">Output</h3>
-    <app-terminal class="terminal black"></app-terminal>
+    <app-terminal class="terminal"></app-terminal>
   </div>
 </ng-template>
 
 <ng-template #debugging>
   <div class="commands-wrapper">
-    <i [ngClass]="(hasWhiteTheme===true)?'pi pi-caret-right icon white':'pi pi-caret-right icon black'" pTooltip="Run" tooltipPosition="bottom" (click)="runCode()"></i>
-    <i [ngClass]="(hasWhiteTheme===true)?'pi pi-eye icon white':'pi pi-eye icon icon black'" pTooltip="Debug" tooltipPosition="bottom" (click)="debugCode()"></i>
-    <i [ngClass]="(hasWhiteTheme===true)?'pi pi-ban icon icon white':'pi pi-ban icon icon black'" pTooltip="Stop" tooltipPosition="bottom" (click)="stopExec()"></i>
+    <i [ngClass]="(hasWhiteTheme===true)?'pi pi-caret-right icon white':'pi pi-caret-right icon black'" pTooltip="Run"
+      tooltipPosition="bottom" (click)="runCode()"></i>
+    <i [ngClass]="(hasWhiteTheme===true)?'pi pi-eye icon white':'pi pi-eye icon icon black'" pTooltip="Debug"
+      tooltipPosition="bottom" (click)="debugCode()"></i>
+    <i [ngClass]="(hasWhiteTheme===true)?'pi pi-ban icon icon white':'pi pi-ban icon icon black'" pTooltip="Stop"
+      tooltipPosition="bottom" (click)="stopExec()"></i>
   </div>
   <div class="debug-wrapper">
     <h3 class="section-name">Debugging</h3>
     <app-terminal class="terminal"></app-terminal>
+  </div>
+  <div class="debug-control">
+    <button pButton type="button" label="Continue" (click)="continueDebug()"></button>
+    <!--
+    <button pButton type="button" label="Step over" (click)="stepOverDebug()"></button>
+    <button pButton type="button" label="Step into" (click)="stepIntoDebug()"></button>
+    <button pButton type="button" label="Step out" (click)="stepOutDebug()"></button>
+  -->
   </div>
   <div class="debug-extra-wrapper">
     <h3 class="section-name">Variables</h3>

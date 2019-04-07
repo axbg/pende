@@ -30,11 +30,12 @@ export class NavigationTab {
     }
 
     public setContent(content) {
-        this.content = content;
+        this.content = this.addSetBuf(content);
+        console.log(this.content);
     }
 
     public getContent(): String {
-        return this.content;
+        return this.removeSetBuf(this.content);
     }
 
     public getIndex(): number {
@@ -83,10 +84,20 @@ export class NavigationTab {
     }
 
     public removeBreakpoint(breakpoint: number) {
-        this.breakpoints.splice(this.breakpoints.indexOf(breakpoint), 1);
+        this.breakpoints = this.breakpoints.filter(element => element != breakpoint);
     }
 
     public getEssentialData(): Object {
         return { id: this.id, title: this.title, content: this.content, path: this.path }
+    }
+
+    private addSetBuf(content) {
+        const main = content.indexOf("main()");
+        const substring = content.substring(main, content.indexOf("{") + 1);
+        return content.replace(substring, substring + " setbuf(stdout, NULL);");
+    }
+
+    private removeSetBuf(content) {
+        return content.replace("setbuf(stdout, NULL);", "");
     }
 }

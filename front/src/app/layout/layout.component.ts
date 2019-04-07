@@ -34,7 +34,27 @@ export class LayoutComponent implements OnInit {
   }
 
   initFileTabs() {
-    this.fileTabs.push(new NavigationTab(0, "Hack with passion!", "Welcome to webide", "", 0));
+    this.fileTabs.push(new NavigationTab(0, "open.c", `#include<stdio.h>
+
+    int main() {
+      setbuf(stdout, NULL);
+          
+      int x, y;
+          
+      printf("Enter x : ");
+          
+      scanf("%d", &x);
+          
+      printf("Enter y : ");
+    
+          
+      scanf("%d", &y);
+          
+      printf("Value entered y is %d\\n", y);
+      printf("Value entered x is %d\\n", x);
+          
+      return 0;
+    }`, "", 0));
   }
 
   initprojectTabs() {
