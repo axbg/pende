@@ -61,6 +61,8 @@ module.exports.handleWS = (socket) => {
                     socket.emit("c-compilation-error", finalResult);
                     socket.emit("c-finished");
                     return;
+                } else {
+                    socket.emit("")
                 }
 
                 executable = spawn("./files/" + username + payload.path + "/a.out");
@@ -79,7 +81,10 @@ module.exports.handleWS = (socket) => {
                 });
 
                 executable.on('close', function (code) {
-                    if (code != 0) {
+                    if (!code) {
+                        console.log("process stopped");
+                    }
+                    else if (code != 0) {
                         socket.emit("c-error");
                     } else {
                         socket.emit("c-finished");
@@ -108,7 +113,7 @@ module.exports.handleWS = (socket) => {
         let path = filesPath + "/" + username
             + payload.path + "/" + payload.title;
 
-        execute_cli.exec("gcc -g " + path + " -fmax-errors=1 -o " + filepath + "/a.out", (result) => {
+        execute_cli.exec("gcc -fmax-errors=1 -g " + path + " -o " + filepath + "/a.out", (result) => {
             executable = spawn("gdb", ['--quiet']);
 
             if (result != null) {
@@ -159,6 +164,17 @@ module.exports.handleWS = (socket) => {
             executable.stdin.write(message.command + "\n");
         }
         catch (err) {
+            console.log(err);
+        }
+    })
+
+    socket.on("c-stop", message => {
+        try {
+            if (executable) {
+                executable.kill();
+            }
+        } catch (err) {
+            console.log(err);
         }
     })
 
