@@ -11,16 +11,21 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
+  loginURL = "http://localhost:8000/api/user/login";
+
   constructor(private googleAuthService: AuthService, private http: HttpClient,
-    private authService: AuthLoginService, private router: Router) { }
+    private authService: AuthLoginService, private router: Router) { 
+    }
 
   signInWithGoogle(): void {
     this.googleAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
       .then((result) => {
-        //make http request sending the user here
-        console.log(result);
-        this.authService.setRedirectedFromLogin();
-        this.router.navigateByUrl("/ide");
+        this.http.post(this.loginURL, {token: result.idToken})
+        .subscribe(result => {
+          window.localStorage.setItem("token", result["token"]);
+          this.authService.setRedirectedFromLogin();
+          this.router.navigateByUrl("/ide");
+        })
       });
   }
 
