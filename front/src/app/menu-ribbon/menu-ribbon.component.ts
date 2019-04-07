@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-menu-ribbon',
@@ -11,7 +12,7 @@ export class MenuRibbonComponent implements OnInit {
   private shortVisible: boolean = false;
   private contactVisible: boolean = false;
   items: MenuItem[];
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
 
@@ -40,6 +41,6 @@ export class MenuRibbonComponent implements OnInit {
   }
 
   logout() {
-    console.log('implement logout');
+    this.router.navigateByUrl("/");
   }
 }
