@@ -82,7 +82,7 @@ module.exports.handleWS = (socket) => {
 
                 executable.on('close', function (code) {
                     if (!code) {
-                        console.log("process stopped");
+                        socket.emit("c-finished")
                     }
                     else if (code != 0) {
                         socket.emit("c-error");
