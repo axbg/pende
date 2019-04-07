@@ -14,7 +14,7 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private tree: TreeModel = {
     value: 'projects',
-    id: 0,
+    path: "",
     settings: {
       'static': false,
       'rightMenu': true,
@@ -36,6 +36,8 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input()
   files: any;
 
+  currentFilePath: any;
+
   @Input()
   hasWhiteTheme: boolean;
 
@@ -48,9 +50,7 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
     private filesEditingService: FilesEditingService) {
 
     this.updateFileIdFiredSubscription = this.filesEditingService.updateFileIdFired$.subscribe(file => {
-      let controller = this.treeComponent.getControllerByNodeId(file['oldId']);
-      controller.changeNodeId(file['newId']);
-      this.updateStore();
+
     });
   }
 
@@ -63,19 +63,21 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
     let changeColorIcon: any = document.querySelectorAll(".node-template");
     let changeColorText: any = document.querySelectorAll(".node-name");
 
-    for(let index = 0; index < changeColorIcon.length; index++){
-      let icon: HTMLElement = changeColorIcon[index];
-      let text: HTMLElement = changeColorText[index];
+    setTimeout(() => {
+      for (let index = 0; index < changeColorIcon.length; index++) {
+        let icon: HTMLElement = changeColorIcon[index];
+        let text: HTMLElement = changeColorText[index];
 
-      icon.style.color = this.hasWhiteTheme ? "black" : "white";
-      text.style.color = this.hasWhiteTheme ? "black" : "white";
-    }
+        icon.style.color = this.hasWhiteTheme ? "black" : "white";
+        text.style.color = this.hasWhiteTheme ? "black" : "white";
+      }
 
-    stopDrag.forEach(node => {
-      let n: HTMLElement = node;
-      n.setAttribute("draggable", "false");
-      n.style.userSelect = "none";
-    })
+      stopDrag.forEach(node => {
+        let n: HTMLElement = node;
+        n.setAttribute("draggable", "false");
+        n.style.userSelect = "none";
+      })
+    }, 1000);
   }
 
 
@@ -93,7 +95,6 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
       let currentNode = event.node;
       if (confirm("Do you want to delete this element?")) {
         this.filesEditingService.fireFileAction({ type: "delete", node: event.node })
-        this.updateStore();
       } else {
         currentNode.parent.addChild(currentNode);
       }
@@ -115,13 +116,10 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     this.filesEditingService.fireFileAction({ type: "rename", node: event.node.node });
-    this.updateStore();
   }
 
   public handleCreate(event) {
     let [filename, extension] = event.node.value.split(".");
-    let parentId = event.node.parent.node.id;
-    let path = event.node.parent.node.path + "/" + event.node.parent.node.value;
     let isDirectory = false;
 
     if (!filename) {
@@ -160,36 +158,60 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
 
+    this.files = this.updateTreeModelAndAppendPath(this.treeComponent.tree, event.node.id).children;
+
     this.filesEditingService.fireFileAction({
-      type: "create", node: event.node.value, parent: parentId,
-      directory: isDirectory, path: path, oldId: event.node.id
+      type: "create", node: event.node.value,
+      directory: isDirectory, path: this.currentFilePath, id: event.node.id,
+      files: this.files, content: ""
     })
   }
 
-  updateStore() {
-    this.files = this.updateTreeModel(this.treeComponent.tree).children;
-    this.filesEditingService.fireUpdateStore(this.files);
+  composeWholePath(node) {
+    let path = "";
+
+    if (node.value !== "projects") {
+      let parent = node.parent;
+
+      while (parent.value !== "projects") {
+        path = path + "/" + parent.value;
+        parent = parent.parent;
+      }
+
+      path = "/projects" + path;
+
+    }
+
+    return path;
   }
 
-  updateTreeModel(tree) {
+  updateTreeModelAndAppendPath(tree, id) {
     const model: TreeModel = {
       value: '',
     };
 
     model.value = tree.node.value;
-    model["path"] = tree.node["path"];
+
+    model["path"] = this.composeWholePath(tree);
+
+    if (tree.node["id"] === id) {
+      this.currentFilePath = this.composeWholePath(tree);
+    }
+
     model["id"] = tree.node['id'];
     if (tree.children) {
       model["children"] = [];
       tree.children.forEach(child => {
-        model["children"].push(this.updateTreeModel(child));
+        model["children"].push(this.updateTreeModelAndAppendPath(child, id));
       });
     }
 
     return model;
   }
 
-  public handleMoved(event) {
+  changeNodePath(node, path) {
+    let controller = this.treeComponent.getControllerByNodeId(node['id']);
+    controller.changeNodePath(path);
   }
 
   ngOnDestroy() {

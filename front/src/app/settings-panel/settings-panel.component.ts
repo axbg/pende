@@ -54,6 +54,6 @@ export class SettingsPanelComponent implements OnInit {
   }
 
   saveSettings(){
-    console.log("save settings");
+    this.settingsService.saveCurrentSettings();
   }
 }
