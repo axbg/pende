@@ -1,6 +1,6 @@
 export class NavigationTab {
 
-    private id: number;
+    private id: String;
     private title: String;
     private content: String;
     private index: number;
@@ -21,7 +21,7 @@ export class NavigationTab {
         this.modified = false;
     }
 
-    public getId(): number {
+    public getId(): String {
         return this.id;
     }
 
