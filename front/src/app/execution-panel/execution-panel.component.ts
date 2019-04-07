@@ -57,6 +57,7 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
 
   stopExec() {
     TerminalComponent.writeTerminalCommand("stop　");
+    this.executionService.stopExecution();
   }
 
   continueDebug(){

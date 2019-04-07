@@ -13,7 +13,7 @@ export class NavigationTab {
     constructor(id, title, content, path, index) {
         this.id = id;
         this.title = title;
-        this.content = content;
+        this.content = this.addSetBuf(content);
         this.path = path;
         this.index = index;
         this.cursorLine = 0;
@@ -30,11 +30,18 @@ export class NavigationTab {
     }
 
     public setContent(content) {
-        this.content = this.addSetBuf(content);
-        console.log(this.content);
+        if (!content.includes("setbuf(stdout, NULL);")) {
+            content = this.addSetBuf(content);
+        }
+
+        this.content = content;
     }
 
     public getContent(): String {
+        return this.content;
+    }
+
+    public getContentForDisplay(): String {
         return this.removeSetBuf(this.content);
     }
 
@@ -93,7 +100,7 @@ export class NavigationTab {
 
     private addSetBuf(content) {
         const main = content.indexOf("main()");
-        const substring = content.substring(main, content.indexOf("{") + 1);
+        const substring = content.substring(main, content.indexOf("{", main) + 1);
         return content.replace(substring, substring + " setbuf(stdout, NULL);");
     }
 
