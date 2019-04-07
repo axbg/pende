@@ -9,14 +9,6 @@ app.get("/", (req, res) => {
     res.send({ "message": "welcome to back" })
 })
 
-app.get("/main", (req, res) => {
-    res.sendFile(__dirname + "/run.html");
-});
-
-app.get("/debug", (req, res) => {
-    res.sendFile(__dirname + "/debug.html");
-})
-
 io.on("connection", wsController);
 
 server.listen(PORT, () => {

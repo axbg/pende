@@ -58,6 +58,7 @@ module.exports.handleWS = (socket) => {
                 executable = spawn("./files/" + username + payload.path + "/a.out");
 
                 executable.on('error', function (err) {
+                    console.log(err);
                     socket.emit("c-error", err);
                 });
 
@@ -86,7 +87,7 @@ module.exports.handleWS = (socket) => {
     //run
     socket.on("c-input", payload => {
         try {
-            executable.stdin.write(payload + "\n");
+            executable.stdin.write(payload.command + "\n");
         } catch (err) {
             //executable.kill();
         }
@@ -94,11 +95,10 @@ module.exports.handleWS = (socket) => {
 
     socket.on("c-debug", (payload) => {
         let filepath = filesPath + "/" + username
-            + "/" + (payload.path ? (payload.path) : "");
+            + payload.path;
 
         let path = filesPath + "/" + username
-            + "/" + (payload.path ? (payload.path) : "")
-            + "/" + payload.name;
+            + payload.path + "/" + payload.title;
 
         execute_cli.exec("gcc -g " + path + " -o " + filepath + "/a.out", (result) => {
             executable = spawn("gdb", ['--quiet']);
@@ -111,19 +111,27 @@ module.exports.handleWS = (socket) => {
             executable.stdin.write("run\n");
 
             executable.stdout.on('data', function (data) {
-                if (data.toString().includes("#")) {
-                    socket.emit("c-debug-stack", data.toString());
-                } else if (data.toString().includes("=")) {
-                    socket.emit("c-debug-variables", data.toString());
-                } else if (data.toString().includes("Breakpoint") && data.toString().includes("()")) {
-                    socket.emit("c-debug-output", data.toString());
+                let formatted = data.toString().replace("(gdb)", "");
+
+                if (formatted.includes("#")) {
+                    const stack = Object.values(formatted.toString().split("\n")).filter((value, index) => {
+                        if (index % 2 === 0) {
+                            return value;
+                        }
+                    });
+                    socket.emit("c-debug-stack", stack);
+                } else if (data.toString().includes(" = ")) {
+                    socket.emit("c-debug-variables", formatted.replace("No arguments.", ""));
+                } else if (formatted.includes("Breakpoint") && formatted.toString().includes("(")) {
+                    socket.emit("c-debug-output", formatted.toString());
                     executable.stdin.write("info locals \n");
+                    setTimeout(() => executable.stdin.write("info args \n"), 10);
                     setTimeout(() => executable.stdin.write("backtrace \n"), 10);
                 } else if (data.toString().includes("[Inferior 1")) {
                     socket.emit("c-debug-finish");
                     executable.kill();
                 } else if (!data.toString().includes("gdb")) {
-                    socket.emit("c-debug-output", data.toString());
+                    socket.emit("c-debug-output", formatted.toString());
                 }
             });
         });
@@ -131,10 +139,9 @@ module.exports.handleWS = (socket) => {
 
     socket.on("c-debug-input", message => {
         try {
-            executable.stdin.write(message + "\n");
+            executable.stdin.write(message.command + "\n");
         }
         catch (err) {
-            console.log(err);
         }
     })
 
