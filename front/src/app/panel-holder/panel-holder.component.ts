@@ -26,6 +26,7 @@ export class PanelHolderComponent implements OnInit {
   debugInitMessages = 0;
   variables: Map<string, string> = new Map<string, string>();
   callstack: string[] = [];
+  filesLoaded: boolean = false;
 
 
   constructor(private tabEditingService: TabEditingServiceService,
@@ -45,51 +46,15 @@ export class PanelHolderComponent implements OnInit {
       this.saveSettings();
     })
 
-    this.tabEditingService.getFileSource$.subscribe(file => {
-      //call websocket event
-
-      //content will be populated on a websocket event
-      //so everything down there will have to be moved in the callback 
-      let content = `#include<stdio.h>
-void salut(int x){
-  printf("%d", x);
-}
-
-int main() {
-      
-  int x, y;
-      
-  printf("Enter x : ");
-      
-  scanf("%d", &x);
-      
-  printf("Enter y : ");
-
-      
-  scanf("%d", &y);
-  
-  salut(x);
-  printf("Value entered y is %d\\n", y);
-  printf("Value entered x is %d\\n", x);
-      
-  return 0;
-}`;
-      let navTab = new NavigationTab(file["id"], file["title"], content, file["path"], 0);
-      this.tabEditingService.openNewTab(navTab);
-    })
-
     this.filesEditingService.actionFired$.subscribe(action => {
+      this.files = action["files"];
       switch (action["type"]) {
         case "create":
-          console.log("creating");
-
-          //fire event for create
-          //after the event is created, update the id in the filesPanel using the following service
-          this.filesEditingService.fireUpdateFileId({
-            newId: 250, oldId: action["oldId"],
-            value: action["value"], path: action["path"], parentId: action['parentId'],
-            isDirectory: action["isDirectory"]
-          });
+          this.socket.emit("save-files", action["files"])
+          this.socket.emit("save-file", {
+            name: action["node"], path: action["path"],
+            content: action["content"], directory: action["directory"]
+          })
           break;
         case "delete":
           //fire event for delete
@@ -102,6 +67,10 @@ int main() {
         case "moving":
           break;
       }
+    })
+
+    this.tabEditingService.getFileSource$.subscribe(file => {
+      this.socket.emit("retrieve-file", file);
     })
 
     this.filesEditingService.updateStoreFired$.subscribe(files => {
@@ -146,8 +115,13 @@ int main() {
       this.socket.emit("c-stop");
     });
 
+    //user settings and file management
+    this.settingsEditingService.savingSettings$.subscribe(() => {
+      this.socket.emit("save-settings", this.settings);
+      //display toast
+    })
+
     this.wsHandlers();
-    this.loadData();
 
   }
 
@@ -158,47 +132,80 @@ int main() {
 
     this.socket.fromEvent("loaded-initial-data").subscribe(data => {
 
-      console.log(data);
-      //load data into variables
-      //add a little timeout
-      //call the following service that will hide the loading display
-      this.layoutService.initialData();
+      if (data["data"]["settings"]) {
+        Object.keys(data["data"]["settings"]).forEach((key) => {
+          let em = new DoubleData(data["data"]["settings"][key]["value"], data["data"]["settings"][key]["label"],
+            data["data"]["settings"][key]["property"]);
+          Object.assign(this.settings, { ...this.settings, [key]: em });
+        })
+      }
 
-      /*
-      setTimeout(() => {
-        this.layoutService.initialData();
-      }, 200)
-      */
+      this.hasWhiteTheme = Constants.WHITE_THEMES.includes(this.settings["theme"].getValue()) ? true : false;
+      this.loadSettings();
 
+      this.files = [];
+      if (data["data"]["files"]) {
+        this.files = data["data"]["files"]
+      }
+
+      this.filesLoaded = true;
+      setTimeout(() => this.layoutService.initialData(), 1000);
     });
 
+    
+    this.socket.fromEvent("retrieved-file").subscribe(data => {
+      let navTab = new NavigationTab(data["file"]["id"], data["file"]["title"], data["content"],
+        data["file"]["path"], 0);
+      this.tabEditingService.openNewTab(navTab);
+    })
+
+
     this.socket.fromEvent("structured").subscribe(data => {
-      if (!this.isDebugging) {
-        if (data["needToSave"]) {
-          this.socket.emit("save", data);
-        } else {
-          this.socket.emit("c-run", data);
+      if (data["needToSave"]) {
+        this.socket.emit("save", data);
+      } else if (!this.isDebugging) {
+        switch (data["title"].split(".")[1]) {
+          case "c":
+            this.socket.emit("c-run", data);
+            break;
+          default:
+            break;
         }
       } else {
-        if (data["needToSave"]) {
-          this.socket.emit("save", data);
-        } else {
-          this.variables.clear();
-          this.callstack = [];
-          Object.assign(data, { ...data, breakpoints: this.breakpoints })
-          this.socket.emit("c-debug", data);
+        this.variables.clear();
+        this.callstack = [];
+        Object.assign(data, { ...data, breakpoints: this.breakpoints })
+        switch (data["title"].split(".")[1]) {
+          case "c":
+            this.socket.emit("c-debug", data);
+            break;
+          default:
+            break;
         }
       }
     })
 
     this.socket.fromEvent("saved").subscribe(data => {
       if (!this.isDebugging) {
-        this.socket.emit("c-run", data);
+        switch (data["title"].split(".")[1]) {
+          case "c":
+            this.socket.emit("c-run", data);
+            break;
+          default:
+            break;
+        }
       } else {
         this.variables.clear();
         this.callstack = [];
         Object.assign(data, { ...data, breakpoints: this.breakpoints })
-        this.socket.emit("c-debug", data);
+
+        switch (data["title"].split(".")[1]) {
+          case "c":
+            this.socket.emit("c-debug", data);
+            break;
+          default:
+            break;
+        }
       }
     })
 
@@ -248,7 +255,6 @@ int main() {
     })
 
     this.socket.fromEvent("c-debug-stack").subscribe(data => {
-      console.log(data);
       (<Array<any>>data).forEach(element => {
         this.callstack.push(<string>element);
       });
@@ -266,37 +272,6 @@ int main() {
       this.callstack = [];
       this.variables.clear();
     })
-  }
-
-
-  loadData() {
-    //move to loaded-initial-data handler
-    let loadedSettings = {
-      "fontSize": new DoubleData(20, "Font-Size", "fontSize"),
-      "theme": new DoubleData("eclipse", "Eclipse", "theme"),
-      "gutter": new DoubleData(true, "Gutter", "gutter")
-    };
-
-    this.hasWhiteTheme = Constants.WHITE_THEMES.includes(loadedSettings["theme"].getValue()) ? true : false;
-
-    Object.keys(loadedSettings).forEach(element => {
-      Object.assign(this.settings, { ...this.settings, [element]: loadedSettings[element] });
-    })
-
-    this.files = [
-      { value: 'project1', id: 1, path: '/' },
-      {
-        value: 'project2', id: 3, path: '/', children: [
-          {
-            id: 15,
-            value: 'test.c',
-            path: '/project2'
-          }
-        ]
-      }
-    ];
-
-    this.loadSettings();
   }
 
   loadSettings() {
