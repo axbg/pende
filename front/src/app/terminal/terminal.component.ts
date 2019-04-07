@@ -13,6 +13,7 @@ export class TerminalComponent implements OnInit {
 
   private subscription: Subscription;
   prompt: string = "";
+  mode: string;
 
   constructor(private terminalService: TerminalService, private executionService: ExecutionService) {
     this.terminalService.commandHandler.subscribe(command => {
@@ -21,14 +22,18 @@ export class TerminalComponent implements OnInit {
         let c = command.replace("　", "");
         switch (c) {
           case "run":
+            this.mode = "run";
             break;
           case "debug":
+            this.mode = "debug";
             break;
           case "stop":
             break;
+          default:
+            break;
         }
       } else {
-        this.executionService.sendInput(command);
+        this.executionService.sendInput({ command: command, mode: this.mode });
       }
     });
   }
@@ -47,6 +52,9 @@ export class TerminalComponent implements OnInit {
     terminalInput.dispatchEvent(new Event("input"));
     terminalInput.dispatchEvent(keyboardEvent);
     terminalInput.value = "";
+    setTimeout(() => {
+      document.querySelector(".ui-terminal").scrollTop = document.querySelector(".ui-terminal").scrollHeight;
+    }, 10);
   }
 
   ngOnDestroy() {
