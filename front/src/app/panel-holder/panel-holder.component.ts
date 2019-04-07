@@ -56,9 +56,8 @@ void salut(int x){
 }
 
 int main() {
-  setbuf(stdout, NULL);
       
-  int x, y;
+  int x, y
       
   printf("Enter x : ");
       
@@ -193,6 +192,15 @@ int main() {
 
     this.socket.fromEvent("c-error").subscribe(data => {
       alert("Error happened. Please try again.");
+    })
+
+    this.socket.fromEvent("c-compilation-error").subscribe(data => {
+      (<Array<any>>data).forEach((element, index) => {
+        if(index === 0){
+          element = "error" + element;
+        }
+        this.executionService.renderOutput(element);
+      });
     })
 
     this.socket.fromEvent("c-finished").subscribe(data => {

@@ -38,7 +38,7 @@ export class AceEditorComponent implements OnInit {
           this.drawBreakpoints(true);
           this.showBreakpoints = false;
         }, 800);
-        
+
         this.executionService.sendExecutionBreakpoints(this.currentTab.getBreakpoints());
 
         let language = this.currentTab.getTitle().split(".")[1];
