@@ -16,6 +16,7 @@ export class ExecutionService {
   private inputData = new Subject<Object>();
   private runOrDebug = new Subject<Object>();
   private debuggingOptions = new Subject<String>();
+  private stoppingExection = new Subject();
 
   beforeExecutionFileStatusCheck$ = this.checkFileStatus.asObservable();
   getModifiedFile$ = this.modifiedFile.asObservable();
@@ -26,6 +27,7 @@ export class ExecutionService {
   newDataInput$ = this.inputData.asObservable();
   runOrDebugState$ = this.runOrDebug.asObservable();
   sendDebugOptions$ = this.debuggingOptions.asObservable();
+  invokeExecutionStop$ = this.stoppingExection.asObservable();
 
   constructor() { }
 
@@ -63,6 +65,10 @@ export class ExecutionService {
 
   debugOptions(data){
     this.debuggingOptions.next(data);
+  }
+
+  stopExecution(){
+    this.stoppingExection.next();
   }
 
 
