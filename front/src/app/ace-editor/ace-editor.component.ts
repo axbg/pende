@@ -34,7 +34,11 @@ export class AceEditorComponent implements OnInit {
         this.editor.getEditor().selection.moveTo(this.currentTab.getCursorLine(), this.currentTab.getCursorColumn());
         this.editor.getEditor().focus();
 
-        this.showBreakpoints = false;
+        setTimeout(() => {
+          this.drawBreakpoints(true);
+          this.showBreakpoints = false;
+        }, 800);
+        
         this.executionService.sendExecutionBreakpoints(this.currentTab.getBreakpoints());
 
         let language = this.currentTab.getTitle().split(".")[1];
@@ -107,7 +111,6 @@ export class AceEditorComponent implements OnInit {
         e.target.classList.add("breakpoint");
         if (ref.currentTab.getBreakpoints().indexOf(parseInt(line)) === -1) {
           ref.currentTab.addBreakpoint(parseInt(line));
-          //service to send list to tabRibbon at every modification
           ref.executionService.sendExecutionBreakpoints(ref.currentTab.getBreakpoints());
         }
 
@@ -154,9 +157,19 @@ export class AceEditorComponent implements OnInit {
       }
     })
 
+    let typingInterval = 800;
+    let typingTimer;
+
+    let doneTyping = () => {
+      console.log("called");
+      this.currentTab.setModified(true);
+      this.drawBreakpoints(true);
+    }
+
     this.editor.getEditor().session.on('change', (delta) => {
       if (!(delta.start.row === 0 && delta.end.row === delta.lines.length - 1)) {
-        this.currentTab.setModified(true);
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(doneTyping, typingInterval);
       }
     });
   }
