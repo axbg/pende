@@ -2,13 +2,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { LayoutComponent } from './layout/layout.component';
 import { TabRibbonComponent } from './tab-ribbon/tab-ribbon.component';
 import { MenuRibbonComponent } from './menu-ribbon/menu-ribbon.component';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { HTTPInterceptorService } from '../app/httpinterceptor.service';
 
 //primeng components import
 import { TabViewModule } from 'primeng/tabview';
@@ -33,8 +32,31 @@ import { DialogModule } from 'primeng/dialog';
 import { TreeModule } from 'ng2-tree'
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { LoginComponent } from './login/login.component';
+import { AuthGuardService } from './auth-guard.service';
+import { SocialLoginModule, AuthServiceConfig, GoogleLoginProvider, LoginOpt } from 'angularx-social-login'
 
-const config: SocketIoConfig = { url: "http://localhost:8000", options:{query:{token: "something"}}};
+const config: SocketIoConfig = { url: "http://localhost:8000", options: { query: { token: "something" } } };
+const routes: Routes = [
+  { path: '', component: LoginComponent },
+  { path: 'ide', component: LayoutComponent, canActivate: [AuthGuardService] }
+]
+
+const googleLoginOptions: LoginOpt = {
+  scope: 'profile email'
+};
+
+export function provideConfig() {
+  let config = new AuthServiceConfig([
+    {
+      id: GoogleLoginProvider.PROVIDER_ID,
+      provider: new GoogleLoginProvider("399387437152-jevvfiorm3oc8hqkh7d60eninldiqpe6.apps.googleusercontent.com",
+        googleLoginOptions)
+    }
+  ])
+
+  return config;
+}
 
 @NgModule({
   declarations: [
@@ -49,6 +71,7 @@ const config: SocketIoConfig = { url: "http://localhost:8000", options:{query:{t
     TerminalComponent,
     PrimeTerminalComponent,
     FilesPanelComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -67,13 +90,14 @@ const config: SocketIoConfig = { url: "http://localhost:8000", options:{query:{t
     ButtonModule,
     DialogModule,
     NgxSpinnerModule,
-    SocketIoModule.forRoot(config)
+    SocketIoModule.forRoot(config),
+    RouterModule.forRoot(routes),
+    SocialLoginModule,
   ],
   providers: [
     {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HTTPInterceptorService,
-      multi: true
+      provide: AuthServiceConfig,
+      useFactory: provideConfig
     }
   ],
   bootstrap: [AppComponent]

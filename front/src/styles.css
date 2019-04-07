@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
-html,
-body {
+
+html, body {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -28,19 +28,17 @@ body {
   display: none;
 }
 
-.ui-tabview-nav,
-.ui-menubar-root-list {
+.ui-tabview-nav, .ui-menubar-root-list {
   display: grid !important;
 }
 
-.ui-state-default,
-.ui-menuitem {
+.ui-state-default, .ui-menuitem {
   text-align: center;
   width: 1fr !important;
   grid-row: 1;
 }
 
-.ui-menuitem :hover{
+.ui-menuitem :hover {
   background-color: #989898 !important;
 }
 
@@ -87,4 +85,9 @@ li[role="presentation"] {
 
 .node-name {
   cursor: pointer;
+}
+
+.login-photo {
+  background-image: url("./assets/login-back.jpg");
+  background-size: cover;
 }
