@@ -2,6 +2,8 @@ const fs = require("fs");
 const filesPath = __dirname + "/../files";
 const execute_cli = require('child_process');
 const spawn = require('child_process').spawn;
+const mongoose = require('../models/index').mongoose;
+const UserModel = mongoose.model("user");
 
 module.exports.handleWS = (socket) => {
     let executable;
@@ -12,7 +14,12 @@ module.exports.handleWS = (socket) => {
         socket.disconnect();
         console.log("disconnect");
     } else {
-        username = socket.handshake.query.token;
+        token = socket.handshake.query.token;
+        UserModel.findOne({ token: token })
+            .then((result) => {
+                username = result.mail;
+                socket.emit("loaded-initial-data", { data: result })
+            });
     }
 
     //run & debug

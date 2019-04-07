@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 
 mongoose.connect("mongodb://localhost:27017/webide", { useNewUrlParser: true });
-
-
 const UserSchema = mongoose.Schema({
-    filetree: Object
+    token: String,
+    mail: String,
+    filetree: Object,
+    settings: Object
 });
 
 const UserModel = mongoose.model("user", UserSchema);
