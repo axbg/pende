@@ -36,7 +36,15 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuardService } from './auth-guard.service';
 import { SocialLoginModule, AuthServiceConfig, GoogleLoginProvider, LoginOpt } from 'angularx-social-login'
 
-const config: SocketIoConfig = { url: "http://localhost:8000", options: { query: { token: "something" } } };
+const config: SocketIoConfig = {
+  url: "http://localhost:8000", options: {
+    query: {
+      token:
+        window.localStorage.getItem("token")
+    }
+  }
+};
+
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'ide', component: LayoutComponent, canActivate: [AuthGuardService] }
