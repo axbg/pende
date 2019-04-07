@@ -4,7 +4,7 @@ mongoose.connect("mongodb://localhost:27017/webide", { useNewUrlParser: true });
 const UserSchema = mongoose.Schema({
     token: String,
     mail: String,
-    filetree: Object,
+    files: Array,
     settings: Object
 });
 

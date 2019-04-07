@@ -84,6 +84,7 @@ module.exports.handleWS = (socket) => {
                 });
 
                 executable.stderr.on('data', function (data) {
+                    console.log(data);
                     socket.emit("c-error", data);
                 });
 
@@ -92,6 +93,7 @@ module.exports.handleWS = (socket) => {
                         socket.emit("c-finished")
                     }
                     else if (code != 0) {
+                        console.log(code);
                         socket.emit("c-error");
                     } else {
                         socket.emit("c-finished");
@@ -99,6 +101,7 @@ module.exports.handleWS = (socket) => {
                 });
             });
         } catch (error) {
+            console.log(error);
             socket.emit("c-error");
         }
 
@@ -183,6 +186,73 @@ module.exports.handleWS = (socket) => {
         } catch (err) {
             console.log(err);
         }
+    })
+
+
+    //user settings & files management
+    socket.on("save-settings", settings => {
+        UserModel.findOne({ mail: username })
+            .then((result) => {
+                result.settings = settings;
+                result.save();
+            })
+    })
+
+    socket.on("save-files", (files) => {
+        UserModel.findOne({ mail: username })
+            .then((result) => {
+                result.files = files;
+                result.save();
+            })
+    })
+
+    socket.on("retrieve-file", file => {
+        let path = filesPath + "/" + username + file.path + "/" + file.title;
+
+        fs.readFile(path, { encoding: 'utf-8' }, (err, data) => {
+            if (!err) {
+                socket.emit("retrieved-file", { file: file, content: data })
+            } else {
+                //handle this error. display something in front-end
+                console.log(err);
+            }
+        })
+    })
+
+    socket.on("save-file", file => {
+        let dirStructure = filesPath + "/" + username
+            + file.path;
+
+        fs.exists(dirStructure, async (result) => {
+            if (!result) {
+                await fs.mkdir(dirStructure, { recursive: true }, () => { });
+            }
+
+            setTimeout(async () => {
+                let path = dirStructure + "/" + file.name;
+
+                if (file.directory) {
+                    await fs.mkdir(path, () => { });
+                } else {
+                    await fs.writeFile(path, file.content, () => { });
+                }
+            }, 100);
+        });
+    })
+
+    socket.on("rename-file", file => {
+        //replaces files from db
+        //rename file on fs
+    })
+
+    socket.on("delete-file", file => {
+        //replaces files from db
+        //remove file from fs
+    })
+
+    socket.on("delete-directory", file => {
+        //replaces files from db
+        //remove directory from fs based on path
     })
 
     socket.on("disconnect", message => {

@@ -2,6 +2,7 @@ const mongoose = require('../models/index').mongoose
 const UserModel = mongoose.model("user");
 const axios = require('axios');
 const uuid = require('uuid/v4');
+const DoubleData = require('../classes/DoubleData');
 
 module.exports.login = async (req, res) => {
 
@@ -25,7 +26,11 @@ module.exports.login = async (req, res) => {
         user = await UserModel.create({
             mail: googleData.data.email,
             token: token,
-            settings: {},
+            settings: {
+                "fontSize": new DoubleData(20, "Font-Size", "fontSize"),
+                "theme": new DoubleData("eclipse", "Eclipse", "theme"),
+                "gutter": new DoubleData(true, "Gutter", "gutter")
+            },
             filetree: {}
         })
 
