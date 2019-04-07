@@ -21,15 +21,13 @@ export class PanelHolderComponent implements OnInit {
   settings: Object = {};
   files: any;
   hasWhiteTheme: boolean;
-  isDebugging: boolean = false;
+  isDebugging: boolean;
+  breakpoints: number[];
+  debugInitMessages = 0;
+  variables: Map<string, string> = new Map<string, string>();
+  callstack: string[] = [];
 
 
-  //va reprezenta sursa de adevar pentru toate panel-urile copil
-  //cand un copil va modifica ceva, va apela un serviciu ce va reflecta schimbarile aici, 
-  //urmand ca de aici sa fie trimise in back
-  //datele sunt incarcate la load si trimise catre copii in momentul in care acestia fac render
-
-  //aici se va instantia si websocket-ul
   constructor(private tabEditingService: TabEditingServiceService,
     private settingsEditingService: SettingsEditingServiceService,
     private filesEditingService: FilesEditingService,
@@ -53,6 +51,9 @@ export class PanelHolderComponent implements OnInit {
       //content will be populated on a websocket event
       //so everything down there will have to be moved in the callback 
       let content = `#include<stdio.h>
+void salut(int x){
+  printf("%d", x);
+}
 
 int main() {
   setbuf(stdout, NULL);
@@ -67,7 +68,8 @@ int main() {
 
       
   scanf("%d", &y);
-      
+  
+  salut(x);
   printf("Value entered y is %d\\n", y);
   printf("Value entered x is %d\\n", x);
       
@@ -120,11 +122,25 @@ int main() {
     })
 
     this.executionService.newDataInput$.subscribe(input => {
-      this.socket.emit("c-input", input);
+      if (input["mode"] === "run") {
+        this.socket.emit("c-input", input);
+      } else {
+        this.socket.emit("c-debug-input", input);
+      }
     })
 
     this.executionService.runOrDebugState$.subscribe(state => {
+      this.variables.clear();
+      this.callstack = [];
       this.isDebugging = <boolean>state;
+    })
+
+    this.executionService.getExecutionBreakpoints$.subscribe(breakpoints => {
+      this.breakpoints = breakpoints;
+    })
+
+    this.executionService.sendDebugOptions$.subscribe((data) => {
+      this.socket.emit("c-debug-input", { command: data });
     })
 
     this.wsHandlers();
@@ -146,14 +162,26 @@ int main() {
           this.socket.emit("c-run", data);
         }
       } else {
-        console.log("debugging");
+        if (data["needToSave"]) {
+          this.socket.emit("save", data);
+        } else {
+          this.variables.clear();
+          this.callstack = [];
+          Object.assign(data, { ...data, breakpoints: this.breakpoints })
+          this.socket.emit("c-debug", data);
+        }
       }
     })
 
     this.socket.fromEvent("saved").subscribe(data => {
-      console.log("saved");
-      //check file extension to call different endpoints
-      this.socket.emit("c-run", data);
+      if (!this.isDebugging) {
+        this.socket.emit("c-run", data);
+      } else {
+        this.variables.clear();
+        this.callstack = [];
+        Object.assign(data, { ...data, breakpoints: this.breakpoints })
+        this.socket.emit("c-debug", data);
+      }
     })
 
     //c-run related
@@ -172,7 +200,48 @@ int main() {
     })
 
     //c-debug-related
+    this.socket.fromEvent("c-debug-output").subscribe(data => {
+      let stg = <string>data;
+      if (!stg.includes("/webide/back/back")) {
+        stg = stg.replace(new RegExp('\r?\n', 'g'), 'ᚠ');
+        this.executionService.renderOutput(stg + "　");
+      } else if (stg.includes("Breakpoint")) {
+        this.callstack = [];
+        this.variables.clear();
+        this.executionService.renderOutput("\n　");
+        this.executionService.renderOutput("\nbreakpoint hit:　line " + stg.split("\n")[3] + "\n");
+        this.executionService.renderOutput("\n　");
+      } else if(stg.includes("(")) {
+        console.log(stg);
+        let nw = stg.split("\n");
+        console.log(nw);
+        this.executionService.renderOutput("\n　");
+        
+        this.executionService.renderOutput("\n　");
+      }
+    })
+
+    this.socket.fromEvent("c-debug-stack").subscribe(data => {
+      (<Array<any>>data).forEach(element => {
+        this.callstack.push(<string>element);
+      });
+    })
+
+    this.socket.fromEvent("c-debug-variables").subscribe(data => {
+      let splitted: string[] = (<string>data).split(/=|\n/).filter(element => element !== " " && element !== "");
+      console.log(splitted);
+      for (let i = 0; i < splitted.length; i += 2) {
+        this.variables.set(splitted[i], splitted[i + 1]);
+      }
+    })
+
+    this.socket.fromEvent("c-debug-finish").subscribe(data => {
+      this.executionService.renderOutput("Finished");
+      this.callstack = [];
+      this.variables.clear();
+    })
   }
+
 
   loadData() {
     //retrieving data from back-end using websocket connection

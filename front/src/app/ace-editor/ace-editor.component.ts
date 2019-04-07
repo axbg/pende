@@ -98,11 +98,11 @@ export class AceEditorComponent implements OnInit {
 
     function addOrRemoveBreakpoint(e) {
       let line = e.target.innerText;
+
       if (e.target.classList.contains("breakpoint")) {
         e.target.classList.remove("breakpoint");
         ref.currentTab.removeBreakpoint(line);
-        //service to send list to tabRibbon at every modification
-        ref.executionService.sendExecutionBreakpoints(this.currentTab.getBreakpoints());
+        ref.executionService.sendExecutionBreakpoints(ref.currentTab.getBreakpoints());
       } else {
         e.target.classList.add("breakpoint");
         if (ref.currentTab.getBreakpoints().indexOf(parseInt(line)) === -1) {
@@ -155,7 +155,7 @@ export class AceEditorComponent implements OnInit {
     })
 
     this.editor.getEditor().session.on('change', (delta) => {
-      if (!(delta.start.row === 0 && delta.end.row === delta.lines.length -1)) {
+      if (!(delta.start.row === 0 && delta.end.row === delta.lines.length - 1)) {
         this.currentTab.setModified(true);
       }
     });

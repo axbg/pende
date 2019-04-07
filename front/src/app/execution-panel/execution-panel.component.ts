@@ -12,11 +12,15 @@ import { LayoutService } from '../layout.service';
 export class ExecutionPanelComponent implements OnInit, OnDestroy {
 
   private isDebugging: boolean = false;
+
+  @Input()
   private variables: Map<string, string> = new Map<string, string>();
-  private callstack: String[] = [];
+
+  @Input()
+  private callstack: string[] = [];
+  
   private fileId: number = 0;
   private fileName: string = "";
-  private breakpoints: number[];
 
   @Input()
   private hasWhiteTheme: boolean;
@@ -25,18 +29,6 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   private newDataSubscription: ISubscription;
 
   constructor(private executionService: ExecutionService, private layoutService: LayoutService) {
-    this.variables.set("a", "5");
-    this.variables.set("b", "bco");
-    this.variables.set("c", "proba proba");
-    this.callstack.push("line 2");
-    this.callstack.push("line 3");
-
-    this.getExecutionBreakpointtsSubscription =
-      this.executionService.getExecutionBreakpoints$.subscribe(breakpoints => {
-        this.breakpoints = breakpoints;
-        console.log(breakpoints);
-      })
-
     this.newDataSubscription = this.executionService.newDataReceived$.subscribe(data => {
       this.renderOutput(data);
     })
@@ -68,12 +60,27 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
     TerminalComponent.writeTerminalCommand("stop　");
   }
 
+  continueDebug(){
+    this.executionService.debugOptions("c");
+  }
+
+  stepOverDebug(){
+    this.executionService.debugOptions("next");
+  }
+
+  stepIntoDebug(){
+    this.executionService.debugOptions("step");
+  }
+
+  stepOutDebug(){
+    this.executionService.debugOptions("finish");
+  }
+
   renderOutput(data) {
     TerminalComponent.writeTerminalCommand(data);
   }
 
   ngOnDestroy() {
-    this.getExecutionBreakpointtsSubscription.unsubscribe();
     this.newDataSubscription.unsubscribe();
   }
 
