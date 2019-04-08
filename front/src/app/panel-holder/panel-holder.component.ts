@@ -28,7 +28,6 @@ export class PanelHolderComponent implements OnInit {
   callstack: string[] = [];
   filesLoaded: boolean = false;
 
-
   constructor(private tabEditingService: TabEditingServiceService,
     private settingsEditingService: SettingsEditingServiceService,
     private filesEditingService: FilesEditingService,
@@ -128,7 +127,6 @@ export class PanelHolderComponent implements OnInit {
     //user settings and file management
     this.settingsEditingService.savingSettings$.subscribe(() => {
       this.socket.emit("save-settings", this.settings);
-      //display toast
     })
 
     this.wsHandlers();
@@ -172,6 +170,7 @@ export class PanelHolderComponent implements OnInit {
     this.socket.fromEvent("structured").subscribe(data => {
       if (data["needToSave"]) {
         this.socket.emit("save", data);
+        (<HTMLElement>document.querySelector(".ui-tabview-selected")).removeAttribute("style");
       } else if (!this.isDebugging) {
         switch (data["title"].split(".")[1]) {
           case "c":
@@ -277,7 +276,7 @@ export class PanelHolderComponent implements OnInit {
     })
 
     this.socket.fromEvent("c-debug-finish").subscribe(data => {
-      this.executionService.renderOutput("finished");
+      this.executionService.renderOutput("finished　");
       this.callstack = [];
       this.variables.clear();
     })

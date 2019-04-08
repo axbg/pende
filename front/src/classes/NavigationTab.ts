@@ -13,7 +13,7 @@ export class NavigationTab {
     constructor(id, title, content, path, index) {
         this.id = id;
         this.title = title;
-        this.content = this.addSetBuf(content);
+        this.setContent(content);
         this.path = path;
         this.index = index;
         this.cursorLine = 0;
