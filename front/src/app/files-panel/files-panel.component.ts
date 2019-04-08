@@ -63,21 +63,19 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
     let changeColorIcon: any = document.querySelectorAll(".node-template");
     let changeColorText: any = document.querySelectorAll(".node-name");
 
-    setTimeout(() => {
-      for (let index = 0; index < changeColorIcon.length; index++) {
-        let icon: HTMLElement = changeColorIcon[index];
-        let text: HTMLElement = changeColorText[index];
+    for (let index = 0; index < changeColorIcon.length; index++) {
+      let icon: HTMLElement = changeColorIcon[index];
+      let text: HTMLElement = changeColorText[index];
 
-        icon.style.color = this.hasWhiteTheme ? "black" : "white";
-        text.style.color = this.hasWhiteTheme ? "black" : "white";
-      }
+      icon.style.color = this.hasWhiteTheme ? "black" : "white";
+      text.style.color = this.hasWhiteTheme ? "black" : "white";
+    }
 
-      stopDrag.forEach(node => {
-        let n: HTMLElement = node;
-        n.setAttribute("draggable", "false");
-        n.style.userSelect = "none";
-      })
-    }, 1000);
+    stopDrag.forEach(node => {
+      let n: HTMLElement = node;
+      n.setAttribute("draggable", "false");
+      n.style.userSelect = "none";
+    })
   }
 
 
