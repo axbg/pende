@@ -58,6 +58,23 @@ module.exports.handleWS = (socket) => {
         }
     })
 
+    let processTimeoutInterval = 5000;
+    let timeoutInterval;
+
+    let forceProcessTimeout = (debug) => {
+        try {
+            executable.kill();
+            console.log("called");
+            if (debug) {
+                socket.emit("c-debug-finish");
+            } else {
+                socket.emit("c-finished");
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     //c-specific
     //run
     socket.on("c-run", async (payload) => {
@@ -82,12 +99,15 @@ module.exports.handleWS = (socket) => {
 
                 executable = spawn("./files/" + username + payload.path + "/a.out");
 
+                timeoutInterval = setTimeout(forceProcessTimeout, processTimeoutInterval);
+
                 executable.on('error', function (err) {
                     console.log(err);
                     socket.emit("c-error", err);
                 });
 
                 executable.stdout.on('data', function (data) {
+                    clearTimeout(timeoutInterval);
                     socket.emit("c-output", data.toString());
                 });
 
@@ -119,11 +139,13 @@ module.exports.handleWS = (socket) => {
     socket.on("c-input", payload => {
         try {
             executable.stdin.write(payload.command + "\n");
+            timeoutInterval = setTimeout(forceProcessTimeout, processTimeoutInterval);
         } catch (err) {
             //executable.kill();
         }
     });
 
+    //debug
     socket.on("c-debug", (payload) => {
         let filepath = filesPath + "/" + username
             + payload.path;
@@ -132,7 +154,7 @@ module.exports.handleWS = (socket) => {
             + payload.path + "/" + payload.title;
 
         execute_cli.exec("gcc -fmax-errors=1 -g " + path + " -o " + filepath + "/a.out", (result) => {
-            executable = spawn("gdb", ['--quiet']);
+            executable = spawn("gdb", ['-quiet']);
 
             if (result != null) {
                 let newResult = result.toString().split(path);
@@ -150,7 +172,17 @@ module.exports.handleWS = (socket) => {
 
             executable.stdin.write("run\n");
 
+            timeoutInterval = setTimeout(() => forceProcessTimeout(true), processTimeoutInterval);
+
             executable.stdout.on('data', function (data) {
+                //protection for infinite loops that happen before any other input
+                //not best practice, but couldn't find any other way for now
+                if (!data.toString().includes("gdb") && !data.toString().includes("projects/webide/back/back")
+                    && !data.toString().includes("done")) {
+                    console.log(data.toString());
+                    clearTimeout(timeoutInterval);
+                }
+
                 let formatted = data.toString().replace("(gdb)", "");
 
                 if (formatted.includes("#")) {
@@ -180,6 +212,7 @@ module.exports.handleWS = (socket) => {
     socket.on("c-debug-input", message => {
         try {
             executable.stdin.write(message.command + "\n");
+            timeoutInterval = setTimeout(() => forceProcessTimeout(true), processTimeoutInterval);
         }
         catch (err) {
             console.log(err);
