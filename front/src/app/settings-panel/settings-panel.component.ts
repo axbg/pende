@@ -50,10 +50,12 @@ export class SettingsPanelComponent implements OnInit {
   }
 
   handlePropertyChange(event) {
+    (<HTMLElement>document.querySelector(".ui-button")).style.backgroundColor = "#B71C1C";
     this.settingsService.modifySettings(event.value);
   }
 
   saveSettings(){
+    (<HTMLElement>document.querySelector(".ui-button")).style.backgroundColor = "#007AD9";
     this.settingsService.saveCurrentSettings();
   }
 }
