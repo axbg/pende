@@ -4,6 +4,7 @@ const execute_cli = require('child_process');
 const spawn = require('child_process').spawn;
 const mongoose = require('../models/index').mongoose;
 const UserModel = mongoose.model("user");
+const rimraf = require('rimraf');
 
 module.exports.handleWS = (socket) => {
     let executable;
@@ -17,8 +18,15 @@ module.exports.handleWS = (socket) => {
         token = socket.handshake.query.token;
         UserModel.findOne({ token: token })
             .then((result) => {
-                username = result.mail;
-                socket.emit("loaded-initial-data", { data: result })
+                if (result) {
+                    username = result.mail;
+
+                    if (!result.files) {
+                        result.files = [];
+                    }
+
+                    socket.emit("loaded-initial-data", { data: result })
+                }
             });
     }
 
@@ -224,35 +232,45 @@ module.exports.handleWS = (socket) => {
             + file.path;
 
         fs.exists(dirStructure, async (result) => {
+            let path = dirStructure + "/" + file.name;
+
             if (!result) {
                 await fs.mkdir(dirStructure, { recursive: true }, () => { });
-            }
-
-            setTimeout(async () => {
-                let path = dirStructure + "/" + file.name;
-
+                setTimeout(async () => {
+                    if (file.directory) {
+                        await fs.mkdir(path, () => { });
+                    } else {
+                        await fs.writeFile(path, file.content, () => { });
+                    }
+                }, 100);
+            } else {
                 if (file.directory) {
                     await fs.mkdir(path, () => { });
                 } else {
                     await fs.writeFile(path, file.content, () => { });
                 }
-            }, 100);
+            }
         });
     })
 
     socket.on("rename-file", file => {
-        //replaces files from db
-        //rename file on fs
+        let dirStructure = filesPath + "/" + username
+            + file.path;
+
+        fs.rename(dirStructure + "/" + file.oldName, dirStructure + "/" + file.newName, function (err) {
+            console.log("renamed");
+        })
+
     })
 
     socket.on("delete-file", file => {
-        //replaces files from db
-        //remove file from fs
-    })
+        if (file.path !== "" && file.node !== "projects") {
+            let fileLocation = filesPath + "/" + username
+                + file.path + "/" + file.name;
 
-    socket.on("delete-directory", file => {
-        //replaces files from db
-        //remove directory from fs based on path
+            rimraf(fileLocation, fs, () => {
+            });
+        }
     })
 
     socket.on("disconnect", message => {
