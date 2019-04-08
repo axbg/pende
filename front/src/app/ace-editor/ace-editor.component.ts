@@ -4,6 +4,7 @@ import { NavigationTab } from '../../classes/NavigationTab';
 import { SettingsEditingServiceService } from '../settings-editing-service.service';
 import { ExecutionService } from '../execution.service';
 import { LayoutService } from '../layout.service';
+import { FilesEditingService } from '../files-editing.service';
 
 @Component({
   selector: 'app-ace-editor',
@@ -18,7 +19,8 @@ export class AceEditorComponent implements OnInit {
   constructor(private tabEditingService: TabEditingServiceService,
     private settingsEditingService: SettingsEditingServiceService,
     private executionService: ExecutionService,
-    private layoutService: LayoutService) {
+    private layoutService: LayoutService,
+    private fileEditingService: FilesEditingService) {
 
     this.tabEditingService.tabOpened$.subscribe(
       tab => {
@@ -86,7 +88,8 @@ export class AceEditorComponent implements OnInit {
         this.executionService.sendUnmodifiedFile(this.currentTab);
       }
       */
-     this.executionService.sendModifiedFile(this.currentTab);
+      (<HTMLElement>document.querySelector(".ui-tabview-selected")).style.backgroundColor = "#007AD9";
+      this.executionService.sendModifiedFile(this.currentTab);
     })
 
     this.executionService.detectExecutionBreakpoints$.subscribe((data) => {
@@ -143,7 +146,6 @@ export class AceEditorComponent implements OnInit {
       bindKey: "Ctrl-s",
       exec: (editor) => {
         this.saveFile();
-        console.log("this will call api and will set modified to false in the callback");
       }
     })
 
@@ -164,21 +166,35 @@ export class AceEditorComponent implements OnInit {
     let typingTimer;
 
     let doneTyping = () => {
-      console.log("called");
       this.drawBreakpoints(true);
     }
 
     this.editor.getEditor().session.on('change', (delta) => {
       if (!(delta.start.row === 0 && delta.end.row === delta.lines.length - 1)) {
-        this.currentTab.setModified(true);
+
+
+        if (delta.end.row - delta.start.row !== 0) {
+          let newBreakpoints = this.currentTab.getBreakpoints();
+          for (let index = 0; index < this.currentTab.getBreakpoints().length; index++) {
+            if (delta.action === "insert") {
+              newBreakpoints[index] += (delta.end.row - delta.start.row);
+            } else {
+              newBreakpoints[index] += (delta.start.row - delta.end.row);
+            }
+          }
+        }
+
+        if (!this.currentTab.getModified()) {
+          (<HTMLElement>document.querySelector(".ui-tabview-selected")).style.backgroundColor = "#B71C1C";
+          this.currentTab.setModified(true);
+        }
+
         clearTimeout(typingTimer);
         typingTimer = setTimeout(doneTyping, typingInterval);
       }
     });
   }
 
-  //will display breakpoints on ctrl + b
-  //when clicking Execute a service will invoke this method to draw breakpoints
   drawBreakpoints(show: boolean) {
     const gutters = document.querySelectorAll(".ace_gutter-cell");
 
@@ -194,9 +210,13 @@ export class AceEditorComponent implements OnInit {
   }
 
   saveFile() {
-    //rest call to save file
-    //in the callback set modified to false
-    console.log('ya');
-    //this.currentTab.setModified(false);
+    (<HTMLElement>document.querySelector(".ui-tabview-selected")).removeAttribute("style");
+    this.currentTab.setContent(this.editor.getEditor().getValue());
+    this.tabEditingService.saveTabSource(this.currentTab);
+    this.currentTab.setModified(false);
+
+    setTimeout(() => {
+      this.fileEditingService.saveFile(this.currentTab);
+    }, 50);
   }
 }

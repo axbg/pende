@@ -41,6 +41,7 @@ export class MenuRibbonComponent implements OnInit {
   }
 
   logout() {
+    window.localStorage.removeItem("token");
     this.router.navigateByUrl("/");
   }
 }
