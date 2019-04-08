@@ -23,8 +23,7 @@ export class LoginComponent implements OnInit {
         this.http.post(this.loginURL, { token: result.idToken })
           .subscribe(result => {
             window.localStorage.setItem("token", result["token"]);
-            this.authService.setRedirectedFromLogin();
-            this.router.navigateByUrl("/ide");
+            window.location.reload();
           })
       });
   }
