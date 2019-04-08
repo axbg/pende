@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges, ViewChild, ChangeDetectorRef, OnDestroy, AfterViewInit } from '@angular/core';
-import { TreeModel, TreeComponent } from 'ng2-tree';
+import { TreeModel } from 'ng2-tree';
 import { TabEditingServiceService } from '../tab-editing-service.service';
 import { FilesEditingService } from '../files-editing.service';
 import { ISubscription } from 'rxjs/Subscription';
@@ -83,8 +83,9 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public handleSelect(event) {
     if (!event.node.children) {
+      let path = this.composeWholePath(event.node);
       this.tabEditingService.notifyFileStore({
-        title: event.node.node.value, path: event.node.node.path,
+        title: event.node.node.value, path: path,
         id: event.node.node.id, hasChildren: event.node.children
       });
     }
@@ -93,8 +94,19 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
   public handleRemove(event) {
     if (event.node.value) {
       let currentNode = event.node;
+
+      if (event.node.value === "projects" && event.node.node.path === "") {
+        alert("You nasty! Root directory cannot be deleted!");
+        return;
+      }
+
       if (confirm("Do you want to delete this element?")) {
-        this.filesEditingService.fireFileAction({ type: "delete", node: event.node })
+        let path = this.composeWholePath(event.node);
+        this.files = this.updateTreeModelAndAppendPath(this.treeComponent.tree, -1).children;
+        this.filesEditingService.fireFileAction({
+          type: "delete", node: event.node.value,
+          files: this.files, path: path
+        })
       } else {
         currentNode.parent.addChild(currentNode);
       }
@@ -106,6 +118,12 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
     let newName = event.newValue;
     let currentId = event.node.node.id;
 
+    if (oldName === "projects" && event.node.node.path === "") {
+      alert("You nasty! Root directory cannot be renamed");
+      event.node.node.value = oldName;
+      return;
+    }
+
     for (let index = 0; index < event.node.parent.children.length; index++) {
       if (event.node.parent.children[index].node.id !== currentId &&
         event.node.parent.children[index].node.value === newName) {
@@ -115,7 +133,20 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
 
-    this.filesEditingService.fireFileAction({ type: "rename", node: event.node.node });
+    if (!event.node.children) {
+      let extension = newName.split(".")[1];
+      if (!extension || extension !== 'c') {
+        alert("Extension not valid - could be: c");
+        event.node.node.value = oldName;
+        return;
+      }
+    }
+
+    this.files = this.updateTreeModelAndAppendPath(this.treeComponent.tree, event.node.id).children;
+    this.filesEditingService.fireFileAction({
+      type: "rename", oldName: oldName, newName: newName,
+      path: this.currentFilePath, files: this.files
+    });
   }
 
   public handleCreate(event) {
@@ -159,7 +190,6 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     this.files = this.updateTreeModelAndAppendPath(this.treeComponent.tree, event.node.id).children;
-
     this.filesEditingService.fireFileAction({
       type: "create", node: event.node.value,
       directory: isDirectory, path: this.currentFilePath, id: event.node.id,
@@ -209,10 +239,6 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
     return model;
   }
 
-  changeNodePath(node, path) {
-    let controller = this.treeComponent.getControllerByNodeId(node['id']);
-    controller.changeNodePath(path);
-  }
 
   ngOnDestroy() {
     this.updateFileIdFiredSubscription.unsubscribe();

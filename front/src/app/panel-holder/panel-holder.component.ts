@@ -43,28 +43,31 @@ export class PanelHolderComponent implements OnInit {
     this.settingsEditingService.modifiedSettings$.subscribe(payload => {
       let property: any = payload["property"];
       Object.assign(this.settings, { ...this.settings, [property]: payload })
-      this.saveSettings();
     })
 
     this.filesEditingService.actionFired$.subscribe(action => {
       this.files = action["files"];
+      this.socket.emit("save-files", action["files"])
       switch (action["type"]) {
         case "create":
-          this.socket.emit("save-files", action["files"])
           this.socket.emit("save-file", {
             name: action["node"], path: action["path"],
             content: action["content"], directory: action["directory"]
           })
           break;
         case "delete":
-          //fire event for delete
-          console.log("deleting " + action["node"]["value"]);
+          this.socket.emit("delete-file", {
+            name: action["node"], path: action["path"],
+          })
+          this.filesEditingService.checkingFileOnDeletionOrRename({ path: action["path"], name: action["node"] });
           break;
         case "rename":
-          //fire event for rename
-          console.log("renaming " + action["node"]["value"]);
+          this.socket.emit("rename-file", {
+            oldName: action["oldName"], newName: action["newName"], path: action["path"]
+          })
+          this.filesEditingService.checkingFileOnDeletionOrRename({ path: action["path"], name: action["node"] });
           break;
-        case "moving":
+        default:
           break;
       }
     })
@@ -87,6 +90,13 @@ export class PanelHolderComponent implements OnInit {
 
     this.executionService.getUnmodifiedFile$.subscribe(file => {
       this.socket.emit("structure", { ...file.getEssentialData(), needToSave: false });
+    })
+
+    this.filesEditingService.saveFileShortcutFired$.subscribe(file => {
+      this.socket.emit("save-file", {
+        name: file["title"], path: file["path"],
+        content: file["content"], directory: false
+      })
     })
 
     this.executionService.newDataInput$.subscribe(input => {
@@ -152,13 +162,12 @@ export class PanelHolderComponent implements OnInit {
       setTimeout(() => this.layoutService.initialData(), 1000);
     });
 
-    
+
     this.socket.fromEvent("retrieved-file").subscribe(data => {
       let navTab = new NavigationTab(data["file"]["id"], data["file"]["title"], data["content"],
         data["file"]["path"], 0);
       this.tabEditingService.openNewTab(navTab);
     })
-
 
     this.socket.fromEvent("structured").subscribe(data => {
       if (data["needToSave"]) {
@@ -280,10 +289,6 @@ export class PanelHolderComponent implements OnInit {
         this.settingsEditingService.modifySettings(this.settings[setting]);
       })
     }, 50);
-  }
-
-  saveSettings() {
-    //will send the settings to back-end via websocket connection
   }
 
 }
