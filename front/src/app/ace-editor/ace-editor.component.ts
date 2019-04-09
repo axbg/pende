@@ -5,6 +5,7 @@ import { SettingsEditingServiceService } from '../settings-editing-service.servi
 import { ExecutionService } from '../execution.service';
 import { LayoutService } from '../layout.service';
 import { FilesEditingService } from '../files-editing.service';
+import * as FileSave from 'file-saver';
 
 @Component({
   selector: 'app-ace-editor',
@@ -153,6 +154,24 @@ export class AceEditorComponent implements OnInit {
     })
 
     this.editor.getEditor().commands.addCommand({
+      name: "download",
+      bindKey: "Ctrl-d",
+      exec: (editor) => {
+        this.downloadFile();
+      }
+    })
+
+    this.editor.getEditor().commands.addCommand({
+      name: "clearBreakpoints",
+      bindKey: "Ctrl-v",
+      exec: (editor) => {
+        this.drawBreakpoints(false);
+        this.showBreakpoints = true;
+        this.currentTab.setBreakpoints([]);
+      }
+    })
+
+    this.editor.getEditor().commands.addCommand({
       name: "showBreakpoints",
       bindKey: "Ctrl-b",
       exec: (editor) => {
@@ -221,5 +240,10 @@ export class AceEditorComponent implements OnInit {
     setTimeout(() => {
       this.fileEditingService.saveFile(this.currentTab);
     }, 50);
+  }
+
+  downloadFile() {
+    let blob = new Blob([<BlobPart>this.currentTab.getContent()], { type: "plain/text;charset=utf-8" });
+    FileSave.saveAs(blob, <string>this.currentTab.getTitle());
   }
 }
