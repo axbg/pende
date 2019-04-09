@@ -176,6 +176,9 @@ export class PanelHolderComponent implements OnInit {
           case "c":
             this.socket.emit("c-run", data);
             break;
+          case "cpp":
+            this.socket.emit("c-run", data);
+            break;
           default:
             break;
         }
@@ -185,6 +188,9 @@ export class PanelHolderComponent implements OnInit {
         Object.assign(data, { ...data, breakpoints: this.breakpoints })
         switch (data["title"].split(".")[1]) {
           case "c":
+            this.socket.emit("c-debug", data);
+            break;
+          case "cpp":
             this.socket.emit("c-debug", data);
             break;
           default:
@@ -199,6 +205,9 @@ export class PanelHolderComponent implements OnInit {
           case "c":
             this.socket.emit("c-run", data);
             break;
+          case "cpp":
+            this.socket.emit("c-run", data);
+            break;
           default:
             break;
         }
@@ -209,6 +218,9 @@ export class PanelHolderComponent implements OnInit {
 
         switch (data["title"].split(".")[1]) {
           case "c":
+            this.socket.emit("c-debug", data);
+            break;
+          case "cpp":
             this.socket.emit("c-debug", data);
             break;
           default:

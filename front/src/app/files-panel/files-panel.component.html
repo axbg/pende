@@ -3,7 +3,8 @@
     <h3 [ngClass]="(hasWhiteTheme===true)?'panel-title white':'panel-title black'">Your files</h3>
     <div [ngClass]="(hasWhiteTheme===true)?'tree-holder white':'tree-holder black'">
       <tree #treeComponent [tree]="tree" (nodeSelected)="handleSelect($event)" (nodeRemoved)="handleRemove($event)"
-        (nodeRenamed)="handleRename($event)" (nodeCreated)="handleCreate($event)" (nodeMoved)="handleMoved($event)">
+        (nodeRenamed)="handleRename($event)" (nodeCreated)="handleCreate($event)" (nodeMoved)="handleMoved($event)"
+        (nodeExpanded)="handleExpanded($event)">
       </tree>
     </div>
   </div>
