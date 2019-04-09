@@ -34,7 +34,9 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { LoginComponent } from './login/login.component';
 import { AuthGuardService } from './auth-guard.service';
-import { SocialLoginModule, AuthServiceConfig, GoogleLoginProvider, LoginOpt } from 'angularx-social-login'
+import { SocialLoginModule, AuthServiceConfig, GoogleLoginProvider, LoginOpt } from 'angularx-social-login';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment'
 
 const config: SocketIoConfig = {
   url: "http://localhost:8000", options: {
@@ -101,6 +103,7 @@ export function provideConfig() {
     SocketIoModule.forRoot(config),
     RouterModule.forRoot(routes),
     SocialLoginModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   providers: [
     {
