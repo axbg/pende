@@ -48,6 +48,9 @@ export class AceEditorComponent implements OnInit {
           case 'c':
             this.editor.setMode("c_cpp");
             break;
+          case 'cpp':
+            this.editor.setMode("c_cpp");
+            break;
           default:
             console.log("not supported yet");
         }

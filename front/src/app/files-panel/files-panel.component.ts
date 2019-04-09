@@ -59,6 +59,12 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    if (!this.hasWhiteTheme) {
+      this.applyThemeColor();
+    }
+  }
+
+  applyThemeColor() {
     let stopDrag: any = document.querySelectorAll(".value-container");
     let changeColorIcon: any = document.querySelectorAll(".node-template");
     let changeColorText: any = document.querySelectorAll(".node-name");
@@ -133,11 +139,17 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (!event.node.children) {
       let extension = newName.split(".")[1];
-      if (!extension || extension !== 'c') {
-        alert("Extension not valid - could be: c");
+      if (!extension || (extension !== 'c' && extension !== "cpp")) {
+        alert("Extension not valid - could be: c or cpp");
         event.node.node.value = oldName;
         return;
       }
+    }
+
+    //this should be optimized
+    //identify the node and change its color
+    if (!this.hasWhiteTheme) {
+      setTimeout(this.applyThemeColor, 50);
     }
 
     this.files = this.updateTreeModelAndAppendPath(this.treeComponent.tree, event.node.id).children;
@@ -170,8 +182,8 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
       isDirectory = true;
 
     } else {
-      if (!extension || extension !== 'c') {
-        alert("Extension not valid - could be: c");
+      if (!extension || (extension !== 'c' && extension !== "cpp")) {
+        alert("Extension not valid - could be: c or cpp");
         event.node.parent.removeChild(event.node);
         return;
       }
@@ -187,12 +199,26 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
 
+    //this should be optimized
+    //identify the node and change its color
+    if (!this.hasWhiteTheme) {
+      setTimeout(this.applyThemeColor, 50);
+    }
+
     this.files = this.updateTreeModelAndAppendPath(this.treeComponent.tree, event.node.id).children;
     this.filesEditingService.fireFileAction({
       type: "create", node: event.node.value,
       directory: isDirectory, path: this.currentFilePath, id: event.node.id,
       files: this.files, content: ""
     })
+  }
+
+  handleExpanded(event) {
+    //this should be optimized
+    //identify the node and change its color
+    if (!this.hasWhiteTheme) {
+      setTimeout(this.applyThemeColor, 50);
+    }
   }
 
   composeWholePath(node) {
