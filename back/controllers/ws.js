@@ -64,8 +64,8 @@ module.exports.handleWS = (socket) => {
     let forceProcessTimeout = (debug) => {
         try {
             executable.kill();
-            console.log("called");
             if (debug) {
+                console.log("here");
                 socket.emit("c-debug-finish");
             } else {
                 socket.emit("c-finished");
@@ -85,7 +85,14 @@ module.exports.handleWS = (socket) => {
             let path = filesPath + "/" + username
                 + payload.path + "/" + payload.title;
 
-            execute_cli.exec("gcc " + path + " -fmax-errors=1 -o " + filepath + "/a.out", (result) => {
+            let compiler = "";
+            if (payload.title.split(".")[1] === "c") {
+                compiler = "gcc";
+            } else {
+                compiler = "g++";
+            }
+
+            execute_cli.exec(compiler + " " + path + " -fmax-errors=1 -o " + filepath + "/a.out", (result) => {
 
                 if (result != null) {
                     let newResult = result.toString().split(path);
@@ -153,7 +160,14 @@ module.exports.handleWS = (socket) => {
         let path = filesPath + "/" + username
             + payload.path + "/" + payload.title;
 
-        execute_cli.exec("gcc -fmax-errors=1 -g " + path + " -o " + filepath + "/a.out", (result) => {
+        let compiler = "";
+        if (payload.title.split(".")[1] === "c") {
+            compiler = "gcc";
+        } else {
+            compiler = "g++";
+        }
+
+        execute_cli.exec(compiler + " -g -fmax-errors=1 " + path + " -o " + filepath + "/a.out", (result) => {
             executable = spawn("gdb", ['-quiet']);
 
             if (result != null) {
@@ -177,9 +191,8 @@ module.exports.handleWS = (socket) => {
             executable.stdout.on('data', function (data) {
                 //protection for infinite loops that happen before any other input
                 //not best practice, but couldn't find any other way for now
-                if (!data.toString().includes("gdb") && !data.toString().includes("projects/webide/back/back")
-                    && !data.toString().includes("done")) {
-                    console.log(data.toString());
+                if ((!data.toString().includes("gdb") && !data.toString().includes("projects/webide/back/back")
+                    && !data.toString().includes("done")) || data.toString().includes("Breakpoint")) {
                     clearTimeout(timeoutInterval);
                 }
 
