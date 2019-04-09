@@ -1,8 +1,31 @@
 <p-menubar [model]="items">
 </p-menubar>
 <p-dialog header="Shortcuts" [(visible)]="shortVisible" [responsive]="true" [maximizable]="true" closeOnEscape="true">
-    table with shortcuts
+    <div class="container">
+        <h3>Useful shortuts. More to come.</h3>
+        <div>
+            <p>Save File: <span class="shortcut-key">CTRL+S</span></p>
+            <p>Show/Hide Breakpoints: <span class="shortcut-key">CTRL+B</span></p>
+            <p>Clear Breakpoints: <span class="shortcut-key">CTRL+V</span></p>
+            <p>Download Opened File: <span class="shortcut-key">CTRL+D</span></p>
+            <p>Fullscreen: <span class="shortcut-key">F11</span></p>
+        </div>
+    </div>
 </p-dialog>
 <p-dialog header="Contact" [(visible)]="contactVisible" [responsive]="true" [maximizable]="true" closeOnEscape="true">
-    contact info
+    <div class="container">
+        <h3>Created by Alexandru - Ștefan Bișag@BUES, 2019</h3>
+        <h4>Find me on</h4>
+        <div>
+            <a href="https://github.com/axbg" target="_blank" class="contact-point">
+                <img src="../../assets/gb.png">
+            </a>
+            <a href="https://web.facebook.com/alexandrubstefan" target="_blank" class="contact-point">
+                <img src="../../assets/fb.png">
+            </a>
+            <a href="https://www.linkedin.com/in/bisagalexstefan/" target="_blank" class="contact-point">
+                <img src="../../assets/in.png">
+            </a>
+        </div>
+    </div>
 </p-dialog>
