@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  loginURL = "http://localhost:8000/api/user/login";
+  loginURL = "http://localhost:8080/api/user/login";
 
   constructor(private googleAuthService: AuthService, private http: HttpClient,
     private authService: AuthLoginService, private router: Router) {
