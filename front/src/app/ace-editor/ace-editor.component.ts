@@ -163,7 +163,7 @@ export class AceEditorComponent implements OnInit {
 
     this.editor.getEditor().commands.addCommand({
       name: "clearBreakpoints",
-      bindKey: "Ctrl-v",
+      bindKey: "Ctrl-g",
       exec: (editor) => {
         this.drawBreakpoints(false);
         this.showBreakpoints = true;

@@ -27,7 +27,7 @@ export class LayoutComponent implements OnInit {
   }
 
   initFileTabs() {
-    this.fileTabs.push(new NavigationTab(0, "webide", "Hack with passion!", "", 0));
+    this.fileTabs.push(new NavigationTab(0, "pandë", "Hack with passion!", "", 0));
   }
 
   initprojectTabs() {
@@ -35,5 +35,4 @@ export class LayoutComponent implements OnInit {
     this.projectTabs.push(new NavigationTab(0, "Execute", "", "", 1));
     this.projectTabs.push(new NavigationTab(0, "Settings", "", "", 2));
   }
-
 }
