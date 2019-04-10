@@ -198,10 +198,12 @@ export class AceEditorComponent implements OnInit {
         if (delta.end.row - delta.start.row !== 0) {
           let newBreakpoints = this.currentTab.getBreakpoints();
           for (let index = 0; index < this.currentTab.getBreakpoints().length; index++) {
-            if (delta.action === "insert") {
-              newBreakpoints[index] += (delta.end.row - delta.start.row);
-            } else {
-              newBreakpoints[index] += (delta.start.row - delta.end.row);
+            if (newBreakpoints[index] >= delta.end.row) {
+              if (delta.action === "insert") {
+                newBreakpoints[index] += (delta.end.row - delta.start.row);
+              } else {
+                newBreakpoints[index] += (delta.start.row - delta.end.row);
+              }
             }
           }
         }
