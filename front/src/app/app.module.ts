@@ -39,7 +39,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment'
 
 const config: SocketIoConfig = {
-  url: "http://localhost:8000", options: {
+  url: "http://localhost:8080", options: {
     query: {
       token:
         window.localStorage.getItem("token")
