@@ -65,7 +65,6 @@ module.exports.handleWS = (socket) => {
         try {
             executable.kill();
             if (debug) {
-                console.log("here");
                 socket.emit("c-debug-finish");
             } else {
                 socket.emit("c-finished");
@@ -130,8 +129,6 @@ module.exports.handleWS = (socket) => {
                     else if (code != 0) {
                         console.log(code);
                         socket.emit("c-error");
-                    } else {
-                        socket.emit("c-finished");
                     }
                 });
             });
@@ -320,6 +317,5 @@ module.exports.handleWS = (socket) => {
     })
 
     socket.on("disconnect", message => {
-        console.log("disconnected");
     })
 }
