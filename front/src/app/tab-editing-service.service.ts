@@ -35,7 +35,7 @@ export class TabEditingServiceService {
     this.modifiedMenuPanel.next(panel);
   }
 
-  notifyFileStore(file: Object){
+  notifyFileStore(file: Object) {
     this.fileSourceModified.next(file);
   }
 

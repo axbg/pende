@@ -7,12 +7,11 @@
   margin: 10px;
   height: 100%;
   text-align: center;
-  border: 1px solid rgba(0,0,0,.12);
+  border: 1px solid rgba(0, 0, 0, .12);
 }
 
 .files-holder {
   margin: 0 auto;
-
   padding-top: 30px;
   text-align: left;
   overflow-y: scroll;
@@ -38,7 +37,7 @@ h3 {
   color: white !important;
 }
 
-.black > label {
+.black>label {
   background-color: #282A36;
   color: white;
 }

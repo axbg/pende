@@ -63,13 +63,12 @@ export class ExecutionService {
     this.runOrDebug.next(data);
   }
 
-  debugOptions(data){
+  debugOptions(data) {
     this.debuggingOptions.next(data);
   }
 
-  stopExecution(){
+  stopExecution() {
     this.stoppingExection.next();
   }
-
 
 }

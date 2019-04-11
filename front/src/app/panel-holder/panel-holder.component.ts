@@ -124,7 +124,6 @@ export class PanelHolderComponent implements OnInit {
       this.socket.emit("c-stop");
     });
 
-    //user settings and file management
     this.settingsEditingService.savingSettings$.subscribe(() => {
       this.socket.emit("save-settings", this.settings);
     })
