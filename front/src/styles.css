@@ -28,6 +28,10 @@ html, body {
   display: none;
 }
 
+button:disabled {
+  background-color: blue !important;
+}
+
 .ui-tabview-nav, .ui-menubar-root-list {
   display: grid !important;
 }
