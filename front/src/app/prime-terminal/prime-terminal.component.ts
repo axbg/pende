@@ -64,7 +64,7 @@ export class PrimeTerminalComponent implements AfterViewInit, AfterViewChecked, 
                 this.command.split("ᚠ").forEach(element => {
                     this.commands.push({ text: element });
                 })
-            } else if(this.command === "stop　") {
+            } else if (this.command === "stop　") {
                 this.commands = [];
             } else {
                 this.commands.push({ text: this.command });

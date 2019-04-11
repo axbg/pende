@@ -12,7 +12,7 @@ export class SettingsConstants {
         return SettingsConstants.themes;
     }
 
-    public static getCursors() : DoubleData[] {
+    public static getCursors(): DoubleData[] {
         return SettingsConstants.cursors;
     }
 }

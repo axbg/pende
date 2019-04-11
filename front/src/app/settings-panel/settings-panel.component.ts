@@ -33,7 +33,7 @@ export class SettingsPanelComponent implements OnInit {
     this.loadSettings();
   }
 
-  loadSettings(){
+  loadSettings() {
     this.fontSize = this.settings["fontSize"].getValue();
     this.selectedTheme = this.settings["theme"];
     this.gutter = this.settings["gutter"].getValue();
@@ -54,7 +54,7 @@ export class SettingsPanelComponent implements OnInit {
     this.settingsService.modifySettings(event.value);
   }
 
-  saveSettings(){
+  saveSettings() {
     (<HTMLElement>document.querySelector(".ui-button")).style.backgroundColor = "#007AD9";
     this.settingsService.saveCurrentSettings();
   }

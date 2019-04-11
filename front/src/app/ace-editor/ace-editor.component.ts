@@ -86,13 +86,6 @@ export class AceEditorComponent implements OnInit {
       })
 
     this.executionService.beforeExecutionFileStatusCheck$.subscribe(data => {
-      /*
-      if (this.currentTab.getModified()) {
-        this.executionService.sendModifiedFile(this.currentTab);
-      } else {
-        this.executionService.sendUnmodifiedFile(this.currentTab);
-      }
-      */
       (<HTMLElement>document.querySelector(".ui-tabview-selected")).style.backgroundColor = "#007AD9";
       this.executionService.sendModifiedFile(this.currentTab);
     })
@@ -189,7 +182,8 @@ export class AceEditorComponent implements OnInit {
       name: "formatCode",
       bindKey: "Ctrl-l",
       exec: (editor) => {
-        console.log("format code");
+        let codeFormatter = Formatter.createJavaFormatter("   ");
+        this.editor.getEditor().setValue(codeFormatter.format(this.editor.getEditor().getValue()).join("\n"));
       }
     })
 
@@ -202,7 +196,6 @@ export class AceEditorComponent implements OnInit {
 
     this.editor.getEditor().session.on('change', (delta) => {
       if (!(delta.start.row === 0 && delta.end.row === delta.lines.length - 1)) {
-
 
         if (delta.end.row - delta.start.row !== 0) {
           let newBreakpoints = this.currentTab.getBreakpoints();

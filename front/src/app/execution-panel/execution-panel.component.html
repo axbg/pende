@@ -5,10 +5,10 @@
 
 <ng-template #running>
   <div class="commands-wrapper" *ngIf="!isDebugging; else debugging">
-    <button id="run" [ngClass]="(hasWhiteTheme===true)?'pi pi-caret-right icon white':'pi pi-caret-right icon black'" pTooltip="Run"
-      tooltipPosition="bottom" (click)="runCode()"></button>
-    <button id="debug" [ngClass]="(hasWhiteTheme===true)?'pi pi-eye icon white':'pi pi-eye icon icon black'" pTooltip="Debug"
-      tooltipPosition="bottom" (click)="debugCode()"></button>
+    <button id="run" [ngClass]="(hasWhiteTheme===true)?'pi pi-caret-right icon white':'pi pi-caret-right icon black'"
+      pTooltip="Run" tooltipPosition="bottom" (click)="runCode()"></button>
+    <button id="debug" [ngClass]="(hasWhiteTheme===true)?'pi pi-eye icon white':'pi pi-eye icon icon black'"
+      pTooltip="Debug" tooltipPosition="bottom" (click)="debugCode()"></button>
     <button [ngClass]="(hasWhiteTheme===true)?'pi pi-ban icon icon white':'pi pi-ban icon icon black'" pTooltip="Stop"
       tooltipPosition="bottom" (click)="stopExec()"></button>
   </div>
@@ -20,10 +20,10 @@
 
 <ng-template #debugging>
   <div class="commands-wrapper">
-    <button id="run" [ngClass]="(hasWhiteTheme===true)?'pi pi-caret-right icon white':'pi pi-caret-right icon black'" pTooltip="Run"
-      tooltipPosition="bottom" (click)="runCode()"></button>
-    <button id="debug" [ngClass]="(hasWhiteTheme===true)?'pi pi-eye icon white':'pi pi-eye icon icon black'" pTooltip="Debug"
-      tooltipPosition="bottom" (click)="debugCode()"></button>
+    <button id="run" [ngClass]="(hasWhiteTheme===true)?'pi pi-caret-right icon white':'pi pi-caret-right icon black'"
+      pTooltip="Run" tooltipPosition="bottom" (click)="runCode()"></button>
+    <button id="debug" [ngClass]="(hasWhiteTheme===true)?'pi pi-eye icon white':'pi pi-eye icon icon black'"
+      pTooltip="Debug" tooltipPosition="bottom" (click)="debugCode()"></button>
     <button [ngClass]="(hasWhiteTheme===true)?'pi pi-ban icon icon white':'pi pi-ban icon icon black'" pTooltip="Stop"
       tooltipPosition="bottom" (click)="stopExec()"></button>
   </div>
@@ -33,11 +33,6 @@
   </div>
   <div class="debug-control">
     <button pButton type="button" label="Continue" (click)="continueDebug()"></button>
-    <!--
-    <button pButton type="button" label="Step over" (click)="stepOverDebug()"></button>
-    <button pButton type="button" label="Step into" (click)="stepIntoDebug()"></button>
-    <button pButton type="button" label="Step out" (click)="stepOutDebug()"></button>
-  -->
   </div>
   <div class="debug-extra-wrapper">
     <h3 class="section-name">Variables</h3>
