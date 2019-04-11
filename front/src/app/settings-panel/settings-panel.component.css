@@ -4,7 +4,7 @@
   background-color: white;
   height: 100%;
   text-align: center;
-  border: 1px solid rgba(0,0,0,.12);
+  border: 1px solid rgba(0, 0, 0, .12);
 }
 
 .panel-title {
@@ -37,7 +37,7 @@
   color: white;
 }
 
-.black > label {
+.black>label {
   background-color: #282A36;
   color: white;
 }

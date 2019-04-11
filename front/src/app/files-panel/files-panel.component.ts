@@ -84,7 +84,6 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   }
 
-
   public handleSelect(event) {
     if (!event.node.children) {
       let path = this.composeWholePath(event.node);
@@ -233,7 +232,6 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
       }
 
       path = "/projects" + path;
-
     }
 
     return path;

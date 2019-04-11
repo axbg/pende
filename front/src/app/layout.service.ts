@@ -16,12 +16,6 @@ export class LayoutService {
   constructor() {
   }
 
-  //for dynamic ui elements, that are re-rendered multiple times, the change is not persistent
-  //we have to set their color from their inside, as a property
-  //we will, then, create an observer and an emitter down there which will change the color attribute
-  //from each dynamic component
-  //ex: tab-ribbon, settings-panel, execution-panel, files-panel
-  //to be 100% clean code we have to do this type of changing to menu-ribbon as well
   changeThemeColor(theme: String) {
     if (Constants.WHITE_THEMES.includes(theme)) {
       document.body.style.backgroundColor = "whitesmoke";

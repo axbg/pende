@@ -8,9 +8,9 @@ describe('PanelHolderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PanelHolderComponent ]
+      declarations: [PanelHolderComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
