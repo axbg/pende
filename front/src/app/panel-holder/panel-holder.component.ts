@@ -201,6 +201,7 @@ export class PanelHolderComponent implements OnInit {
 
     this.socket.fromEvent("saved").subscribe(data => {
       if (!this.isDebugging) {
+        this.changeButtonStatus("disable");
         switch (data["title"].split(".")[1]) {
           case "c":
             this.socket.emit("c-run", data);
@@ -212,10 +213,10 @@ export class PanelHolderComponent implements OnInit {
             break;
         }
       } else {
+        this.changeButtonStatus("disable");
         this.variables.clear();
         this.callstack = [];
         Object.assign(data, { ...data, breakpoints: this.breakpoints })
-
         switch (data["title"].split(".")[1]) {
           case "c":
             this.socket.emit("c-debug", data);
@@ -250,13 +251,14 @@ export class PanelHolderComponent implements OnInit {
     })
 
     this.socket.fromEvent("c-finished").subscribe(data => {
+      this.changeButtonStatus();
       this.executionService.renderOutput("finished　");
     })
 
     //c-debug-related
     this.socket.fromEvent("c-debug-output").subscribe(data => {
       let stg = <string>data;
-      if (!stg.includes("/webide/back/back")) {
+      if (!stg.includes("/back/controllers") && !stg.includes("/back/files/")) {
         stg = stg.replace(new RegExp('\r?\n', 'g'), 'ᚠ');
         this.executionService.renderOutput(stg + "　");
       } else if (stg.includes("Breakpoint")) {
@@ -265,12 +267,6 @@ export class PanelHolderComponent implements OnInit {
         this.executionService.renderOutput("\n　");
         this.executionService.renderOutput("\nbreakpoint hit:　line " + stg.split("\n")[3] + "\n");
         this.executionService.renderOutput("\n　");
-      } else if (stg.includes("(")) {
-        /*
-        let nw = stg.split("\n");
-        this.executionService.renderOutput("\n　");
-        this.executionService.renderOutput("\n　");
-        */
       }
     })
 
@@ -288,10 +284,32 @@ export class PanelHolderComponent implements OnInit {
     })
 
     this.socket.fromEvent("c-debug-finish").subscribe(data => {
+      this.changeButtonStatus();
       this.executionService.renderOutput("finished　");
       this.callstack = [];
       this.variables.clear();
     })
+  }
+
+  //refactor this
+  //pas the button statuses as a props and modify them inside angular execution panel
+  //without manipulating the dom directly
+  changeButtonStatus(status?) {
+    let em1 = <HTMLElement>document.getElementById("run");
+    let em2 = <HTMLElement>document.getElementById("debug");
+    if (status === "disable") {
+      em1.setAttribute("disabled", "true");
+      em1.setAttribute("style", "color: #666666 !important;");
+      em1.style.setProperty("border", "1px solid #999999");
+      em2.setAttribute("disabled", "true");
+      em2.setAttribute("style", "color: #666666 !important;");
+      em2.style.setProperty("border", "1px solid #999999");
+    } else {
+      em1.removeAttribute("disabled");
+      em1.removeAttribute("style");
+      em2.removeAttribute("disabled");
+      em2.removeAttribute("style");
+    }
   }
 
   loadSettings() {
