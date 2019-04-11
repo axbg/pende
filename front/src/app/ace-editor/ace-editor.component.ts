@@ -6,6 +6,7 @@ import { ExecutionService } from '../execution.service';
 import { LayoutService } from '../layout.service';
 import { FilesEditingService } from '../files-editing.service';
 import * as FileSave from 'file-saver';
+import Formatter from 'auto-format';
 
 @Component({
   selector: 'app-ace-editor',
@@ -181,6 +182,14 @@ export class AceEditorComponent implements OnInit {
         } else {
           this.drawBreakpoints(false);
         }
+      }
+    })
+
+    this.editor.getEditor().commands.addCommand({
+      name: "formatCode",
+      bindKey: "Ctrl-l",
+      exec: (editor) => {
+        console.log("format code");
       }
     })
 

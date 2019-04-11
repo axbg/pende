@@ -54,6 +54,12 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   }
 
   stopExec() {
+    let em = <HTMLElement>document.getElementById("run");
+    let em2 = <HTMLElement>document.getElementById("debug");
+    em.removeAttribute("disabled");
+    em.removeAttribute("style");
+    em2.removeAttribute("disabled");
+    em2.removeAttribute("style");
     TerminalComponent.writeTerminalCommand("stop　");
     this.executionService.stopExecution();
   }
