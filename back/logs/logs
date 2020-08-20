@@ -1,3 +1,0 @@
-::1 - - [10/Apr/2019:19:01:42 +0000] "POST /api/user/login HTTP/1.1" 200 48 "http://localhost:4200/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36"
-::1 - - [10/Apr/2019:19:07:43 +0000] "POST /api/user/login HTTP/1.1" 200 48 "http://localhost:4200/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36"
-::1 - - [10/Apr/2019:19:54:45 +0000] "POST /api/user/login HTTP/1.1" 200 48 "http://localhost:4200/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36"

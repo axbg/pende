@@ -1,1 +1,6 @@
-files/
+files/*
+!files/.gitkeep
+logs/*
+!logs/.gitkeep
+logs
+Dockerfile

@@ -1,15 +1,20 @@
 const mongoose = require('mongoose');
 
-mongoose.connect("mongodb://localhost:27017/webide", { useNewUrlParser: true });
+const mongoDB = require('../config').MONGO_DATABASE;
+
+mongoose.connect('mongodb://localhost:27017/' + mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
+
 const UserSchema = mongoose.Schema({
-    token: String,
-    mail: String,
-    files: Array,
-    settings: Object
+  token: String,
+  mail: String,
+  files: Array,
+  settings: Object,
 });
 
-const UserModel = mongoose.model("user", UserSchema);
+const User = mongoose.model('User', UserSchema);
 
 module.exports = {
-    mongoose
-}
+  mongoose,
+  User,
+};
+
