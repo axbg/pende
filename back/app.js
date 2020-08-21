@@ -24,5 +24,5 @@ io.on('connection', wsController);
 app.use('/api', router);
 
 server.listen(PORT, () => {
-  console.log('app started on http://localhost:' + PORT);
+  console.log('pende-back started on http://localhost:' + PORT);
 });
