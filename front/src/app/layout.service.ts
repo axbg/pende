@@ -6,7 +6,6 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class LayoutService {
-
   private newThemeColor = new Subject<String>();
   private loadInitialData = new Subject<Object>();
 

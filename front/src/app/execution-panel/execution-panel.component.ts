@@ -10,7 +10,6 @@ import { LayoutService } from '../layout.service';
   styleUrls: ['./execution-panel.component.css']
 })
 export class ExecutionPanelComponent implements OnInit, OnDestroy {
-
   private isDebugging: boolean = false;
 
   @Input()
