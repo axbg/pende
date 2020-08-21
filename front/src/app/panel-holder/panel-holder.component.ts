@@ -107,8 +107,7 @@ export class PanelHolderComponent implements OnInit {
     })
 
     this.executionService.runOrDebugState$.subscribe(state => {
-      this.variables.clear();
-      this.callstack = [];
+      this.clearDebugOutputs();
       this.isDebugging = <boolean>state;
     })
 
@@ -117,10 +116,12 @@ export class PanelHolderComponent implements OnInit {
     })
 
     this.executionService.sendDebugOptions$.subscribe((data) => {
+      this.clearDebugOutputs();
       this.socket.emit("c-debug-input", { command: data });
     })
 
     this.executionService.invokeExecutionStop$.subscribe(() => {
+      this.clearDebugOutputs();
       this.socket.emit("c-stop");
     });
 
@@ -129,14 +130,17 @@ export class PanelHolderComponent implements OnInit {
     })
 
     this.wsHandlers();
-
   }
 
   ngOnInit() {
   }
 
-  wsHandlers() {
+  clearDebugOutputs() {
+    this.variables.clear();
+    this.callstack = [];
+  }
 
+  wsHandlers() {
     this.socket.fromEvent("loaded-initial-data").subscribe(data => {
 
       if (data["data"]["settings"]) {
@@ -182,8 +186,7 @@ export class PanelHolderComponent implements OnInit {
             break;
         }
       } else {
-        this.variables.clear();
-        this.callstack = [];
+        this.clearDebugOutputs();
         Object.assign(data, { ...data, breakpoints: this.breakpoints })
         switch (data["title"].split(".")[1]) {
           case "c":
@@ -213,8 +216,7 @@ export class PanelHolderComponent implements OnInit {
         }
       } else {
         this.changeButtonStatus("disable");
-        this.variables.clear();
-        this.callstack = [];
+        this.clearDebugOutputs();
         Object.assign(data, { ...data, breakpoints: this.breakpoints })
         switch (data["title"].split(".")[1]) {
           case "c":
@@ -261,8 +263,7 @@ export class PanelHolderComponent implements OnInit {
         stg = stg.replace(new RegExp('\r?\n', 'g'), 'ᚠ');
         this.executionService.renderOutput(stg + "　");
       } else if (stg.includes("Breakpoint")) {
-        this.callstack = [];
-        this.variables.clear();
+        this.clearDebugOutputs();
         this.executionService.renderOutput("\n　");
         this.executionService.renderOutput("\nbreakpoint hit:　line " + stg.split("\n")[3] + "\n");
         this.executionService.renderOutput("\n　");
@@ -285,8 +286,7 @@ export class PanelHolderComponent implements OnInit {
     this.socket.fromEvent("c-debug-finish").subscribe(data => {
       this.changeButtonStatus();
       this.executionService.renderOutput("finished　");
-      this.callstack = [];
-      this.variables.clear();
+      this.clearDebugOutputs();
     })
   }
 
