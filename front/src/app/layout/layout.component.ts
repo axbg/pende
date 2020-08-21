@@ -9,7 +9,6 @@ import { LayoutService } from '../layout.service';
   styleUrls: ['./layout.component.css']
 })
 export class LayoutComponent implements OnInit {
-
   fileTabs: Array<NavigationTab> = [];
   projectTabs: Array<NavigationTab> = [];
   menuItems: [];
@@ -27,7 +26,7 @@ export class LayoutComponent implements OnInit {
   }
 
   initFileTabs() {
-    this.fileTabs.push(new NavigationTab(0, "pandë.c", "//Hack with passion!", "", 0));
+    this.fileTabs.push(new NavigationTab(0, "pendë.c", "//Hack with passion!", "", 0));
   }
 
   initprojectTabs() {
