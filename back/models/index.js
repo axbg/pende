@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 
-const mongoDB = require('../config').MONGO_DATABASE;
+const mongoDB = require('../config').MONGO_DB;
 
-mongoose.connect('mongodb://localhost:27017/' + mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect('mongodb://localhost:27017/' + mongoDB, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 const UserSchema = mongoose.Schema({
   token: String,
@@ -17,4 +20,3 @@ module.exports = {
   mongoose,
   User,
 };
-
