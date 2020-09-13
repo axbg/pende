@@ -9,8 +9,8 @@ import { Router } from '@angular/router';
 })
 export class MenuRibbonComponent implements OnInit {
 
-  private shortVisible: boolean = false;
-  private contactVisible: boolean = false;
+  private shortVisible = false;
+  private contactVisible = false;
   items: MenuItem[];
   constructor(private router: Router) { }
 
@@ -19,21 +19,21 @@ export class MenuRibbonComponent implements OnInit {
     this.items = [
       {
         label: 'Shortcuts',
-        command: (event) => { this.showDialog("short"); }
+        command: (event) => { this.showDialog('short'); }
       },
       {
         label: 'Contact',
-        command: (event) => { this.showDialog("contact"); }
+        command: (event) => { this.showDialog('contact'); }
       },
       {
         label: 'Logout',
         command: (event) => { this.logout(); }
       }
-    ]
+    ];
   }
 
   showDialog(modal) {
-    if (modal === "short") {
+    if (modal === 'short') {
       this.shortVisible = true;
     } else {
       this.contactVisible = true;
@@ -41,7 +41,7 @@ export class MenuRibbonComponent implements OnInit {
   }
 
   logout() {
-    window.localStorage.removeItem("token");
-    this.router.navigateByUrl("/");
+    window.localStorage.removeItem('token');
+    this.router.navigateByUrl('/');
   }
 }

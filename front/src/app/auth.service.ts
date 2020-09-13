@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class AuthLoginService {
 
-  redirectedFromLogin: boolean = false
+  redirectedFromLogin = false;
 
   constructor() { }
 

@@ -1,0 +1,10 @@
+.full-height {
+  height: 100%;
+  position: relative;
+}
+.welcome-text {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}

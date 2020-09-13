@@ -14,24 +14,19 @@ export class LayoutComponent implements OnInit {
   menuItems: [];
 
   constructor(private spinner: NgxSpinnerService, private layourService: LayoutService) {
-    this.initFileTabs();
-    this.initprojectTabs();
+    this.initProjectTabs();
     this.layourService.loadedInitialData$.subscribe(() => {
       this.spinner.hide();
-    })
+    });
   }
 
   ngOnInit() {
     this.spinner.show();
   }
 
-  initFileTabs() {
-    this.fileTabs.push(new NavigationTab(0, "pendë.c", "//Hack with passion!", "", 0));
-  }
-
-  initprojectTabs() {
-    this.projectTabs.push(new NavigationTab(0, "Files", "", "", 0));
-    this.projectTabs.push(new NavigationTab(0, "Execute", "", "", 1));
-    this.projectTabs.push(new NavigationTab(0, "Settings", "", "", 2));
+  initProjectTabs() {
+    this.projectTabs.push(new NavigationTab(0, 'Files', '', '', 0));
+    this.projectTabs.push(new NavigationTab(0, 'Execute', '', '', 1));
+    this.projectTabs.push(new NavigationTab(0, 'Settings', '', '', 2));
   }
 }

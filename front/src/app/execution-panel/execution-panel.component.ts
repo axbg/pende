@@ -10,7 +10,7 @@ import { LayoutService } from '../layout.service';
   styleUrls: ['./execution-panel.component.css']
 })
 export class ExecutionPanelComponent implements OnInit, OnDestroy {
-  private isDebugging: boolean = false;
+  private isDebugging = false;
 
   @Input()
   private variables: Map<string, string> = new Map<string, string>();
@@ -18,8 +18,8 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   @Input()
   private callstack: string[] = [];
 
-  private fileId: number = 0;
-  private fileName: string = "";
+  private fileId = 0;
+  private fileName = '';
 
   @Input()
   private hasWhiteTheme: boolean;
@@ -29,7 +29,7 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   constructor(private executionService: ExecutionService, private layoutService: LayoutService) {
     this.newDataSubscription = this.executionService.newDataReceived$.subscribe(data => {
       this.renderOutput(data);
-    })
+    });
   }
 
   ngOnInit() {
@@ -39,7 +39,7 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   runCode() {
     this.executionService.stopExecution();
     this.executionService.checkCurrentFileStatus();
-    TerminalComponent.writeTerminalCommand("run　");
+    TerminalComponent.writeTerminalCommand('run　');
     this.isDebugging = false;
     this.executionService.changeRunOrDebug(false);
   }
@@ -47,36 +47,36 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   debugCode() {
     this.executionService.stopExecution();
     this.executionService.checkCurrentFileStatus();
-    TerminalComponent.writeTerminalCommand("debug　");
+    TerminalComponent.writeTerminalCommand('debug　');
     this.isDebugging = true;
     this.executionService.changeRunOrDebug(true);
   }
 
   stopExec() {
-    let em = <HTMLElement>document.getElementById("run");
-    let em2 = <HTMLElement>document.getElementById("debug");
-    em.removeAttribute("disabled");
-    em.removeAttribute("style");
-    em2.removeAttribute("disabled");
-    em2.removeAttribute("style");
-    TerminalComponent.writeTerminalCommand("stop　");
+    const em = <HTMLElement>document.getElementById('run');
+    const em2 = <HTMLElement>document.getElementById('debug');
+    em.removeAttribute('disabled');
+    em.removeAttribute('style');
+    em2.removeAttribute('disabled');
+    em2.removeAttribute('style');
+    TerminalComponent.writeTerminalCommand('stop　');
     this.executionService.stopExecution();
   }
 
   continueDebug() {
-    this.executionService.debugOptions("c");
+    this.executionService.debugOptions('c');
   }
 
   stepOverDebug() {
-    this.executionService.debugOptions("next");
+    this.executionService.debugOptions('next');
   }
 
   stepIntoDebug() {
-    this.executionService.debugOptions("step");
+    this.executionService.debugOptions('step');
   }
 
   stepOutDebug() {
-    this.executionService.debugOptions("finish");
+    this.executionService.debugOptions('finish');
   }
 
   renderOutput(data) {
