@@ -17,27 +17,27 @@ export class LayoutService {
 
   changeThemeColor(theme: String) {
     if (Constants.WHITE_THEMES.includes(theme)) {
-      document.body.style.backgroundColor = "whitesmoke";
-      (<HTMLElement>document.querySelector(".code-editor")).style.backgroundColor = "whitesmoke";
-      document.querySelectorAll(".ui-menuitem").forEach(elem => {
-        (<HTMLElement>elem).style.backgroundColor = "white";
+      document.body.style.backgroundColor = 'whitesmoke';
+      (<HTMLElement>document.querySelector('.code-editor')).style.backgroundColor = 'whitesmoke';
+      document.querySelectorAll('.ui-menuitem').forEach(elem => {
+        (<HTMLElement>elem).style.backgroundColor = 'white';
       });
-      document.querySelectorAll(".ui-menuitem-text").forEach(elem => {
-        (<HTMLElement>elem).style.color = "black";
+      document.querySelectorAll('.ui-menuitem-text').forEach(elem => {
+        (<HTMLElement>elem).style.color = 'black';
       });
-      document.getElementById("menu-panel").style.backgroundColor = "whitesmoke";
-      this.changeGeneralThemeColor("white");
+      document.getElementById('menu-panel').style.backgroundColor = 'whitesmoke';
+      this.changeGeneralThemeColor('white');
     } else {
-      document.body.style.backgroundColor = "#101010";
-      (<HTMLElement>document.querySelector(".code-editor")).style.backgroundColor = "#101010";
-      document.querySelectorAll(".ui-menuitem").forEach(elem => {
-        (<HTMLElement>elem).style.backgroundColor = "#101010";
+      document.body.style.backgroundColor = '#101010';
+      (<HTMLElement>document.querySelector('.code-editor')).style.backgroundColor = '#101010';
+      document.querySelectorAll('.ui-menuitem').forEach(elem => {
+        (<HTMLElement>elem).style.backgroundColor = '#101010';
       });
-      document.querySelectorAll(".ui-menuitem-text").forEach(elem => {
-        (<HTMLElement>elem).style.color = "white";
+      document.querySelectorAll('.ui-menuitem-text').forEach(elem => {
+        (<HTMLElement>elem).style.color = 'white';
       });
-      document.getElementById("menu-panel").style.backgroundColor = "#101010";
-      this.changeGeneralThemeColor("black");
+      document.getElementById('menu-panel').style.backgroundColor = '#101010';
+      this.changeGeneralThemeColor('black');
     }
   }
 

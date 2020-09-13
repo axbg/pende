@@ -5,8 +5,8 @@ import { CommonModule } from '@angular/common';
 import { TerminalService } from './terminalservice';
 import { Subscription } from 'rxjs';
 
-//this is a remake of the primeng terminal component
-//because the one present in the library is outdated..
+// this is a remake of the primeng terminal component
+// because the one present in the library is outdated..
 @Component({
     selector: 'app-prime-terminal',
     templateUrl: './prime-terminal.component.html',
@@ -59,12 +59,12 @@ export class PrimeTerminalComponent implements AfterViewInit, AfterViewChecked, 
     }
 
     handleCommand(event: KeyboardEvent) {
-        if (event.code === "enter" || event.keyCode === 13) {
-            if (this.command.includes("ᚠ")) {
-                this.command.split("ᚠ").forEach(element => {
+        if (event.code === 'enter' || event.keyCode === 13) {
+            if (this.command.includes('ᚠ')) {
+                this.command.split('ᚠ').forEach(element => {
                     this.commands.push({ text: element });
-                })
-            } else if (this.command === "stop　") {
+                });
+            } else if (this.command === 'stop　') {
                 this.commands = [];
             } else {
                 this.commands.push({ text: this.command });

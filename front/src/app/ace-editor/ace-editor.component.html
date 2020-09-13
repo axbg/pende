@@ -1,1 +1,10 @@
-<ace-editor #editor style="height:100%;"></ace-editor>
+<div class="full-height">
+  <ace-editor
+    #editor
+    class="full-height"
+    [style.visibility]="showEditor ? 'visible' : 'hidden'"
+  ></ace-editor>
+  <div class="welcome-text" *ngIf="!showEditor">
+    <h3>Open a file and let's start hacking</h3>
+  </div>
+</div>
