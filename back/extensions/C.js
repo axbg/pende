@@ -1,9 +1,10 @@
 const AbstractExtension = require("./AbstractExtension");
 const WsEvent = require("../classes/WsEvent");
 const childProcess = require("child_process");
-const { timeStamp } = require("console");
 
-const filesPath = __dirname + "/../files";
+const path = require('path');
+
+const filesPath = path.join(__dirname + "/../files");
 
 class C extends AbstractExtension {
   extend() {
@@ -207,9 +208,9 @@ class C extends AbstractExtension {
     try {
       this.executable.kill();
       if (debug) {
-        socket.emit(WsEvent.C.DEBUG_FINISHED);
+        this.socket.emit(WsEvent.C.DEBUG_FINISHED);
       } else {
-        socket.emit(WsEvent.C.FINISHED);
+        this.socket.emit(WsEvent.C.FINISHED);
       }
     } catch (e) {
       console.log(e);
