@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  loginURL = "http://localhost:8080/api/user/login";
+  loginURL = 'http://localhost:8080/api/user/login';
 
   constructor(private googleAuthService: AuthService, private http: HttpClient,
     private authService: AuthLoginService, private router: Router) {
@@ -21,17 +21,17 @@ export class LoginComponent implements OnInit {
     this.googleAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
       .then((result) => {
         this.http.post(this.loginURL, { token: result.idToken })
-          .subscribe(result => {
-            window.localStorage.setItem("token", result["token"]);
+          .subscribe(res => {
+            window.localStorage.setItem('token', res['token']);
             window.location.reload();
-          })
+          });
       });
   }
 
   ngOnInit() {
-    if (window.localStorage.getItem("token")) {
+    if (window.localStorage.getItem('token')) {
       this.authService.setRedirectedFromLogin();
-      this.router.navigateByUrl("/ide");
+      this.router.navigateByUrl('/ide');
     }
   }
 

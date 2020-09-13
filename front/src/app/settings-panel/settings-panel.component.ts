@@ -15,11 +15,11 @@ export class SettingsPanelComponent implements OnInit {
   cursors: DoubleData[];
   selectedTheme: DoubleData;
   selectedCursor: DoubleData;
-  fontSize: number = 24;
-  gutter: boolean = true;
+  fontSize = 24;
+  gutter = true;
 
   @Input()
-  hasWhiteTheme: boolean = false;
+  hasWhiteTheme = false;
 
   @Input()
   settings: DoubleData[];
@@ -34,28 +34,28 @@ export class SettingsPanelComponent implements OnInit {
   }
 
   loadSettings() {
-    this.fontSize = this.settings["fontSize"].getValue();
-    this.selectedTheme = this.settings["theme"];
-    this.gutter = this.settings["gutter"].getValue();
+    this.fontSize = this.settings['fontSize'].getValue();
+    this.selectedTheme = this.settings['theme'];
+    this.gutter = this.settings['gutter'].getValue();
   }
 
   transformSliderData(event) {
-    let property: String = event.event.target.parentNode.parentNode.getAttribute("property");
-    this.handlePropertyChange({ value: new DoubleData(event.value, "", property) });
+    const property: String = event.event.target.parentNode.parentNode.getAttribute('property');
+    this.handlePropertyChange({ value: new DoubleData(event.value, '', property) });
   }
 
   transformSwitchData(event) {
-    let property: String = event.originalEvent.target.parentNode.parentNode.getAttribute("property");
-    this.handlePropertyChange({ value: new DoubleData(event.checked, "", property) });
+    const property: String = event.originalEvent.target.parentNode.parentNode.getAttribute('property');
+    this.handlePropertyChange({ value: new DoubleData(event.checked, '', property) });
   }
 
   handlePropertyChange(event) {
-    (<HTMLElement>document.querySelector(".ui-button")).style.backgroundColor = "#B71C1C";
+    (<HTMLElement>document.querySelector('.ui-button')).style.backgroundColor = '#B71C1C';
     this.settingsService.modifySettings(event.value);
   }
 
   saveSettings() {
-    (<HTMLElement>document.querySelector(".ui-button")).style.backgroundColor = "#007AD9";
+    (<HTMLElement>document.querySelector('.ui-button')).style.backgroundColor = '#007AD9';
     this.settingsService.saveCurrentSettings();
   }
 }

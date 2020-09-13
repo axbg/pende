@@ -1,37 +1,44 @@
-import { Component, OnInit, Input, OnChanges, ViewChild, ChangeDetectorRef, OnDestroy, AfterViewInit } from '@angular/core';
-import { TreeModel } from 'ng2-tree';
-import { TabEditingServiceService } from '../tab-editing-service.service';
-import { FilesEditingService } from '../files-editing.service';
-import { ISubscription } from 'rxjs/Subscription';
+import {
+  Component,
+  OnInit,
+  Input,
+  OnChanges,
+  ViewChild,
+  ChangeDetectorRef,
+  OnDestroy,
+  AfterViewInit,
+} from "@angular/core";
+import { TreeModel } from "ng2-tree";
+import { TabEditingServiceService } from "../tab-editing-service.service";
+import { FilesEditingService } from "../files-editing.service";
+import { ISubscription } from "rxjs/Subscription";
 
 @Component({
-  selector: 'app-files-panel',
-  templateUrl: './files-panel.component.html',
-  styleUrls: ['./files-panel.component.css']
+  selector: "app-files-panel",
+  templateUrl: "./files-panel.component.html",
+  styleUrls: ["./files-panel.component.css"],
 })
-
-export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
-
+export class FilesPanelComponent implements OnInit, AfterViewInit, OnDestroy {
   private tree: TreeModel = {
-    value: 'projects',
+    value: "projects",
     path: "",
     settings: {
-      'static': false,
-      'rightMenu': true,
-      'leftMenu': false,
-      'cssClasses': {
-        'expanded': 'pi pi-angle-down margin clickable',
-        'collapsed': 'pi pi-angle-right margin clickable',
-        'leaf': 'nothing',
-        'empty': 'pi pi-circle-off margin clickable'
+      static: false,
+      rightMenu: true,
+      leftMenu: false,
+      cssClasses: {
+        expanded: "pi pi-angle-down margin clickable",
+        collapsed: "pi pi-angle-right margin clickable",
+        leaf: "nothing",
+        empty: "pi pi-circle-off margin clickable",
       },
-      'templates': {
-        'node': '<i class="pi pi-folder clickable"></i>',
-        'leaf': '<i class="pi pi-file clickable"></i>',
-        'leftMenu': '<i></i>',
-      }
-    }
-  }
+      templates: {
+        node: '<i class="pi pi-folder clickable"></i>',
+        leaf: '<i class="pi pi-file clickable"></i>',
+        leftMenu: "<i></i>",
+      },
+    },
+  };
 
   @Input()
   files: any;
@@ -42,16 +49,17 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
   hasWhiteTheme: boolean;
 
   @ViewChild("treeComponent")
-  treeComponent
+  treeComponent;
 
   updateFileIdFiredSubscription: ISubscription;
 
-  constructor(private tabEditingService: TabEditingServiceService,
-    private filesEditingService: FilesEditingService) {
-
-    this.updateFileIdFiredSubscription = this.filesEditingService.updateFileIdFired$.subscribe(file => {
-
-    });
+  constructor(
+    private tabEditingService: TabEditingServiceService,
+    private filesEditingService: FilesEditingService
+  ) {
+    this.updateFileIdFiredSubscription = this.filesEditingService.updateFileIdFired$.subscribe(
+      (file) => {}
+    );
   }
 
   ngOnInit() {
@@ -65,38 +73,40 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   applyThemeColor() {
-    let stopDrag: any = document.querySelectorAll(".value-container");
-    let changeColorIcon: any = document.querySelectorAll(".node-template");
-    let changeColorText: any = document.querySelectorAll(".node-name");
+    const stopDrag: any = document.querySelectorAll(".value-container");
+    const changeColorIcon: any = document.querySelectorAll(".node-template");
+    const changeColorText: any = document.querySelectorAll(".node-name");
 
     for (let index = 0; index < changeColorIcon.length; index++) {
-      let icon: HTMLElement = changeColorIcon[index];
-      let text: HTMLElement = changeColorText[index];
+      const icon: HTMLElement = changeColorIcon[index];
+      const text: HTMLElement = changeColorText[index];
 
       icon.style.color = this.hasWhiteTheme ? "black" : "white";
       text.style.color = this.hasWhiteTheme ? "black" : "white";
     }
 
-    stopDrag.forEach(node => {
-      let n: HTMLElement = node;
+    stopDrag.forEach((node) => {
+      const n: HTMLElement = node;
       n.setAttribute("draggable", "false");
       n.style.userSelect = "none";
-    })
+    });
   }
 
   public handleSelect(event) {
     if (!event.node.children) {
-      let path = this.composeWholePath(event.node);
+      const path = this.composeWholePath(event.node);
       this.tabEditingService.notifyFileStore({
-        title: event.node.node.value, path: path,
-        id: event.node.node.id, hasChildren: event.node.children
+        title: event.node.node.value,
+        path: path,
+        id: event.node.node.id,
+        hasChildren: event.node.children,
       });
     }
   }
 
   public handleRemove(event) {
     if (event.node.value) {
-      let currentNode = event.node;
+      const currentNode = event.node;
 
       if (event.node.value === "projects" && event.node.node.path === "") {
         alert("You nasty! Root directory cannot be deleted!");
@@ -104,12 +114,17 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
       }
 
       if (confirm("Do you want to delete this element?")) {
-        let path = this.composeWholePath(event.node);
-        this.files = this.updateTreeModelAndAppendPath(this.treeComponent.tree, -1).children;
+        const path = this.composeWholePath(event.node);
+        this.files = this.updateTreeModelAndAppendPath(
+          this.treeComponent.tree,
+          -1
+        ).children;
         this.filesEditingService.fireFileAction({
-          type: "delete", node: event.node.value,
-          files: this.files, path: path
-        })
+          type: "delete",
+          node: event.node.value,
+          files: this.files,
+          path: path,
+        });
       } else {
         currentNode.parent.addChild(currentNode);
       }
@@ -117,9 +132,9 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public handleRename(event) {
-    let oldName = event.oldValue;
-    let newName = event.newValue;
-    let currentId = event.node.node.id;
+    const oldName = event.oldValue;
+    const newName = event.newValue;
+    const currentId = event.node.node.id;
 
     if (oldName === "projects" && event.node.node.path === "") {
       alert("You nasty! Root directory cannot be renamed");
@@ -128,8 +143,10 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     for (let index = 0; index < event.node.parent.children.length; index++) {
-      if (event.node.parent.children[index].node.id !== currentId &&
-        event.node.parent.children[index].node.value === newName) {
+      if (
+        event.node.parent.children[index].node.id !== currentId &&
+        event.node.parent.children[index].node.value === newName
+      ) {
         event.node.node.value = oldName;
         alert("A file with this name already exists in the current folder");
         return;
@@ -137,29 +154,35 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     if (!event.node.children) {
-      let extension = newName.split(".")[1];
-      if (!extension || (extension !== 'c' && extension !== "cpp")) {
+      const extension = newName.split(".")[1];
+      if (!extension || (extension !== "c" && extension !== "cpp")) {
         alert("Extension not valid - could be: c or cpp");
         event.node.node.value = oldName;
         return;
       }
     }
 
-    //this should be optimized
-    //identify the node and change its color
+    // this should be optimized
+    // identify the node and change its color
     if (!this.hasWhiteTheme) {
       setTimeout(this.applyThemeColor, 50);
     }
 
-    this.files = this.updateTreeModelAndAppendPath(this.treeComponent.tree, event.node.id).children;
+    this.files = this.updateTreeModelAndAppendPath(
+      this.treeComponent.tree,
+      event.node.id
+    ).children;
     this.filesEditingService.fireFileAction({
-      type: "rename", oldName: oldName, newName: newName,
-      path: this.currentFilePath, files: this.files
+      type: "rename",
+      oldName: oldName,
+      newName: newName,
+      path: this.currentFilePath,
+      files: this.files,
     });
   }
 
   public handleCreate(event) {
-    let [filename, extension] = event.node.value.split(".");
+    const [filename, extension] = event.node.value.split(".");
     let isDirectory = false;
 
     if (!filename) {
@@ -169,28 +192,33 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (event.node.children) {
       for (let index = 0; index < event.node.parent.children.length; index++) {
-        if (event.node.parent.children[index].node.value === event.node.value
-          && event.node.parent.children[index].node.children !== null
-          && event.node.parent.children[index].node.id !== event.node.id) {
+        if (
+          event.node.parent.children[index].node.value === event.node.value &&
+          event.node.parent.children[index].node.children !== null &&
+          event.node.parent.children[index].node.id !== event.node.id
+        ) {
           event.node.parent.removeChild(event.node);
-          alert("A directory with this name already exists in the current folder");
+          alert(
+            "A directory with this name already exists in the current folder"
+          );
           return;
         }
       }
 
       isDirectory = true;
-
     } else {
-      if (!extension || (extension !== 'c' && extension !== "cpp")) {
+      if (!extension || (extension !== "c" && extension !== "cpp")) {
         alert("Extension not valid - could be: c or cpp");
         event.node.parent.removeChild(event.node);
         return;
       }
 
       for (let index = 0; index < event.node.parent.children.length; index++) {
-        if (event.node.parent.children[index].node.value === event.node.value
-          && event.node.children === null
-          && event.node.parent.children[index].node.id !== event.node.id) {
+        if (
+          event.node.parent.children[index].node.value === event.node.value &&
+          event.node.children === null &&
+          event.node.parent.children[index].node.id !== event.node.id
+        ) {
           event.node.parent.removeChild(event.node);
           alert("A file with this name already exists in the current folder");
           return;
@@ -198,23 +226,30 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
 
-    //this should be optimized
-    //identify the node and change its color
+    // this should be optimized
+    // identify the node and change its color
     if (!this.hasWhiteTheme) {
       setTimeout(this.applyThemeColor, 50);
     }
 
-    this.files = this.updateTreeModelAndAppendPath(this.treeComponent.tree, event.node.id).children;
+    this.files = this.updateTreeModelAndAppendPath(
+      this.treeComponent.tree,
+      event.node.id
+    ).children;
     this.filesEditingService.fireFileAction({
-      type: "create", node: event.node.value,
-      directory: isDirectory, path: this.currentFilePath, id: event.node.id,
-      files: this.files, content: ""
-    })
+      type: "create",
+      node: event.node.value,
+      directory: isDirectory,
+      path: this.currentFilePath,
+      id: event.node.id,
+      files: this.files,
+      content: "",
+    });
   }
 
   handleExpanded(event) {
-    //this should be optimized
-    //identify the node and change its color
+    // this should be optimized
+    // identify the node and change its color
     if (!this.hasWhiteTheme) {
       setTimeout(this.applyThemeColor, 50);
     }
@@ -239,7 +274,7 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
 
   updateTreeModelAndAppendPath(tree, id) {
     const model: TreeModel = {
-      value: '',
+      value: "",
     };
 
     model.value = tree.node.value;
@@ -250,10 +285,10 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
       this.currentFilePath = this.composeWholePath(tree);
     }
 
-    model["id"] = tree.node['id'];
+    model["id"] = tree.node["id"];
     if (tree.children) {
       model["children"] = [];
-      tree.children.forEach(child => {
+      tree.children.forEach((child) => {
         model["children"].push(this.updateTreeModelAndAppendPath(child, id));
       });
     }
@@ -261,9 +296,7 @@ export class FilesPanelComponent implements OnInit, OnDestroy, AfterViewInit {
     return model;
   }
 
-
   ngOnDestroy() {
     this.updateFileIdFiredSubscription.unsubscribe();
   }
-
 }

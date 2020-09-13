@@ -19,7 +19,7 @@ export class TabRibbonComponent implements OnInit {
     this.fileEditingService.checkIfFileOpenedOnDeletionOrRename$.subscribe(file => {
       if (this.closable) {
         for (let index = 0; index < this.tabs.length; index++) {
-          if (this.tabs[index].getPath() === file["path"] && this.tabs[index].getTitle() === file["name"]) {
+          if (this.tabs[index].getPath() === file['path'] && this.tabs[index].getTitle() === file['name']) {
             this.closeTabProcedure(index);
             break;
           }
@@ -46,7 +46,7 @@ export class TabRibbonComponent implements OnInit {
         } else {
           this.renderTab();
         }
-      })
+      });
     }
   }
 
@@ -59,7 +59,7 @@ export class TabRibbonComponent implements OnInit {
   }
 
   clearTarget() {
-    this.tabEditingService.renderTabSource(new NavigationTab("", "", "", "", 0));
+    this.tabEditingService.renderTabSource(new NavigationTab('', '', '', '', 0));
   }
 
   tabChange(index) {
@@ -69,15 +69,14 @@ export class TabRibbonComponent implements OnInit {
 
   closeTabProcedure(index) {
     if (this.tabs.length > 1) {
-
       if (this.currentIndex === index && index !== 0) {
         this.tabs.splice(index, 1);
         this.tabChange(this.currentIndex - 1);
       } else if (this.currentIndex > index) {
-        //little bug here
-        //example
-        //when tab 4 is selected and tab 2 is deleted
-        //selection will jump to tab 3, instead of tab 4
+        // little bug here
+        // example
+        // when tab 4 is selected and tab 2 is deleted
+        // selection will jump to tab 3, instead of tab 4
         this.tabs.splice(index, 1);
         this.currentIndex = this.currentIndex - 1;
 
@@ -93,15 +92,16 @@ export class TabRibbonComponent implements OnInit {
     } else {
       this.tabs.splice(index, 1);
       this.clearTarget();
+      this.tabEditingService.notifyLastTabClosed();
     }
   }
 
   closeTab(index) {
     if (this.tabs[index].getModified()) {
-      if (confirm("Do you want to close this file?")) {
-        if (confirm("Do you want to save the file before leaving?")) {
-          //api call to save file
-          //save file if modified & closing
+      if (confirm('Do you want to close this file?')) {
+        if (confirm('Do you want to save the file before leaving?')) {
+          // api call to save file
+          // save file if modified & closing
           console.log('yas save');
         }
         this.closeTabProcedure(index);

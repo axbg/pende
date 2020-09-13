@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { TerminalService } from '../prime-terminal/terminalservice'
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { TerminalService } from '../prime-terminal/terminalservice';
 import { Subscription } from 'rxjs/Subscription';
 import { ExecutionService } from '../execution.service';
 
@@ -9,25 +9,21 @@ import { ExecutionService } from '../execution.service';
   styleUrls: ['./terminal.component.css'],
   providers: [TerminalService]
 })
-export class TerminalComponent implements OnInit {
-
-  private subscription: Subscription;
-  prompt: string = "";
-  mode: string;
+export class TerminalComponent implements OnInit, OnDestroy {
 
   constructor(private terminalService: TerminalService, private executionService: ExecutionService) {
     this.terminalService.commandHandler.subscribe(command => {
 
-      if (command.includes("　")) {
-        let c = command.replace("　", "");
+      if (command.includes('　')) {
+        const c = command.replace('　', '');
         switch (c) {
-          case "run":
-            this.mode = "run";
+          case 'run':
+            this.mode = 'run';
             break;
-          case "debug":
-            this.mode = "debug";
+          case 'debug':
+            this.mode = 'debug';
             break;
-          case "stop":
+          case 'stop':
             break;
           default:
             break;
@@ -38,20 +34,24 @@ export class TerminalComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-
-  }
+  private subscription: Subscription;
+  prompt = '';
+  mode: string;
 
   static writeTerminalCommand(command: any) {
-    let terminalInput = <HTMLInputElement>document.querySelector(".ui-terminal-input");
-    let keyboardEvent = new KeyboardEvent("keydown", { code: "enter" });
+    const terminalInput = <HTMLInputElement>document.querySelector('.ui-terminal-input');
+    const keyboardEvent = new KeyboardEvent('keydown', { code: 'enter' });
     terminalInput.value = command.toString();
-    terminalInput.dispatchEvent(new Event("input"));
+    terminalInput.dispatchEvent(new Event('input'));
     terminalInput.dispatchEvent(keyboardEvent);
-    terminalInput.value = "";
+    terminalInput.value = '';
     setTimeout(() => {
-      document.querySelector(".ui-terminal").scrollTop = document.querySelector(".ui-terminal").scrollHeight;
+      document.querySelector('.ui-terminal').scrollTop = document.querySelector('.ui-terminal').scrollHeight;
     }, 10);
+  }
+
+  ngOnInit() {
+
   }
 
   ngOnDestroy() {
