@@ -1,11 +1,11 @@
 <div class="container" [ngSwitch]="panel">
   <!-- render specific Panels for each ngSwitchCase option -->
   <div class="files-container" *ngSwitchCase="'Files'">
-    <app-files-panel *ngIf="filesLoaded" [files]="files" [hasWhiteTheme]="hasWhiteTheme"></app-files-panel>
+    <app-files-panel *ngIf="filesLoaded" [files]="files" [themeColor]="themeColor"></app-files-panel>
   </div>
-  <app-execution-panel *ngSwitchCase="'Execute'" [hasWhiteTheme]="hasWhiteTheme" [variables]="variables"
+  <app-execution-panel *ngSwitchCase="'Execute'" [themeColor]="themeColor" [variables]="variables"
     [callstack]="callstack">
   </app-execution-panel>
-  <app-settings-panel *ngSwitchCase="'Settings'" [settings]="settings" [hasWhiteTheme]="hasWhiteTheme">
+  <app-settings-panel *ngSwitchCase="'Settings'" [settings]="settings" [themeColor]="themeColor">
   </app-settings-panel>
 </div>

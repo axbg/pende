@@ -2,11 +2,8 @@ import {
   Component,
   OnInit,
   Input,
-  OnChanges,
   ViewChild,
-  ChangeDetectorRef,
-  OnDestroy,
-  AfterViewInit,
+  OnDestroy
 } from "@angular/core";
 import { TreeModel } from "ng2-tree";
 import { TabEditingServiceService } from "../tab-editing-service.service";
@@ -18,7 +15,7 @@ import { ISubscription } from "rxjs/Subscription";
   templateUrl: "./files-panel.component.html",
   styleUrls: ["./files-panel.component.css"],
 })
-export class FilesPanelComponent implements OnInit, AfterViewInit, OnDestroy {
+export class FilesPanelComponent implements OnInit, OnDestroy {
   private tree: TreeModel = {
     value: "projects",
     path: "",
@@ -46,7 +43,7 @@ export class FilesPanelComponent implements OnInit, AfterViewInit, OnDestroy {
   currentFilePath: any;
 
   @Input()
-  hasWhiteTheme: boolean;
+  themeColor: String;
 
   @ViewChild("treeComponent")
   treeComponent;
@@ -67,29 +64,17 @@ export class FilesPanelComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (!this.hasWhiteTheme) {
-      this.applyThemeColor();
-    }
+    this.stopItemsDragging();
   }
 
-  applyThemeColor() {
-    const stopDrag: any = document.querySelectorAll(".value-container");
-    const changeColorIcon: any = document.querySelectorAll(".node-template");
-    const changeColorText: any = document.querySelectorAll(".node-name");
+  stopItemsDragging() {
+    const items: any = document.querySelectorAll(".value-container");
 
-    for (let index = 0; index < changeColorIcon.length; index++) {
-      const icon: HTMLElement = changeColorIcon[index];
-      const text: HTMLElement = changeColorText[index];
-
-      icon.style.color = this.hasWhiteTheme ? "black" : "white";
-      text.style.color = this.hasWhiteTheme ? "black" : "white";
-    }
-
-    stopDrag.forEach((node) => {
-      const n: HTMLElement = node;
+    items.forEach(node => {
+      let n: HTMLElement = node;
       n.setAttribute("draggable", "false");
       n.style.userSelect = "none";
-    });
+    })
   }
 
   public handleSelect(event) {
@@ -162,12 +147,6 @@ export class FilesPanelComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
 
-    // this should be optimized
-    // identify the node and change its color
-    if (!this.hasWhiteTheme) {
-      setTimeout(this.applyThemeColor, 50);
-    }
-
     this.files = this.updateTreeModelAndAppendPath(
       this.treeComponent.tree,
       event.node.id
@@ -226,12 +205,6 @@ export class FilesPanelComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
 
-    // this should be optimized
-    // identify the node and change its color
-    if (!this.hasWhiteTheme) {
-      setTimeout(this.applyThemeColor, 50);
-    }
-
     this.files = this.updateTreeModelAndAppendPath(
       this.treeComponent.tree,
       event.node.id
@@ -245,14 +218,6 @@ export class FilesPanelComponent implements OnInit, AfterViewInit, OnDestroy {
       files: this.files,
       content: "",
     });
-  }
-
-  handleExpanded(event) {
-    // this should be optimized
-    // identify the node and change its color
-    if (!this.hasWhiteTheme) {
-      setTimeout(this.applyThemeColor, 50);
-    }
   }
 
   composeWholePath(node) {

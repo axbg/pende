@@ -4,40 +4,23 @@
 
 .files {
   background-color: white;
-  margin: 10px;
   height: 100%;
   text-align: center;
-  border: 1px solid rgba(0, 0, 0, .12);
+  border: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .files-holder {
   margin: 0 auto;
-  padding-top: 30px;
   text-align: left;
-  overflow-y: scroll;
-  height: 80%;
+  height: 100%;
   font-size: 1.2em;
-}
-
-.tree-holder {
-  margin-left: 10%;
 }
 
 h3 {
   text-align: center;
 }
 
-.white {
-  background-color: white !important;
-  color: black !important;
-}
-
-.black {
-  background-color: #282A36 !important;
-  color: white !important;
-}
-
-.black>label {
-  background-color: #282A36;
+.bgblack >>> .node-name,
+.bgblack >>> .node-template {
   color: white;
 }

@@ -22,7 +22,7 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   private fileName = '';
 
   @Input()
-  private hasWhiteTheme: boolean;
+  private themeColor: String;
 
   private newDataSubscription: ISubscription;
 
