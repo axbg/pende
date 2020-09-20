@@ -17,12 +17,14 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   @Input()
   private callstack: string[] = [];
 
-  private fileId = 0;
-  private fileName = "";
+  @Input()
+  private initialized: boolean;
 
   @Input()
   private themeColor: String;
 
+  private fileId = 0;
+  private fileName = "";
   private newDataSubscription: ISubscription;
 
   constructor(private executionService: ExecutionService) {
@@ -37,15 +39,34 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
     this.executionService.showExecutionBreakpoints();
   }
 
+  checkInitialized() {
+    if (!this.initialized) {
+      window.alert("You should open a file first");
+      return false;
+    }
+
+    return true;
+  }
+
   runCode() {
+    if (!this.checkInitialized()) {
+      return;
+    }
+
     this.executionService.stopExecution();
     this.executionService.checkCurrentFileStatus();
+
     TerminalComponent.writeTerminalCommand("run　");
+
     this.isDebugging = false;
     this.executionService.changeRunOrDebug(false);
   }
 
   debugCode() {
+    if (!this.checkInitialized()) {
+      return;
+    }
+
     this.executionService.stopExecution();
     this.executionService.checkCurrentFileStatus();
     TerminalComponent.writeTerminalCommand("debug　");
@@ -65,19 +86,11 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   }
 
   continueDebug() {
+    if (!this.checkInitialized()) {
+      return;
+    }
+
     this.executionService.debugOptions("c");
-  }
-
-  stepOverDebug() {
-    this.executionService.debugOptions("next");
-  }
-
-  stepIntoDebug() {
-    this.executionService.debugOptions("step");
-  }
-
-  stepOutDebug() {
-    this.executionService.debugOptions("finish");
   }
 
   renderOutput(data) {
