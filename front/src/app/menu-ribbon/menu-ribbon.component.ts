@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Router } from '@angular/router';
+import { LayoutService } from '../layout.service';
 
 @Component({
   selector: 'app-menu-ribbon',
@@ -8,11 +9,18 @@ import { Router } from '@angular/router';
   styleUrls: ['./menu-ribbon.component.css']
 })
 export class MenuRibbonComponent implements OnInit {
-
   private shortVisible = false;
   private contactVisible = false;
-  items: MenuItem[];
-  constructor(private router: Router) { }
+  private items: MenuItem[];
+  private themeColor: String;
+
+  constructor(private router: Router, private layoutService: LayoutService) { 
+    layoutService.settingsChanged$.subscribe((settings) => {
+      if(settings.getProperty() === "theme") {
+        this.themeColor = settings.getColor();
+      }
+    });
+  }
 
   ngOnInit() {
 

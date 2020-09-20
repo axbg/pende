@@ -6,7 +6,7 @@ import { LayoutService } from "../layout.service";
 import { FilesEditingService } from "../files-editing.service";
 import * as FileSave from "file-saver";
 import Formatter from "auto-format";
-import { Constants } from 'src/classes/Constants';
+import { Constants } from "src/classes/Constants";
 
 @Component({
   selector: "app-ace-editor",
@@ -118,6 +118,10 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
       this.executionService.sendExecutionBreakpoints(
         this.currentTab.getBreakpoints()
       );
+    });
+
+    this.fileEditingService.saveFileShortcutFired$.subscribe(() => {
+      this.saveFile();
     });
   }
 
@@ -293,7 +297,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
     const blob = new Blob([<BlobPart>this.currentTab.getContent()], {
       type: "plain/text;charset=utf-8",
     });
-    
+
     FileSave.saveAs(blob, <string>this.currentTab.getTitle());
   }
 }
