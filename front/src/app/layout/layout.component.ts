@@ -21,7 +21,6 @@ export class LayoutComponent implements OnInit {
     });
 
     this.layourService.settingsChanged$.subscribe((settings) => {
-      console.log(settings);
       if(settings.getProperty() === "theme") {
         this.themeColor = settings.getColor();
       }
