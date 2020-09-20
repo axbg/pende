@@ -1,4 +1,4 @@
-<p-menubar [model]="items">
+<p-menubar [model]="items" styleClass="menucus" [ngClass]="{'bgblack' : themeColor === 'black'}">
 </p-menubar>
 <p-dialog header="Shortcuts" [(visible)]="shortVisible" [responsive]="true" [maximizable]="true" closeOnEscape="true">
     <div class="container">

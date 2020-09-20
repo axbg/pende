@@ -100,9 +100,7 @@ export class TabRibbonComponent implements OnInit {
     if (this.tabs[index].getModified()) {
       if (confirm('Do you want to close this file?')) {
         if (confirm('Do you want to save the file before leaving?')) {
-          // api call to save file
-          // save file if modified & closing
-          console.log('yas save');
+          this.fileEditingService.saveFileShortcutCall();
         }
         this.closeTabProcedure(index);
       }

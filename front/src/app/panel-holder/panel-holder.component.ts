@@ -36,6 +36,7 @@ export class PanelHolderComponent implements OnInit {
     private layoutService: LayoutService,
     private socket: Socket) {
     this.tabEditingService.menuPanel$.subscribe(payload => {
+      console.log(payload);
       this.panel = payload;
     });
 
@@ -95,7 +96,7 @@ export class PanelHolderComponent implements OnInit {
       this.socket.emit('structure', { ...file.getEssentialData(), needToSave: false });
     });
 
-    this.filesEditingService.saveFileShortcutFired$.subscribe(file => {
+    this.filesEditingService.saveFileSourceFired$.subscribe(file => {
       this.socket.emit('save-file', {
         name: file['title'], path: file['path'],
         content: file['content'], directory: false
