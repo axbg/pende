@@ -1,21 +1,26 @@
-import { Component, OnInit, TemplateRef, ContentChild, Input } from '@angular/core';
-import { TabEditingServiceService } from '../tab-editing-service.service';
-import { DoubleData } from 'src/classes/DoubleData';
-import { SettingsEditingServiceService } from '../settings-editing-service.service';
-import { NavigationTab } from 'src/classes/NavigationTab';
-import { FilesEditingService } from '../files-editing.service';
-import { LayoutService } from '../layout.service';
-import { Constants } from 'src/classes/Constants';
-import { ExecutionService } from '../execution.service';
-import { Socket } from 'ngx-socket-io';
+import {
+  Component,
+  OnInit,
+  TemplateRef,
+  ContentChild,
+  Input,
+} from "@angular/core";
+import { TabEditingServiceService } from "../tab-editing-service.service";
+import { DoubleData } from "src/classes/DoubleData";
+import { SettingsEditingServiceService } from "../settings-editing-service.service";
+import { NavigationTab } from "src/classes/NavigationTab";
+import { FilesEditingService } from "../files-editing.service";
+import { LayoutService } from "../layout.service";
+import { Constants } from "src/classes/Constants";
+import { ExecutionService } from "../execution.service";
+import { Socket } from "ngx-socket-io";
 
 @Component({
-  selector: 'app-panel-holder',
-  templateUrl: './panel-holder.component.html',
-  styleUrls: ['./panel-holder.component.css']
+  selector: "app-panel-holder",
+  templateUrl: "./panel-holder.component.html",
+  styleUrls: ["./panel-holder.component.css"],
 })
 export class PanelHolderComponent implements OnInit {
-
   @Input() panel: String;
 
   settings: Object = {};
@@ -28,117 +33,144 @@ export class PanelHolderComponent implements OnInit {
   callstack: string[] = [];
   filesLoaded = false;
   themeColor: String = "white";
+  tabOpened: boolean = false;
 
-  constructor(private tabEditingService: TabEditingServiceService,
+  constructor(
+    private tabEditingService: TabEditingServiceService,
     private settingsEditingService: SettingsEditingServiceService,
     private filesEditingService: FilesEditingService,
     private executionService: ExecutionService,
     private layoutService: LayoutService,
-    private socket: Socket) {
-    this.tabEditingService.menuPanel$.subscribe(payload => {
-      console.log(payload);
+    private socket: Socket
+  ) {
+    this.tabEditingService.menuPanel$.subscribe((payload) => {
       this.panel = payload;
     });
 
-    this.settingsEditingService.modifiedSettings$.subscribe(payload => {
-      const property: any = payload['property'];
+    const tabOpenedSub = this.tabEditingService.tabOpened$.subscribe((tab) => {
+      if(tab) {
+        this.tabOpened = true;
+        tabOpenedSub.unsubscribe();
+      }
+    });
+
+    this.settingsEditingService.modifiedSettings$.subscribe((payload) => {
+      const property: any = payload["property"];
       Object.assign(this.settings, { ...this.settings, [property]: payload });
 
       this.layoutService.changeSettings(payload);
     });
 
-    this.layoutService.settingsChanged$.subscribe(payload => {
-      if(payload.getProperty() === "theme") {
+    this.layoutService.settingsChanged$.subscribe((payload) => {
+      if (payload.getProperty() === "theme") {
         this.themeColor = payload.getColor();
       }
     });
 
-    this.filesEditingService.actionFired$.subscribe(action => {
-      this.files = action['files'];
-      this.socket.emit('save-files', action['files']);
-      switch (action['type']) {
-        case 'create':
-          this.socket.emit('save-file', {
-            name: action['node'], path: action['path'],
-            content: action['content'], directory: action['directory']
+    this.filesEditingService.actionFired$.subscribe((action) => {
+      this.files = action["files"];
+      this.socket.emit("save-files", action["files"]);
+      switch (action["type"]) {
+        case "create":
+          this.socket.emit("save-file", {
+            name: action["node"],
+            path: action["path"],
+            content: action["content"],
+            directory: action["directory"],
           });
           break;
-        case 'delete':
-          this.socket.emit('delete-file', {
-            name: action['node'], path: action['path'],
+        case "delete":
+          this.socket.emit("delete-file", {
+            name: action["node"],
+            path: action["path"],
           });
-          this.filesEditingService.checkingFileOnDeletionOrRename({ path: action['path'], name: action['node'] });
+          this.filesEditingService.checkingFileOnDeletionOrRename({
+            path: action["path"],
+            name: action["node"],
+          });
           break;
-        case 'rename':
-          this.socket.emit('rename-file', {
-            oldName: action['oldName'], newName: action['newName'], path: action['path']
+        case "rename":
+          this.socket.emit("rename-file", {
+            oldName: action["oldName"],
+            newName: action["newName"],
+            path: action["path"],
           });
-          this.filesEditingService.checkingFileOnDeletionOrRename({ path: action['path'], name: action['node'] });
+          this.filesEditingService.checkingFileOnDeletionOrRename({
+            path: action["path"],
+            name: action["node"],
+          });
           break;
         default:
           break;
       }
     });
 
-    this.tabEditingService.getFileSource$.subscribe(file => {
-      this.socket.emit('retrieve-file', file);
+    this.tabEditingService.getFileSource$.subscribe((file) => {
+      this.socket.emit("retrieve-file", file);
     });
 
-    this.filesEditingService.updateStoreFired$.subscribe(files => {
+    this.filesEditingService.updateStoreFired$.subscribe((files) => {
       this.files = files;
     });
 
-    this.executionService.getModifiedFile$.subscribe(file => {
-      this.socket.emit('structure', { ...file.getEssentialData(), needToSave: true });
-    });
-
-    this.executionService.getUnmodifiedFile$.subscribe(file => {
-      this.socket.emit('structure', { ...file.getEssentialData(), needToSave: false });
-    });
-
-    this.filesEditingService.saveFileSourceFired$.subscribe(file => {
-      this.socket.emit('save-file', {
-        name: file['title'], path: file['path'],
-        content: file['content'], directory: false
+    this.executionService.getModifiedFile$.subscribe((file) => {
+      this.socket.emit("structure", {
+        ...file.getEssentialData(),
+        needToSave: true,
       });
     });
 
-    this.executionService.newDataInput$.subscribe(input => {
-      if (input['mode'] === 'run') {
-        this.socket.emit('c-input', input);
+    this.executionService.getUnmodifiedFile$.subscribe((file) => {
+      this.socket.emit("structure", {
+        ...file.getEssentialData(),
+        needToSave: false,
+      });
+    });
+
+    this.filesEditingService.saveFileSourceFired$.subscribe((file) => {
+      this.socket.emit("save-file", {
+        name: file["title"],
+        path: file["path"],
+        content: file["content"],
+        directory: false,
+      });
+    });
+
+    this.executionService.newDataInput$.subscribe((input) => {
+      if (input["mode"] === "run") {
+        this.socket.emit("c-input", input);
       } else {
-        this.socket.emit('c-debug-input', input);
+        this.socket.emit("c-debug-input", input);
       }
     });
 
-    this.executionService.runOrDebugState$.subscribe(state => {
+    this.executionService.runOrDebugState$.subscribe((state) => {
       this.clearDebugOutputs();
       this.isDebugging = <boolean>state;
     });
 
-    this.executionService.getExecutionBreakpoints$.subscribe(breakpoints => {
+    this.executionService.getExecutionBreakpoints$.subscribe((breakpoints) => {
       this.breakpoints = breakpoints;
     });
 
     this.executionService.sendDebugOptions$.subscribe((data) => {
       this.clearDebugOutputs();
-      this.socket.emit('c-debug-input', { command: data });
+      this.socket.emit("c-debug-input", { command: data });
     });
 
     this.executionService.invokeExecutionStop$.subscribe(() => {
       this.clearDebugOutputs();
-      this.socket.emit('c-stop');
+      this.socket.emit("c-stop");
     });
 
     this.settingsEditingService.savingSettings$.subscribe(() => {
-      this.socket.emit('save-settings', this.settings);
+      this.socket.emit("save-settings", this.settings);
     });
 
     this.wsHandlers();
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   clearDebugOutputs() {
     this.variables.clear();
@@ -146,11 +178,14 @@ export class PanelHolderComponent implements OnInit {
   }
 
   wsHandlers() {
-    this.socket.fromEvent('loaded-initial-data').subscribe(data => {
-      if (data['data']['settings']) {
-        Object.keys(data['data']['settings']).forEach((key) => {
-          const em = new DoubleData(data['data']['settings'][key]['value'], data['data']['settings'][key]['label'],
-            data['data']['settings'][key]['property']);
+    this.socket.fromEvent("loaded-initial-data").subscribe((data) => {
+      if (data["data"]["settings"]) {
+        Object.keys(data["data"]["settings"]).forEach((key) => {
+          const em = new DoubleData(
+            data["data"]["settings"][key]["value"],
+            data["data"]["settings"][key]["label"],
+            data["data"]["settings"][key]["property"]
+          );
           Object.assign(this.settings, { ...this.settings, [key]: em });
         });
       }
@@ -158,32 +193,38 @@ export class PanelHolderComponent implements OnInit {
       this.loadSettings();
 
       this.files = [];
-      if (data['data']['files']) {
-        this.files = data['data']['files'];
+      if (data["data"]["files"]) {
+        this.files = data["data"]["files"];
       }
 
       this.filesLoaded = true;
       setTimeout(() => this.layoutService.initialData(), 1000);
     });
 
-
-    this.socket.fromEvent('retrieved-file').subscribe(data => {
-      const navTab = new NavigationTab(data['file']['id'], data['file']['title'], data['content'],
-        data['file']['path'], 0);
+    this.socket.fromEvent("retrieved-file").subscribe((data) => {
+      const navTab = new NavigationTab(
+        data["file"]["id"],
+        data["file"]["title"],
+        data["content"],
+        data["file"]["path"],
+        0
+      );
       this.tabEditingService.openNewTab(navTab);
     });
 
-    this.socket.fromEvent('structured').subscribe(data => {
-      if (data['needToSave']) {
-        this.socket.emit('save', data);
-        (<HTMLElement>document.querySelector('.ui-tabview-selected')).removeAttribute('style');
+    this.socket.fromEvent("structured").subscribe((data) => {
+      if (data["needToSave"]) {
+        this.socket.emit("save", data);
+        (<HTMLElement>(
+          document.querySelector(".ui-tabview-selected")
+        )).removeAttribute("style");
       } else if (!this.isDebugging) {
-        switch (data['title'].split('.')[1]) {
-          case 'c':
-            this.socket.emit('c-run', data);
+        switch (data["title"].split(".")[1]) {
+          case "c":
+            this.socket.emit("c-run", data);
             break;
-          case 'cpp':
-            this.socket.emit('c-run', data);
+          case "cpp":
+            this.socket.emit("c-run", data);
             break;
           default:
             break;
@@ -191,12 +232,12 @@ export class PanelHolderComponent implements OnInit {
       } else {
         this.clearDebugOutputs();
         Object.assign(data, { ...data, breakpoints: this.breakpoints });
-        switch (data['title'].split('.')[1]) {
-          case 'c':
-            this.socket.emit('c-debug', data);
+        switch (data["title"].split(".")[1]) {
+          case "c":
+            this.socket.emit("c-debug", data);
             break;
-          case 'cpp':
-            this.socket.emit('c-debug', data);
+          case "cpp":
+            this.socket.emit("c-debug", data);
             break;
           default:
             break;
@@ -204,29 +245,29 @@ export class PanelHolderComponent implements OnInit {
       }
     });
 
-    this.socket.fromEvent('saved').subscribe(data => {
+    this.socket.fromEvent("saved").subscribe((data) => {
       if (!this.isDebugging) {
-        this.changeButtonStatus('disable');
-        switch (data['title'].split('.')[1]) {
-          case 'c':
-            this.socket.emit('c-run', data);
+        this.changeButtonStatus("disable");
+        switch (data["title"].split(".")[1]) {
+          case "c":
+            this.socket.emit("c-run", data);
             break;
-          case 'cpp':
-            this.socket.emit('c-run', data);
+          case "cpp":
+            this.socket.emit("c-run", data);
             break;
           default:
             break;
         }
       } else {
-        this.changeButtonStatus('disable');
+        this.changeButtonStatus("disable");
         this.clearDebugOutputs();
         Object.assign(data, { ...data, breakpoints: this.breakpoints });
-        switch (data['title'].split('.')[1]) {
-          case 'c':
-            this.socket.emit('c-debug', data);
+        switch (data["title"].split(".")[1]) {
+          case "c":
+            this.socket.emit("c-debug", data);
             break;
-          case 'cpp':
-            this.socket.emit('c-debug', data);
+          case "cpp":
+            this.socket.emit("c-debug", data);
             break;
           default:
             break;
@@ -235,60 +276,64 @@ export class PanelHolderComponent implements OnInit {
     });
 
     // c-run related
-    this.socket.fromEvent('c-output').subscribe(data => {
+    this.socket.fromEvent("c-output").subscribe((data) => {
       let stg = <string>data;
-      stg = stg.replace(new RegExp('\r?\n', 'g'), 'ᚠ');
-      this.executionService.renderOutput(stg + '　');
+      stg = stg.replace(new RegExp("\r?\n", "g"), "ᚠ");
+      this.executionService.renderOutput(stg + "　");
     });
 
-    this.socket.fromEvent('c-error').subscribe(data => {
-      alert('Error happened. Please try again.');
+    this.socket.fromEvent("c-error").subscribe((data) => {
+      alert("Error happened. Please try again.");
     });
 
-    this.socket.fromEvent('c-compilation-error').subscribe(data => {
+    this.socket.fromEvent("c-compilation-error").subscribe((data) => {
       (<Array<any>>data).forEach((element, index) => {
         if (index === 0) {
-          element = 'error' + element;
+          element = "error" + element;
         }
         this.executionService.renderOutput(element);
       });
     });
 
-    this.socket.fromEvent('c-finished').subscribe(data => {
+    this.socket.fromEvent("c-finished").subscribe((data) => {
       this.changeButtonStatus();
-      this.executionService.renderOutput('finished　');
+      this.executionService.renderOutput("finished　");
     });
 
     // c-debug-related
-    this.socket.fromEvent('c-debug-output').subscribe(data => {
+    this.socket.fromEvent("c-debug-output").subscribe((data) => {
       let stg = <string>data;
-      if (!stg.includes('/back/controllers') && !stg.includes('/back/files/')) {
-        stg = stg.replace(new RegExp('\r?\n', 'g'), 'ᚠ');
-        this.executionService.renderOutput(stg + '　');
-      } else if (stg.includes('Breakpoint')) {
+      if (!stg.includes("/back/controllers") && !stg.includes("/back/files/")) {
+        stg = stg.replace(new RegExp("\r?\n", "g"), "ᚠ");
+        this.executionService.renderOutput(stg + "　");
+      } else if (stg.includes("Breakpoint")) {
         this.clearDebugOutputs();
-        this.executionService.renderOutput('\n　');
-        this.executionService.renderOutput('\nbreakpoint hit:　line ' + stg.split('\n')[3] + '\n');
-        this.executionService.renderOutput('\n　');
+        this.executionService.renderOutput("\n　");
+        this.executionService.renderOutput(
+          "\nbreakpoint hit:　line " + stg.split("\n")[3] + "\n"
+        );
+        this.executionService.renderOutput("\n　");
       }
     });
 
-    this.socket.fromEvent('c-debug-stack').subscribe(data => {
-      (<Array<any>>data).forEach(element => {
+    this.socket.fromEvent("c-debug-stack").subscribe((data) => {
+      (<Array<any>>data).forEach((element) => {
         this.callstack.push(<string>element);
       });
     });
 
-    this.socket.fromEvent('c-debug-variables').subscribe(data => {
-      const splitted: string[] = (<string>data).split(/=|\n/).filter(element => element !== ' ' && element !== '');
+    this.socket.fromEvent("c-debug-variables").subscribe((data) => {
+      const splitted: string[] = (<string>data)
+        .split(/=|\n/)
+        .filter((element) => element !== " " && element !== "");
       for (let i = 0; i < splitted.length; i += 2) {
         this.variables.set(splitted[i], splitted[i + 1]);
       }
     });
 
-    this.socket.fromEvent('c-debug-finish').subscribe(data => {
+    this.socket.fromEvent("c-debug-finish").subscribe((data) => {
       this.changeButtonStatus();
-      this.executionService.renderOutput('finished　');
+      this.executionService.renderOutput("finished　");
       this.clearDebugOutputs();
     });
   }
@@ -297,29 +342,28 @@ export class PanelHolderComponent implements OnInit {
   // pas the button statuses as a props and modify them inside angular execution panel
   // without manipulating the dom directly
   changeButtonStatus(status?) {
-    const em1 = <HTMLElement>document.getElementById('run');
-    const em2 = <HTMLElement>document.getElementById('debug');
-    if (status === 'disable') {
-      em1.setAttribute('disabled', 'true');
-      em1.setAttribute('style', 'color: #666666 !important;');
-      em1.style.setProperty('border', '1px solid #999999');
-      em2.setAttribute('disabled', 'true');
-      em2.setAttribute('style', 'color: #666666 !important;');
-      em2.style.setProperty('border', '1px solid #999999');
+    const em1 = <HTMLElement>document.getElementById("run");
+    const em2 = <HTMLElement>document.getElementById("debug");
+    if (status === "disable") {
+      em1.setAttribute("disabled", "true");
+      em1.setAttribute("style", "color: #666666 !important;");
+      em1.style.setProperty("border", "1px solid #999999");
+      em2.setAttribute("disabled", "true");
+      em2.setAttribute("style", "color: #666666 !important;");
+      em2.style.setProperty("border", "1px solid #999999");
     } else {
-      em1.removeAttribute('disabled');
-      em1.removeAttribute('style');
-      em2.removeAttribute('disabled');
-      em2.removeAttribute('style');
+      em1.removeAttribute("disabled");
+      em1.removeAttribute("style");
+      em2.removeAttribute("disabled");
+      em2.removeAttribute("style");
     }
   }
 
   loadSettings() {
     setTimeout(() => {
-      Object.keys(this.settings).forEach(setting => {
+      Object.keys(this.settings).forEach((setting) => {
         this.settingsEditingService.modifySettings(this.settings[setting]);
       });
     }, 50);
   }
-
 }

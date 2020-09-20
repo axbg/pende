@@ -5,11 +5,11 @@
 
 <ng-template #running>
   <div class="commands-wrapper" *ngIf="!isDebugging; else debugging">
-    <button id="run" [ngClass]="(hasWhiteTheme===true)?'pi pi-caret-right icon white':'pi pi-caret-right icon black'"
+    <button id="run" class="pi pi-caret-right icon" [ngClass]="(themeColor==='white')?'white':'black'"
       pTooltip="Run" tooltipPosition="bottom" (click)="runCode()"></button>
-    <button id="debug" [ngClass]="(hasWhiteTheme===true)?'pi pi-eye icon white':'pi pi-eye icon icon black'"
+    <button id="debug" class="pi pi-eye icon"[ngClass]="(themeColor==='white')?'white':'black'"
       pTooltip="Debug" tooltipPosition="bottom" (click)="debugCode()"></button>
-    <button [ngClass]="(hasWhiteTheme===true)?'pi pi-ban icon icon white':'pi pi-ban icon icon black'" pTooltip="Stop"
+    <button class="pi pi-ban icon" [ngClass]="(themeColor==='white')?'white':'black'" pTooltip="Stop"
       tooltipPosition="bottom" (click)="stopExec()"></button>
   </div>
   <div class="output-wrapper">
@@ -20,11 +20,11 @@
 
 <ng-template #debugging>
   <div class="commands-wrapper">
-    <button id="run" [ngClass]="(hasWhiteTheme===true)?'pi pi-caret-right icon white':'pi pi-caret-right icon black'"
+    <button id="run" class="pi pi-caret-right icon" [ngClass]="(themeColor==='white')?'white':'black'"
       pTooltip="Run" tooltipPosition="bottom" (click)="runCode()"></button>
-    <button id="debug" [ngClass]="(hasWhiteTheme===true)?'pi pi-eye icon white':'pi pi-eye icon icon black'"
+    <button id="debug" class="pi pi-eye icon" [ngClass]="(themeColor==='white')?'white':'black'"
       pTooltip="Debug" tooltipPosition="bottom" (click)="debugCode()"></button>
-    <button [ngClass]="(hasWhiteTheme===true)?'pi pi-ban icon icon white':'pi pi-ban icon icon black'" pTooltip="Stop"
+    <button class="pi pi-ban icon" [ngClass]="(themeColor==='white')?'white':'black'" pTooltip="Stop"
       tooltipPosition="bottom" (click)="stopExec()"></button>
   </div>
   <div class="debug-wrapper">

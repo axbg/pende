@@ -6,7 +6,6 @@ import { NavigationTab } from 'src/classes/NavigationTab';
   providedIn: 'root'
 })
 export class ExecutionService {
-
   private checkFileStatus = new Subject();
   private modifiedFile = new Subject<NavigationTab>();
   private unmodifiedFile = new Subject<NavigationTab>();

@@ -6,7 +6,6 @@ import { DoubleData } from 'src/classes/DoubleData';
   providedIn: 'root'
 })
 export class SettingsEditingServiceService {
-
   private currentSettings = new Subject<DoubleData>();
   private saveSettings = new Subject();
 

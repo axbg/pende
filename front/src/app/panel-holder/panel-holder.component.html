@@ -4,7 +4,7 @@
     <app-files-panel *ngIf="filesLoaded" [files]="files" [themeColor]="themeColor"></app-files-panel>
   </div>
   <app-execution-panel *ngSwitchCase="'Execute'" [themeColor]="themeColor" [variables]="variables"
-    [callstack]="callstack">
+    [callstack]="callstack" [initialized]="tabOpened">
   </app-execution-panel>
   <app-settings-panel *ngSwitchCase="'Settings'" [settings]="settings" [themeColor]="themeColor">
   </app-settings-panel>
