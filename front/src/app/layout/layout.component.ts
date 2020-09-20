@@ -12,12 +12,20 @@ export class LayoutComponent implements OnInit {
   fileTabs: Array<NavigationTab> = [];
   projectTabs: Array<NavigationTab> = [];
   menuItems: [];
+  themeColor: String;
 
   constructor(private spinner: NgxSpinnerService, private layourService: LayoutService) {
     this.initProjectTabs();
     this.layourService.loadedInitialData$.subscribe(() => {
       this.spinner.hide();
     });
+
+    this.layourService.settingsChanged$.subscribe((settings) => {
+      console.log(settings);
+      if(settings.getProperty() === "theme") {
+        this.themeColor = settings.getColor();
+      }
+    })
   }
 
   ngOnInit() {

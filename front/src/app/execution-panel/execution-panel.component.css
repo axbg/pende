@@ -1,14 +1,8 @@
 .execution {
-  margin: 10px;
-  padding: 10px;
   background-color: white;
   height: 100%;
   text-align: center;
   border: 1px solid rgba(0, 0, 0, .12);
-}
-
-.panel-title {
-  font-size: 25px;
 }
 
 .icon {
@@ -24,7 +18,7 @@
 }
 
 .output-wrapper {
-  width: 95%;
+  width: 90%;
   margin: 0 auto;
   height: 80%;
   max-height: 700px;

@@ -1,52 +1,41 @@
 import { Injectable } from '@angular/core';
 import { Constants } from '../classes/Constants';
 import { Subject } from 'rxjs';
+import { DoubleData } from 'src/classes/DoubleData';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LayoutService {
-  private newThemeColor = new Subject<String>();
   private loadInitialData = new Subject<Object>();
+  private changeSetting = new Subject<DoubleData>();
 
-  themeColor$ = this.newThemeColor.asObservable();
+  settingsChanged$ = this.changeSetting.asObservable();
   loadedInitialData$ = this.loadInitialData.asObservable();
 
   constructor() {
   }
 
-  changeThemeColor(theme: String) {
-    if (Constants.WHITE_THEMES.includes(theme)) {
-      document.body.style.backgroundColor = 'whitesmoke';
-      (<HTMLElement>document.querySelector('.code-editor')).style.backgroundColor = 'whitesmoke';
-      document.querySelectorAll('.ui-menuitem').forEach(elem => {
-        (<HTMLElement>elem).style.backgroundColor = 'white';
-      });
-      document.querySelectorAll('.ui-menuitem-text').forEach(elem => {
-        (<HTMLElement>elem).style.color = 'black';
-      });
-      document.getElementById('menu-panel').style.backgroundColor = 'whitesmoke';
-      this.changeGeneralThemeColor('white');
-    } else {
-      document.body.style.backgroundColor = '#101010';
-      (<HTMLElement>document.querySelector('.code-editor')).style.backgroundColor = '#101010';
-      document.querySelectorAll('.ui-menuitem').forEach(elem => {
-        (<HTMLElement>elem).style.backgroundColor = '#101010';
-      });
-      document.querySelectorAll('.ui-menuitem-text').forEach(elem => {
-        (<HTMLElement>elem).style.color = 'white';
-      });
-      document.getElementById('menu-panel').style.backgroundColor = '#101010';
-      this.changeGeneralThemeColor('black');
+  changeSettings(setting: DoubleData) {
+    switch (setting.getProperty()) {
+      case 'theme':
+        const color = Constants.WHITE_THEMES.includes(setting.getValue()) ? "white" : "black";        
+        setting.setColor(color);
+      case 'cursor':
+      case 'fontSize':
+      case 'gutter':
+        this.fireChangeSettings(setting);
+        break;
+      default:
+        break;
     }
   }
 
-  changeGeneralThemeColor(color: String) {
-    this.newThemeColor.next(color);
+  fireChangeSettings(setting: DoubleData) {
+    this.changeSetting.next(setting);
   }
 
   initialData() {
     this.loadInitialData.next();
   }
-
 }
