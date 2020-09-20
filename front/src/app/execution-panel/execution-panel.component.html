@@ -1,4 +1,4 @@
-<div [ngClass]="(hasWhiteTheme===true)?'execution white':'execution black'">
+<div class="execution" [ngClass]="{'bgblack' : themeColor === 'black'}">
   <ng-template *ngIf="!isDebugging;then running; else debugging">
   </ng-template>
 </div>

@@ -1,21 +1,14 @@
 .settings {
-  margin: 10px;
-  padding: 10px;
   background-color: white;
   height: 100%;
   text-align: center;
   border: 1px solid rgba(0, 0, 0, .12);
 }
 
-.panel-title {
-  font-size: 25px;
-}
-
 .settings-holder {
   margin: 0 auto;
   padding: 30px;
   text-align: left;
-  overflow-y: scroll;
   height: 80%;
 }
 
@@ -25,19 +18,4 @@
 
 .setting-wrapper {
   margin: 20px;
-}
-
-.white {
-  background-color: white;
-  color: black;
-}
-
-.black {
-  background-color: #282A36;
-  color: white;
-}
-
-.black>label {
-  background-color: #282A36;
-  color: white;
 }

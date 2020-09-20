@@ -27,6 +27,7 @@ export class PanelHolderComponent implements OnInit {
   variables: Map<string, string> = new Map<string, string>();
   callstack: string[] = [];
   filesLoaded = false;
+  themeColor: String = "white";
 
   constructor(private tabEditingService: TabEditingServiceService,
     private settingsEditingService: SettingsEditingServiceService,
@@ -34,7 +35,6 @@ export class PanelHolderComponent implements OnInit {
     private executionService: ExecutionService,
     private layoutService: LayoutService,
     private socket: Socket) {
-
     this.tabEditingService.menuPanel$.subscribe(payload => {
       this.panel = payload;
     });
@@ -42,6 +42,14 @@ export class PanelHolderComponent implements OnInit {
     this.settingsEditingService.modifiedSettings$.subscribe(payload => {
       const property: any = payload['property'];
       Object.assign(this.settings, { ...this.settings, [property]: payload });
+
+      this.layoutService.changeSettings(payload);
+    });
+
+    this.layoutService.settingsChanged$.subscribe(payload => {
+      if(payload.getProperty() === "theme") {
+        this.themeColor = payload.getColor();
+      }
     });
 
     this.filesEditingService.actionFired$.subscribe(action => {
@@ -77,10 +85,6 @@ export class PanelHolderComponent implements OnInit {
 
     this.filesEditingService.updateStoreFired$.subscribe(files => {
       this.files = files;
-    });
-
-    this.layoutService.themeColor$.subscribe(color => {
-      this.hasWhiteTheme = color === 'white' ? true : false;
     });
 
     this.executionService.getModifiedFile$.subscribe(file => {
@@ -142,7 +146,6 @@ export class PanelHolderComponent implements OnInit {
 
   wsHandlers() {
     this.socket.fromEvent('loaded-initial-data').subscribe(data => {
-
       if (data['data']['settings']) {
         Object.keys(data['data']['settings']).forEach((key) => {
           const em = new DoubleData(data['data']['settings'][key]['value'], data['data']['settings'][key]['label'],
@@ -151,7 +154,6 @@ export class PanelHolderComponent implements OnInit {
         });
       }
 
-      this.hasWhiteTheme = Constants.WHITE_THEMES.includes(this.settings['theme'].getValue()) ? true : false;
       this.loadSettings();
 
       this.files = [];
