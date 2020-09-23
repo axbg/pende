@@ -14,6 +14,8 @@ const WsEvent = {
     RENAME_FILE: 'rename-file',
     DELETE_FILE: 'delete-file',
     DISCONNECT: 'disconnect',
+    ERROR: 'error',
+    ERROR_FILE: 'error-file',
   },
   C: {
     RUN: 'c-run',

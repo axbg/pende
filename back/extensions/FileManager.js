@@ -1,108 +1,86 @@
-const fs = require('fs');
-const rimraf = require('rimraf');
-const path = require('path');
+const fs = require("fs-extra");
+const path = require("path");
 
-const AbstractExtension = require('./AbstractExtension');
-const WsEvent = require('../classes/WsEvent');
+const WsEvent = require("../classes/WsEvent");
+const AbstractExtension = require("./AbstractExtension");
+const User = require("../models").User;
 
-const User = require('../models').User;
-
-const filesPath = path.join(__dirname + '/../files');
+const filesPath = path.join(__dirname + "/../files");
 
 class C extends AbstractExtension {
   extend() {
-    this.socket.on(WsEvent.COMMON.STRUCTURE, (payload) => {
-      const dirStructure = filesPath + '/' + this.username + payload.path;
+    this.socket.on(WsEvent.COMMON.STRUCTURE, async (payload) => {
+      const dirStructure = filesPath + "/" + this.username + payload.path;
+      await fs.mkdirp(dirStructure);
 
-      fs.exists(dirStructure, async (result) => {
-        if (!result) {
-          await fs.mkdir(dirStructure, {recursive: true}, () => {});
-        }
-        this.socket.emit(WsEvent.COMMON.STRUCTURED, payload);
-      });
+      this.socket.emit(WsEvent.COMMON.STRUCTURED, payload);
     });
 
     this.socket.on(WsEvent.COMMON.SAVE, async (payload) => {
-      try {
-        const dirStructure = filesPath + '/' + this.username + payload.path;
+      const path =
+        filesPath + "/" + this.username + payload.path + "/" + payload.title;
 
-        const path = dirStructure + '/' + payload.title;
+      await fs.outputFile(path, payload.content);
 
-        await fs.writeFile(path, payload.content, () => {});
-
-        this.socket.emit(WsEvent.COMMON.SAVED, payload);
-      } catch (err) {}
+      this.socket.emit(WsEvent.COMMON.SAVED, payload);
     });
 
-    this.socket.on(WsEvent.COMMON.SAVE_SETTINGS, (settings) => {
-      User.findOne({mail: this.username}).then((result) => {
-        result.settings = settings;
-        result.save();
+    this.socket.on(WsEvent.COMMON.SAVE_SETTINGS, (SettingDatas) => {
+      User.findOne({ mail: this.username }).then((user) => {
+        user.SettingDatas = SettingDatas;
+        user.save();
       });
     });
 
     this.socket.on(WsEvent.COMMON.SAVE_FILES, (files) => {
-      User.findOne({mail: this.username}).then((result) => {
-        result.files = files;
-        result.save();
+      User.findOne({ mail: this.username }).then((user) => {
+        user.files = files;
+        user.save();
       });
     });
 
     this.socket.on(WsEvent.COMMON.RETRIEVE_FILE, (file) => {
-      const path = filesPath + '/' + this.username + file.path + '/' + file.title;
+      const path =
+        filesPath + "/" + this.username + file.path + "/" + file.title;
 
-      fs.readFile(path, {encoding: 'utf-8'}, (err, data) => {
+      fs.readFile(path, { encoding: "utf-8" }, (err, data) => {
         if (!err) {
           this.socket.emit(WsEvent.COMMON.RETRIEVED_FILE, {
             file: file,
             content: data,
           });
         } else {
-          // handle this error. display something in front-end
-          console.log(err);
+          this.socket.emit(WsEvent.COMMON.ERROR_FILE, {
+            message: "The file couldn't be open",
+          });
         }
       });
     });
 
-    this.socket.on(WsEvent.COMMON.SAVE_FILE, (file) => {
-      const dirStructure = filesPath + '/' + this.username + file.path;
+    this.socket.on(WsEvent.COMMON.SAVE_FILE, async (file) => {
+      const path =
+        filesPath + "/" + this.username + file.path + "/" + file.name;
 
-      fs.exists(dirStructure, async (result) => {
-        const path = dirStructure + '/' + file.name;
-
-        if (!result) {
-          await fs.mkdir(dirStructure, {recursive: true}, () => {});
-          setTimeout(async () => {
-            if (file.directory) {
-              await fs.mkdir(path, () => {});
-            } else {
-              await fs.writeFile(path, file.content, () => {});
-            }
-          }, 100);
-        } else {
-          if (file.directory) {
-            await fs.mkdir(path, () => {});
-          } else {
-            await fs.writeFile(path, file.content, () => {});
-          }
-        }
-      });
+      if (file.directory) {
+        await fs.mkdirp(path);
+      } else {
+        await fs.outputFile(path, file.content);
+      }
     });
 
-    this.socket.on(WsEvent.COMMON.RENAME_FILE, (file) => {
-      const dirStructure = filesPath + '/' + this.username + file.path;
-      fs.rename(
-          dirStructure + '/' + file.oldName,
-          dirStructure + '/' + file.newName,
-          function(err) {},
+    this.socket.on(WsEvent.COMMON.RENAME_FILE, async (file) => {
+      const dirStructure = filesPath + "/" + this.username + file.path;
+      await fs.move(
+        dirStructure + "/" + file.oldName,
+        dirStructure + "/" + file.newName
       );
     });
 
-    this.socket.on(WsEvent.COMMON.DELETE_FILE, (file) => {
-      if (file.path !== '' && file.node !== 'projects') {
+    this.socket.on(WsEvent.COMMON.DELETE_FILE, async (file) => {
+      if (file.path !== "" && file.node !== "projects") {
         const fileLocation =
-          filesPath + '/' + this.username + file.path + '/' + file.name;
-        rimraf(fileLocation, fs, () => {});
+          filesPath + "/" + this.username + file.path + "/" + file.name;
+        await fs.remove(fileLocation);
       }
     });
   }

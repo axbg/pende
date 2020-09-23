@@ -13,10 +13,13 @@ const wsController = require('./controllers/ws').handleWS;
 
 app.use(cors());
 app.use(express.json());
-app.use(morgan('combined', {stream: fs.createWriteStream('./logs', {flags: 'a'})}));
 
-app.get('/', (req, res) => {
-  res.send({'message': 'pende back-end'});
+app.use(
+    morgan('combined', {stream: fs.createWriteStream('./logs', {flags: 'a'})}),
+);
+
+app.get('/', (_, res) => {
+  res.send({message: 'pende back-end'});
 });
 
 io.on('connection', wsController);

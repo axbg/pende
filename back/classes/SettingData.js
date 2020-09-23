@@ -1,4 +1,4 @@
-class DoubleData {
+class SettingData {
   constructor(value, label, property) {
     this.value = value;
     this.label = label;
@@ -6,4 +6,4 @@ class DoubleData {
   }
 }
 
-module.exports = DoubleData;
+module.exports = SettingData;
