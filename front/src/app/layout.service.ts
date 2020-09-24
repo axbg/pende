@@ -19,8 +19,9 @@ export class LayoutService {
   changeSettings(setting: DoubleData) {
     switch (setting.getProperty()) {
       case 'theme':
-        const color = Constants.WHITE_THEMES.includes(setting.getValue()) ? "white" : "black";        
+        const color = Constants.WHITE_THEMES.includes(setting.getValue()) ? 'white' : 'black';
         setting.setColor(color);
+      // tslint:disable-next-line: no-switch-case-fall-through
       case 'cursor':
       case 'fontSize':
       case 'gutter':
