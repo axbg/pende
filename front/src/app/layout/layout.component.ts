@@ -21,10 +21,10 @@ export class LayoutComponent implements OnInit {
     });
 
     this.layourService.settingsChanged$.subscribe((settings) => {
-      if(settings.getProperty() === "theme") {
+      if (settings.getProperty() === 'theme') {
         this.themeColor = settings.getColor();
       }
-    })
+    });
   }
 
   ngOnInit() {

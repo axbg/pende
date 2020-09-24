@@ -59,6 +59,7 @@ export class PrimeTerminalComponent implements AfterViewInit, AfterViewChecked, 
     }
 
     handleCommand(event: KeyboardEvent) {
+        // tslint:disable-next-line: deprecation
         if (event.code === 'enter' || event.keyCode === 13) {
             if (this.command.includes('ᚠ')) {
                 this.command.split('ᚠ').forEach(element => {
