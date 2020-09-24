@@ -14,9 +14,9 @@ export class MenuRibbonComponent implements OnInit {
   private items: MenuItem[];
   private themeColor: String;
 
-  constructor(private router: Router, private layoutService: LayoutService) { 
+  constructor(private router: Router, private layoutService: LayoutService) {
     layoutService.settingsChanged$.subscribe((settings) => {
-      if(settings.getProperty() === "theme") {
+      if (settings.getProperty() === 'theme') {
         this.themeColor = settings.getColor();
       }
     });

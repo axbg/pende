@@ -3,36 +3,36 @@ import {
   OnInit,
   Input,
   ViewChild,
-  OnDestroy
-} from "@angular/core";
-import { TreeModel } from "ng2-tree";
-import { TabEditingServiceService } from "../tab-editing-service.service";
-import { FilesEditingService } from "../files-editing.service";
-import { ISubscription } from "rxjs/Subscription";
+  OnDestroy, AfterViewInit
+} from '@angular/core';
+import { TreeModel } from 'ng2-tree';
+import { TabEditingServiceService } from '../tab-editing-service.service';
+import { FilesEditingService } from '../files-editing.service';
+import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
-  selector: "app-files-panel",
-  templateUrl: "./files-panel.component.html",
-  styleUrls: ["./files-panel.component.css"],
+  selector: 'app-files-panel',
+  templateUrl: './files-panel.component.html',
+  styleUrls: ['./files-panel.component.css'],
 })
-export class FilesPanelComponent implements OnInit, OnDestroy {
+export class FilesPanelComponent implements OnInit, AfterViewInit, OnDestroy {
   private tree: TreeModel = {
-    value: "projects",
-    path: "",
+    value: 'projects',
+    path: '',
     settings: {
       static: false,
       rightMenu: true,
       leftMenu: false,
       cssClasses: {
-        expanded: "pi pi-angle-down margin clickable",
-        collapsed: "pi pi-angle-right margin clickable",
-        leaf: "nothing",
-        empty: "pi pi-circle-off margin clickable",
+        expanded: 'pi pi-angle-down margin clickable',
+        collapsed: 'pi pi-angle-right margin clickable',
+        leaf: 'nothing',
+        empty: 'pi pi-circle-off margin clickable',
       },
       templates: {
         node: '<i class="pi pi-folder clickable"></i>',
         leaf: '<i class="pi pi-file clickable"></i>',
-        leftMenu: "<i></i>",
+        leftMenu: '<i></i>',
       },
     },
   };
@@ -45,7 +45,7 @@ export class FilesPanelComponent implements OnInit, OnDestroy {
   @Input()
   themeColor: String;
 
-  @ViewChild("treeComponent")
+  @ViewChild('treeComponent')
   treeComponent;
 
   updateFileIdFiredSubscription: ISubscription;
@@ -68,13 +68,13 @@ export class FilesPanelComponent implements OnInit, OnDestroy {
   }
 
   stopItemsDragging() {
-    const items: any = document.querySelectorAll(".value-container");
+    const items: any = document.querySelectorAll('.value-container');
 
     items.forEach(node => {
-      let n: HTMLElement = node;
-      n.setAttribute("draggable", "false");
-      n.style.userSelect = "none";
-    })
+      const n: HTMLElement = node;
+      n.setAttribute('draggable', 'false');
+      n.style.userSelect = 'none';
+    });
   }
 
   public handleSelect(event) {
@@ -93,19 +93,19 @@ export class FilesPanelComponent implements OnInit, OnDestroy {
     if (event.node.value) {
       const currentNode = event.node;
 
-      if (event.node.value === "projects" && event.node.node.path === "") {
-        alert("You nasty! Root directory cannot be deleted!");
+      if (event.node.value === 'projects' && event.node.node.path === '') {
+        alert('You nasty! Root directory cannot be deleted!');
         return;
       }
 
-      if (confirm("Do you want to delete this element?")) {
+      if (confirm('Do you want to delete this element?')) {
         const path = this.composeWholePath(event.node);
         this.files = this.updateTreeModelAndAppendPath(
           this.treeComponent.tree,
           -1
         ).children;
         this.filesEditingService.fireFileAction({
-          type: "delete",
+          type: 'delete',
           node: event.node.value,
           files: this.files,
           path: path,
@@ -121,8 +121,8 @@ export class FilesPanelComponent implements OnInit, OnDestroy {
     const newName = event.newValue;
     const currentId = event.node.node.id;
 
-    if (oldName === "projects" && event.node.node.path === "") {
-      alert("You nasty! Root directory cannot be renamed");
+    if (oldName === 'projects' && event.node.node.path === '') {
+      alert('You nasty! Root directory cannot be renamed');
       event.node.node.value = oldName;
       return;
     }
@@ -133,15 +133,15 @@ export class FilesPanelComponent implements OnInit, OnDestroy {
         event.node.parent.children[index].node.value === newName
       ) {
         event.node.node.value = oldName;
-        alert("A file with this name already exists in the current folder");
+        alert('A file with this name already exists in the current folder');
         return;
       }
     }
 
     if (!event.node.children) {
-      const extension = newName.split(".")[1];
-      if (!extension || (extension !== "c" && extension !== "cpp")) {
-        alert("Extension not valid - could be: c or cpp");
+      const extension = newName.split('.')[1];
+      if (!extension || (extension !== 'c' && extension !== 'cpp')) {
+        alert('Extension not valid - could be: c or cpp');
         event.node.node.value = oldName;
         return;
       }
@@ -152,7 +152,7 @@ export class FilesPanelComponent implements OnInit, OnDestroy {
       event.node.id
     ).children;
     this.filesEditingService.fireFileAction({
-      type: "rename",
+      type: 'rename',
       oldName: oldName,
       newName: newName,
       path: this.currentFilePath,
@@ -161,11 +161,11 @@ export class FilesPanelComponent implements OnInit, OnDestroy {
   }
 
   public handleCreate(event) {
-    const [filename, extension] = event.node.value.split(".");
+    const [filename, extension] = event.node.value.split('.');
     let isDirectory = false;
 
     if (!filename) {
-      alert("File name could not be empty");
+      alert('File name could not be empty');
       return;
     }
 
@@ -178,7 +178,7 @@ export class FilesPanelComponent implements OnInit, OnDestroy {
         ) {
           event.node.parent.removeChild(event.node);
           alert(
-            "A directory with this name already exists in the current folder"
+            'A directory with this name already exists in the current folder'
           );
           return;
         }
@@ -186,8 +186,8 @@ export class FilesPanelComponent implements OnInit, OnDestroy {
 
       isDirectory = true;
     } else {
-      if (!extension || (extension !== "c" && extension !== "cpp")) {
-        alert("Extension not valid - could be: c or cpp");
+      if (!extension || (extension !== 'c' && extension !== 'cpp')) {
+        alert('Extension not valid - could be: c or cpp');
         event.node.parent.removeChild(event.node);
         return;
       }
@@ -199,7 +199,7 @@ export class FilesPanelComponent implements OnInit, OnDestroy {
           event.node.parent.children[index].node.id !== event.node.id
         ) {
           event.node.parent.removeChild(event.node);
-          alert("A file with this name already exists in the current folder");
+          alert('A file with this name already exists in the current folder');
           return;
         }
       }
@@ -210,28 +210,28 @@ export class FilesPanelComponent implements OnInit, OnDestroy {
       event.node.id
     ).children;
     this.filesEditingService.fireFileAction({
-      type: "create",
+      type: 'create',
       node: event.node.value,
       directory: isDirectory,
       path: this.currentFilePath,
       id: event.node.id,
       files: this.files,
-      content: "",
+      content: '',
     });
   }
 
   composeWholePath(node) {
-    let path = "";
+    let path = '';
 
-    if (node.value !== "projects") {
+    if (node.value !== 'projects') {
       let parent = node.parent;
 
-      while (parent.value !== "projects") {
-        path = path + "/" + parent.value;
+      while (parent.value !== 'projects') {
+        path = path + '/' + parent.value;
         parent = parent.parent;
       }
 
-      path = "/projects" + path;
+      path = '/projects' + path;
     }
 
     return path;
@@ -239,22 +239,22 @@ export class FilesPanelComponent implements OnInit, OnDestroy {
 
   updateTreeModelAndAppendPath(tree, id) {
     const model: TreeModel = {
-      value: "",
+      value: '',
     };
 
     model.value = tree.node.value;
 
-    model["path"] = this.composeWholePath(tree);
+    model['path'] = this.composeWholePath(tree);
 
-    if (tree.node["id"] === id) {
+    if (tree.node['id'] === id) {
       this.currentFilePath = this.composeWholePath(tree);
     }
 
-    model["id"] = tree.node["id"];
+    model['id'] = tree.node['id'];
     if (tree.children) {
-      model["children"] = [];
+      model['children'] = [];
       tree.children.forEach((child) => {
-        model["children"].push(this.updateTreeModelAndAppendPath(child, id));
+        model['children'].push(this.updateTreeModelAndAppendPath(child, id));
       });
     }
 

@@ -1,20 +1,20 @@
-import { Component, ViewChild, OnInit, AfterViewInit } from "@angular/core";
-import { TabEditingServiceService } from "../tab-editing-service.service";
-import { NavigationTab } from "../../classes/NavigationTab";
-import { ExecutionService } from "../execution.service";
-import { LayoutService } from "../layout.service";
-import { FilesEditingService } from "../files-editing.service";
-import * as FileSave from "file-saver";
-import Formatter from "auto-format";
-import { Constants } from "src/classes/Constants";
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { TabEditingServiceService } from '../tab-editing-service.service';
+import { NavigationTab } from '../../classes/NavigationTab';
+import { ExecutionService } from '../execution.service';
+import { LayoutService } from '../layout.service';
+import { FilesEditingService } from '../files-editing.service';
+import * as FileSave from 'file-saver';
+import Formatter from 'auto-format';
+import { Constants } from 'src/classes/Constants';
 
 @Component({
-  selector: "app-ace-editor",
-  templateUrl: "./ace-editor.component.html",
-  styleUrls: ["./ace-editor.component.css"],
+  selector: 'app-ace-editor',
+  templateUrl: './ace-editor.component.html',
+  styleUrls: ['./ace-editor.component.css'],
 })
 export class AceEditorComponent implements OnInit, AfterViewInit {
-  @ViewChild("editor") editor;
+  @ViewChild('editor') editor;
 
   currentTab: NavigationTab;
   showEditor = false;
@@ -63,16 +63,16 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
           this.currentTab.getBreakpoints()
         );
 
-        const language = this.currentTab.getTitle().split(".")[1];
+        const language = this.currentTab.getTitle().split('.')[1];
         switch (language) {
-          case "c":
-            this.editor.setMode("c_cpp");
+          case 'c':
+            this.editor.setMode('c_cpp');
             break;
-          case "cpp":
-            this.editor.setMode("c_cpp");
+          case 'cpp':
+            this.editor.setMode('c_cpp');
             break;
           default:
-            console.log("not supported yet");
+            console.log('not supported yet');
         }
       }
     });
@@ -83,21 +83,21 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
 
     this.layoutService.settingsChanged$.subscribe((setting) => {
       switch (setting.getProperty()) {
-        case "theme":
+        case 'theme':
           this.editor.setTheme(setting.getValue());
           this.darkTheme = Constants.BLACK_THEMES.includes(setting.getValue());
           break;
-        case "cursor":
+        case 'cursor':
           this.editor.getEditor().setOptions({
             keyboardHandler: setting.getValue(),
           });
           break;
-        case "fontSize":
+        case 'fontSize':
           this.editor.getEditor().setOptions({
-            fontSize: setting.getValue() + "px",
+            fontSize: setting.getValue() + 'px',
           });
           break;
-        case "gutter":
+        case 'gutter':
           this.editor.getEditor().setOptions({
             showGutter: setting.getValue(),
           });
@@ -108,8 +108,8 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
 
     this.executionService.beforeExecutionFileStatusCheck$.subscribe((data) => {
       (<HTMLElement>(
-        document.querySelector(".ui-tabview-selected")
-      )).style.backgroundColor = "#007AD9";
+        document.querySelector('.ui-tabview-selected')
+      )).style.backgroundColor = '#007AD9';
       this.executionService.sendModifiedFile(this.currentTab);
     });
 
@@ -130,20 +130,20 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
   }
 
   generateBreakPoints() {
-    const gutt = document.querySelector(".ace_layer");
+    const gutt = document.querySelector('.ace_layer');
     const ref = this;
 
     function addOrRemoveBreakpoint(e) {
       const line = e.target.innerText;
 
-      if (e.target.classList.contains("breakpoint")) {
-        e.target.classList.remove("breakpoint");
+      if (e.target.classList.contains('breakpoint')) {
+        e.target.classList.remove('breakpoint');
         ref.currentTab.removeBreakpoint(line);
         ref.executionService.sendExecutionBreakpoints(
           ref.currentTab.getBreakpoints()
         );
       } else {
-        e.target.classList.add("breakpoint");
+        e.target.classList.add('breakpoint');
         if (ref.currentTab.getBreakpoints().indexOf(parseInt(line)) === -1) {
           ref.currentTab.addBreakpoint(parseInt(line));
           ref.executionService.sendExecutionBreakpoints(
@@ -157,9 +157,9 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
       }
     }
 
-    gutt.addEventListener("DOMNodeInserted", (e) => {
-      e.target.removeEventListener("click", addOrRemoveBreakpoint);
-      e.target.addEventListener("click", addOrRemoveBreakpoint);
+    gutt.addEventListener('DOMNodeInserted', (e) => {
+      e.target.removeEventListener('click', addOrRemoveBreakpoint);
+      e.target.addEventListener('click', addOrRemoveBreakpoint);
     });
   }
 
@@ -170,24 +170,24 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
     });
 
     this.editor.getEditor().commands.addCommand({
-      name: "save",
-      bindKey: "Ctrl-s",
+      name: 'save',
+      bindKey: 'Ctrl-s',
       exec: (editor) => {
         this.saveFile();
       },
     });
 
     this.editor.getEditor().commands.addCommand({
-      name: "download",
-      bindKey: "Ctrl-d",
+      name: 'download',
+      bindKey: 'Ctrl-d',
       exec: (editor) => {
         this.downloadFile();
       },
     });
 
     this.editor.getEditor().commands.addCommand({
-      name: "clearBreakpoints",
-      bindKey: "Ctrl-g",
+      name: 'clearBreakpoints',
+      bindKey: 'Ctrl-g',
       exec: (editor) => {
         this.drawBreakpoints(false);
         this.showBreakpoints = true;
@@ -196,8 +196,8 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
     });
 
     this.editor.getEditor().commands.addCommand({
-      name: "showBreakpoints",
-      bindKey: "Ctrl-b",
+      name: 'showBreakpoints',
+      bindKey: 'Ctrl-b',
       exec: (editor) => {
         this.showBreakpoints = !this.showBreakpoints;
         if (this.showBreakpoints) {
@@ -209,14 +209,14 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
     });
 
     this.editor.getEditor().commands.addCommand({
-      name: "formatCode",
-      bindKey: "Ctrl-l",
+      name: 'formatCode',
+      bindKey: 'Ctrl-l',
       exec: (editor) => {
-        const codeFormatter = Formatter.createJavaFormatter("   ");
+        const codeFormatter = Formatter.createJavaFormatter('   ');
         this.editor
           .getEditor()
           .setValue(
-            codeFormatter.format(this.editor.getEditor().getValue()).join("\n")
+            codeFormatter.format(this.editor.getEditor().getValue()).join('\n')
           );
       },
     });
@@ -228,7 +228,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
       this.drawBreakpoints(true);
     };
 
-    this.editor.getEditor().session.on("change", (delta) => {
+    this.editor.getEditor().session.on('change', (delta) => {
       if (
         !(delta.start.row === 0 && delta.end.row === delta.lines.length - 1)
       ) {
@@ -240,7 +240,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
             index++
           ) {
             if (newBreakpoints[index] >= delta.end.row) {
-              if (delta.action === "insert") {
+              if (delta.action === 'insert') {
                 newBreakpoints[index] += delta.end.row - delta.start.row;
               } else {
                 newBreakpoints[index] += delta.start.row - delta.end.row;
@@ -251,8 +251,8 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
 
         if (!this.currentTab.getModified()) {
           (<HTMLElement>(
-            document.querySelector(".ui-tabview-selected")
-          )).style.backgroundColor = "#B71C1C";
+            document.querySelector('.ui-tabview-selected')
+          )).style.backgroundColor = '#B71C1C';
           this.currentTab.setModified(true);
         }
 
@@ -263,7 +263,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
   }
 
   drawBreakpoints(show: boolean) {
-    const gutters = document.querySelectorAll(".ace_gutter-cell");
+    const gutters = document.querySelectorAll('.ace_gutter-cell');
 
     for (let i = 0; i < gutters.length; i++) {
       if (
@@ -272,9 +272,9 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
           .includes(parseInt(gutters[i].textContent))
       ) {
         if (show) {
-          gutters[i].classList.add("breakpoint");
+          gutters[i].classList.add('breakpoint');
         } else {
-          gutters[i].classList.remove("breakpoint");
+          gutters[i].classList.remove('breakpoint');
         }
       }
     }
@@ -282,8 +282,8 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
 
   saveFile() {
     (<HTMLElement>(
-      document.querySelector(".ui-tabview-selected")
-    )).removeAttribute("style");
+      document.querySelector('.ui-tabview-selected')
+    )).removeAttribute('style');
     this.currentTab.setContent(this.editor.getEditor().getValue());
     this.tabEditingService.saveTabSource(this.currentTab);
     this.currentTab.setModified(false);
@@ -295,7 +295,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
 
   downloadFile() {
     const blob = new Blob([<BlobPart>this.currentTab.getContent()], {
-      type: "plain/text;charset=utf-8",
+      type: 'plain/text;charset=utf-8',
     });
 
     FileSave.saveAs(blob, <string>this.currentTab.getTitle());

@@ -1,110 +1,116 @@
 export class NavigationTab {
+  private id: String;
+  private title: String;
+  private content: String;
+  private index: number;
+  private path: String;
+  private cursorLine: number;
+  private cursorColumn: number;
+  private modified: boolean;
+  private breakpoints: number[] = [];
 
-    private id: String;
-    private title: String;
-    private content: String;
-    private index: number;
-    private path: String;
-    private cursorLine: number;
-    private cursorColumn: number;
-    private modified: boolean;
-    private breakpoints: number[] = [];
+  constructor(id, title, content, path, index) {
+    this.id = id;
+    this.title = title;
+    this.setContent(content);
+    this.path = path;
+    this.index = index;
+    this.cursorLine = 0;
+    this.cursorColumn = 0;
+    this.modified = false;
+  }
 
-    constructor(id, title, content, path, index) {
-        this.id = id;
-        this.title = title;
-        this.setContent(content);
-        this.path = path;
-        this.index = index;
-        this.cursorLine = 0;
-        this.cursorColumn = 0;
-        this.modified = false;
+  public getId(): String {
+    return this.id;
+  }
+
+  public getTitle(): String {
+    return this.title;
+  }
+
+  public setContent(content) {
+    if (!content.includes("setbuf(stdout, NULL);")) {
+      content = this.addSetBuf(content);
     }
 
-    public getId(): String {
-        return this.id;
-    }
+    this.content = content;
+  }
 
-    public getTitle(): String {
-        return this.title;
-    }
+  public getContent(): String {
+    return this.content;
+  }
 
-    public setContent(content) {
-        if (!content.includes('setbuf(stdout, NULL);')) {
-            content = this.addSetBuf(content);
-        }
+  public getContentForDisplay(): String {
+    return this.removeSetBuf(this.content);
+  }
 
-        this.content = content;
-    }
+  public getIndex(): number {
+    return this.index;
+  }
 
-    public getContent(): String {
-        return this.content;
-    }
+  public getPath(): String {
+    return this.path;
+  }
 
-    public getContentForDisplay(): String {
-        return this.removeSetBuf(this.content);
-    }
+  public setIndex(index: number) {
+    this.index = index;
+  }
 
-    public getIndex(): number {
-        return this.index;
-    }
+  public getCursorLine(): number {
+    return this.cursorLine;
+  }
 
-    public getPath(): String {
-        return this.path;
-    }
+  public getCursorColumn(): number {
+    return this.cursorColumn;
+  }
 
-    public setIndex(index: number) {
-        this.index = index;
-    }
+  public setCursor(line: number, column: number) {
+    this.cursorLine = line;
+    this.cursorColumn = column;
+  }
 
-    public getCursorLine(): number {
-        return this.cursorLine;
-    }
+  public getModified(): boolean {
+    return this.modified;
+  }
 
-    public getCursorColumn(): number {
-        return this.cursorColumn;
-    }
+  public setModified(modified: boolean) {
+    this.modified = modified;
+  }
 
-    public setCursor(line: number, column: number) {
-        this.cursorLine = line;
-        this.cursorColumn = column;
-    }
+  public getBreakpoints(): number[] {
+    return this.breakpoints;
+  }
 
-    public getModified(): boolean {
-        return this.modified;
-    }
+  public setBreakpoints(breakpoints: number[]) {
+    this.breakpoints = breakpoints;
+  }
 
-    public setModified(modified: boolean) {
-        this.modified = modified;
-    }
+  public addBreakpoint(breakpoint: number) {
+    this.breakpoints.push(breakpoint);
+  }
 
-    public getBreakpoints(): number[] {
-        return this.breakpoints;
-    }
+  public removeBreakpoint(breakpoint: number) {
+    this.breakpoints = this.breakpoints.filter(
+      (element) => element !== breakpoint
+    );
+  }
 
-    public setBreakpoints(breakpoints: number[]) {
-        this.breakpoints = breakpoints;
-    }
+  public getEssentialData(): Object {
+    return {
+      id: this.id,
+      title: this.title,
+      content: this.content,
+      path: this.path,
+    };
+  }
 
-    public addBreakpoint(breakpoint: number) {
-        this.breakpoints.push(breakpoint);
-    }
+  private addSetBuf(content: any) {
+    const main = content.indexOf("main()");
+    const substring = content.substring(main, content.indexOf("{", main) + 1);
+    return content.replace(substring, substring + " setbuf(stdout, NULL);");
+  }
 
-    public removeBreakpoint(breakpoint: number) {
-        this.breakpoints = this.breakpoints.filter(element => element != breakpoint);
-    }
-
-    public getEssentialData(): Object {
-        return { id: this.id, title: this.title, content: this.content, path: this.path };
-    }
-
-    private addSetBuf(content) {
-        const main = content.indexOf('main()');
-        const substring = content.substring(main, content.indexOf('{', main) + 1);
-        return content.replace(substring, substring + ' setbuf(stdout, NULL);');
-    }
-
-    private removeSetBuf(content) {
-        return content.replace('setbuf(stdout, NULL);', '');
-    }
+  private removeSetBuf(content: any) {
+    return content.replace("setbuf(stdout, NULL);", "");
+  }
 }
