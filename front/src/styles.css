@@ -95,6 +95,11 @@ li[role="presentation"] {
   background-size: cover;
 }
 
+.bgblacklayout {
+  background-color: #2D2D2D !important;
+  border: 1px solid rgba(255, 255, 255, .25) !important;
+}
+
 .bgblack {
   background-color: #141414 !important;
   color: white !important;
