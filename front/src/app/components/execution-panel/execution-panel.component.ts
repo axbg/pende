@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { TerminalComponent } from 'src/app/components/terminal/terminal.component';
 import { ExecutionService } from 'src/app/services/execution.service';
 import { ISubscription } from 'rxjs/Subscription';
+import { TabService } from 'src/app/services/tab-service';
 
 @Component({
   selector: 'app-execution-panel',
@@ -10,33 +11,48 @@ import { ISubscription } from 'rxjs/Subscription';
 })
 export class ExecutionPanelComponent implements OnInit, OnDestroy {
   private isDebugging = false;
-
-  @Input()
   private variables: Map<string, string> = new Map<string, string>();
-
-  @Input()
   private callstack: string[] = [];
-
-  @Input()
-  private initialized: boolean;
+  private initialized: Boolean = false;
+  private buttonsEnabled: Boolean = true;
+  private newDataSubscription: ISubscription;
 
   @Input()
   private themeColor: String;
 
-  private buttonsEnabled: Boolean = true;
-  private newDataSubscription: ISubscription;
-
-  constructor(private executionService: ExecutionService) {
-    this.newDataSubscription = this.executionService.newDataReceived$.subscribe(
+  constructor(private executionService: ExecutionService, private tabEditingService: TabService) {
+    this.newDataSubscription = this.executionService.renderTerminalDataObservable$.subscribe(
       (data) => {
-        this.renderOutput(data);
+        this.renderTerminalData(data);
         this.toggleButtons(data);
+      });
+
+    const tabOpenedSub = this.tabEditingService.tabOpened$.subscribe((tab) => {
+      if (tab) {
+        this.initialized = true;
+        tabOpenedSub.unsubscribe();
       }
-    );
+    });
+
+    this.executionService.clearDebugOutputObservable$.subscribe(data => {
+      this.clearDebugOutput();
+    });
+
+    this.executionService.changeButtonsStatusObservable$.subscribe(data => {
+      this.buttonsEnabled = data;
+    });
+
+    this.executionService.passVariablesObservable$.subscribe((variables: Map<string, string>) => {
+      this.variables = variables;
+    });
+
+    this.executionService.passCallstackObservable$.subscribe(callstack => {
+      this.callstack = callstack;
+    });
   }
 
   ngOnInit() {
-    this.executionService.showExecutionBreakpoints();
+    this.executionService.showBreakpoints();
   }
 
   checkInitialized() {
@@ -53,13 +69,17 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.clearDebugOutput();
     this.executionService.stopExecution();
-    this.executionService.checkCurrentFileStatus();
+    this.executionService.checkFileStatus();
 
     TerminalComponent.writeTerminalCommand('run　');
 
     this.isDebugging = false;
-    this.executionService.changeRunOrDebug(false);
+
+    this.clearDebugOutput();
+    this.executionService.debugStatus(this.isDebugging);
+    this.executionService.runOrDebug(false);
   }
 
   debugCode() {
@@ -67,11 +87,17 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.clearDebugOutput();
     this.executionService.stopExecution();
-    this.executionService.checkCurrentFileStatus();
+    this.executionService.checkFileStatus();
+
     TerminalComponent.writeTerminalCommand('debug　');
+
     this.isDebugging = true;
-    this.executionService.changeRunOrDebug(true);
+
+    this.clearDebugOutput();
+    this.executionService.debugStatus(this.isDebugging);
+    this.executionService.runOrDebug(true);
   }
 
   stopExec() {
@@ -85,17 +111,23 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.executionService.debugOptions('c');
+    this.clearDebugOutput();
+    this.executionService.debuggingOptions('c');
   }
 
-  renderOutput(data) {
+  renderTerminalData(data) {
     TerminalComponent.writeTerminalCommand(data);
   }
 
   toggleButtons(data) {
-    if(data === 'finished　') {
+    if (data === 'finished　') {
       this.buttonsEnabled = true;
     }
+  }
+
+  clearDebugOutput() {
+    this.variables.clear();
+    this.callstack = [];
   }
 
   ngOnDestroy() {

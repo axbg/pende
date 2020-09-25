@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Constants } from 'src/app/classes/Constants';
 import { Subject } from 'rxjs';
-import { DoubleData } from 'src/app/classes/DoubleData';
+import { SettingData } from 'src/app/classes/SettingData';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LayoutService {
-  private loadInitialData = new Subject<Object>();
-  private changeSetting = new Subject<DoubleData>();
+  private loadInitialDataSubject = new Subject<Object>();
+  private changeSettingSubject = new Subject<SettingData>();
 
-  settingsChanged$ = this.changeSetting.asObservable();
-  loadedInitialData$ = this.loadInitialData.asObservable();
+  changeSettingObservable$ = this.changeSettingSubject.asObservable();
+  loadInitialDataObservable$ = this.loadInitialDataSubject.asObservable();
 
   constructor() {
   }
 
-  changeSettings(setting: DoubleData) {
+  changeSettings(setting: SettingData) {
     switch (setting.getProperty()) {
       case 'theme':
         const color = Constants.WHITE_THEMES.includes(setting.getValue()) ? 'white' : 'black';
@@ -25,18 +25,18 @@ export class LayoutService {
       case 'cursor':
       case 'fontSize':
       case 'gutter':
-        this.fireChangeSettings(setting);
+        this.changeSetting(setting);
         break;
       default:
         break;
     }
   }
 
-  fireChangeSettings(setting: DoubleData) {
-    this.changeSetting.next(setting);
+  changeSetting(setting: SettingData) {
+    this.changeSettingSubject.next(setting);
   }
 
-  initialData() {
-    this.loadInitialData.next();
+  loadInitialData() {
+    this.loadInitialDataSubject.next();
   }
 }

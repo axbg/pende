@@ -12,7 +12,7 @@ import { ExecutionService } from 'src/app/services/execution.service';
 export class TerminalComponent implements OnInit, OnDestroy {
 
   constructor(private terminalService: TerminalService, private executionService: ExecutionService) {
-    this.terminalService.commandHandler.subscribe(command => {
+    this.terminalService.sendCommandObservable$.subscribe(command => {
 
       if (command.includes('　')) {
         const c = command.replace('　', '');
@@ -29,7 +29,7 @@ export class TerminalComponent implements OnInit, OnDestroy {
             break;
         }
       } else {
-        this.executionService.sendInput({ command: command, mode: this.mode });
+        this.executionService.inputData({ command: command, mode: this.mode });
       }
     });
   }

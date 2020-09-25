@@ -3,22 +3,21 @@ import { Subject } from 'rxjs';
 
 @Injectable()
 export class TerminalService {
+    private sendCommandSubject = new Subject<string>();
+    private sendReponseSubject = new Subject<string>();
 
-    private commandSource = new Subject<string>();
-    private responseSource = new Subject<string>();
-
-    commandHandler = this.commandSource.asObservable();
-    responseHandler = this.responseSource.asObservable();
+    sendCommandObservable$ = this.sendCommandSubject.asObservable();
+    sendResponseObservable$ = this.sendReponseSubject.asObservable();
 
     sendCommand(command: string) {
         if (command) {
-            this.commandSource.next(command);
+            this.sendCommandSubject.next(command);
         }
     }
 
     sendResponse(response: string) {
         if (response) {
-            this.responseSource.next(response);
+            this.sendReponseSubject.next(response);
         }
     }
 }

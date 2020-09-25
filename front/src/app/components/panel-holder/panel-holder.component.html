@@ -1,11 +1,9 @@
-<div class="container" [ngSwitch]="panel">
-  <!-- render specific Panels for each ngSwitchCase option -->
-  <div class="files-container" *ngSwitchCase="'Files'">
-    <app-files-panel *ngIf="filesLoaded" [files]="files" [themeColor]="themeColor"></app-files-panel>
+<div class="container">
+  <div class="files-container" [ngClass]="{'hidden' : panel !== 'Files'}">
+    <app-files-panel [themeColor]="themeColor"></app-files-panel>
   </div>
-  <app-execution-panel *ngSwitchCase="'Execute'" [themeColor]="themeColor" [variables]="variables"
-    [callstack]="callstack" [initialized]="tabOpened">
+  <app-execution-panel [themeColor]="themeColor" [ngClass]="{'hidden' : panel !== 'Execute'}">
   </app-execution-panel>
-  <app-settings-panel *ngSwitchCase="'Settings'" [settings]="settings" [themeColor]="themeColor">
+  <app-settings-panel [themeColor]="themeColor" [ngClass]="{'hidden' : panel !== 'Settings'}">
   </app-settings-panel>
 </div>
