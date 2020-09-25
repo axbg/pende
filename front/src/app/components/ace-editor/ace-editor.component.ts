@@ -1,9 +1,9 @@
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
-import { TabEditingServiceService } from 'src/app/services/tab-editing-service.service';
+import { TabService } from 'src/app/services/tab-service';
 import { NavigationTab } from 'src/app/classes/NavigationTab';
 import { ExecutionService } from 'src/app/services/execution.service';
 import { LayoutService } from 'src/app/services/layout.service';
-import { FilesEditingService } from 'src/app/services/files-editing.service';
+import { FileService } from 'src/app/services/file-service';
 import * as FileSave from 'file-saver';
 import Formatter from 'auto-format';
 import { Constants } from 'src/app/classes/Constants';
@@ -22,10 +22,10 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
   darkTheme = false;
 
   constructor(
-    private tabEditingService: TabEditingServiceService,
+    private tabEditingService: TabService,
     private executionService: ExecutionService,
     private layoutService: LayoutService,
-    private fileEditingService: FilesEditingService
+    private fileEditingService: FileService
   ) {
     this.tabEditingService.tabOpened$.subscribe((tab) => {
       if (tab && tab.getId()) {
@@ -59,7 +59,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
           this.showBreakpoints = false;
         }, 800);
 
-        this.executionService.sendExecutionBreakpoints(
+        this.executionService.executionBreakpoints(
           this.currentTab.getBreakpoints()
         );
 
@@ -81,7 +81,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
       this.showEditor = false;
     });
 
-    this.layoutService.settingsChanged$.subscribe((setting) => {
+    this.layoutService.changeSettingObservable$.subscribe((setting) => {
       switch (setting.getProperty()) {
         case 'theme':
           this.editor.setTheme(setting.getValue());
@@ -106,23 +106,23 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.executionService.beforeExecutionFileStatusCheck$.subscribe((data) => {
+    this.executionService.checkFileStatusObservable$.subscribe((data) => {
       (<HTMLElement>(
         document.querySelector('.ui-tabview-selected')
       )).style.backgroundColor = '#007AD9';
-      this.executionService.sendModifiedFile(this.currentTab);
+      this.executionService.modifyFile(this.currentTab);
     });
 
-    this.executionService.detectExecutionBreakpoints$.subscribe(() => {
+    this.executionService.showBreakpointsObservable$.subscribe(() => {
       if (this.showEditor) {
         this.drawBreakpoints(true);
-        this.executionService.sendExecutionBreakpoints(
+        this.executionService.executionBreakpoints(
           this.currentTab.getBreakpoints()
         );
       }
     });
 
-    this.fileEditingService.saveFileShortcutFired$.subscribe(() => {
+    this.fileEditingService.saveFileShortcutObservable$.subscribe(() => {
       this.saveFile();
     });
   }
@@ -141,14 +141,14 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
       if (e.target.classList.contains('breakpoint')) {
         e.target.classList.remove('breakpoint');
         ref.currentTab.removeBreakpoint(line);
-        ref.executionService.sendExecutionBreakpoints(
+        ref.executionService.executionBreakpoints(
           ref.currentTab.getBreakpoints()
         );
       } else {
         e.target.classList.add('breakpoint');
         if (ref.currentTab.getBreakpoints().indexOf(parseInt(line)) === -1) {
           ref.currentTab.addBreakpoint(parseInt(line));
-          ref.executionService.sendExecutionBreakpoints(
+          ref.executionService.executionBreakpoints(
             ref.currentTab.getBreakpoints()
           );
         }

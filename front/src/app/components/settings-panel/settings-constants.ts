@@ -1,23 +1,23 @@
-import { DoubleData } from 'src/app/classes/DoubleData';
+import {SettingData } from 'src/app/classes/SettingData';
 
 export class SettingsConstants {
-  private static themes: DoubleData[] = [
-    new DoubleData('eclipse', 'Eclipse', 'theme', 'white'),
-    new DoubleData('twilight', 'Twilight', 'theme', 'black'),
+  private static themes: SettingData[] = [
+    new SettingData('eclipse', 'Eclipse', 'theme', 'white'),
+    new SettingData('twilight', 'Twilight', 'theme', 'black'),
   ];
-  private static cursors: DoubleData[] = [
-    new DoubleData('', 'Default', 'cursor'),
-    new DoubleData('ace/keyboard/vim', 'Vim', 'cursor'),
-    new DoubleData('ace/keyboard/emacs', 'Emacs', 'cursor'),
+  private static cursors: SettingData[] = [
+    new SettingData('', 'Default', 'cursor'),
+    new SettingData('ace/keyboard/vim', 'Vim', 'cursor'),
+    new SettingData('ace/keyboard/emacs', 'Emacs', 'cursor'),
   ];
 
   constructor() {}
 
-  public static getThemes(): DoubleData[] {
+  public static getThemes(): SettingData[] {
     return SettingsConstants.themes;
   }
 
-  public static getCursors(): DoubleData[] {
+  public static getCursors(): SettingData[] {
     return SettingsConstants.cursors;
   }
 }

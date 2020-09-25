@@ -1,4 +1,4 @@
-export class DoubleData {
+export class SettingData {
 
     private value: String;
     private label: String;

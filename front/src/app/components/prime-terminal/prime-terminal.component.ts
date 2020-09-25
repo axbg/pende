@@ -33,7 +33,7 @@ export class PrimeTerminalComponent implements AfterViewInit, AfterViewChecked, 
     subscription: Subscription;
 
     constructor(public el: ElementRef, public terminalService: TerminalService) {
-        this.subscription = terminalService.responseHandler.subscribe(response => {
+        this.subscription = terminalService.sendResponseObservable$.subscribe(response => {
             this.commands[this.commands.length - 1].response = response;
             this.commandProcessed = true;
         });

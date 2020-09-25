@@ -1,21 +1,19 @@
 import {
   Component,
-  OnInit,
   Input,
   ViewChild,
-  OnDestroy, AfterViewInit
+  AfterViewInit
 } from '@angular/core';
 import { TreeModel } from 'ng2-tree';
-import { TabEditingServiceService } from 'src/app/services/tab-editing-service.service';
-import { FilesEditingService } from 'src/app/services/files-editing.service';
-import { ISubscription } from 'rxjs/Subscription';
+import { TabService } from 'src/app/services/tab-service';
+import { FileService } from 'src/app/services/file-service';
 
 @Component({
   selector: 'app-files-panel',
   templateUrl: './files-panel.component.html',
   styleUrls: ['./files-panel.component.css'],
 })
-export class FilesPanelComponent implements OnInit, AfterViewInit, OnDestroy {
+export class FilesPanelComponent implements AfterViewInit {
   private tree: TreeModel = {
     value: 'projects',
     path: '',
@@ -37,9 +35,8 @@ export class FilesPanelComponent implements OnInit, AfterViewInit, OnDestroy {
     },
   };
 
-  @Input()
   files: any;
-
+  filesLoaded: Boolean = false;
   currentFilePath: any;
 
   @Input()
@@ -48,19 +45,15 @@ export class FilesPanelComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('treeComponent')
   treeComponent;
 
-  updateFileIdFiredSubscription: ISubscription;
-
   constructor(
-    private tabEditingService: TabEditingServiceService,
-    private filesEditingService: FilesEditingService
+    private tabEditingService: TabService,
+    private filesEditingService: FileService
   ) {
-    this.updateFileIdFiredSubscription = this.filesEditingService.updateFileIdFired$.subscribe(
-      (file) => {}
-    );
-  }
-
-  ngOnInit() {
-    this.tree.children = this.files;
+    this.filesEditingService.loadFilesObservable$.subscribe(data => {
+      this.files = data;
+      this.tree.children = this.files;
+      this.filesLoaded = true;
+    });
   }
 
   ngAfterViewInit() {
@@ -104,7 +97,7 @@ export class FilesPanelComponent implements OnInit, AfterViewInit, OnDestroy {
           this.treeComponent.tree,
           -1
         ).children;
-        this.filesEditingService.fireFileAction({
+        this.filesEditingService.fileAction({
           type: 'delete',
           node: event.node.value,
           files: this.files,
@@ -151,7 +144,7 @@ export class FilesPanelComponent implements OnInit, AfterViewInit, OnDestroy {
       this.treeComponent.tree,
       event.node.id
     ).children;
-    this.filesEditingService.fireFileAction({
+    this.filesEditingService.fileAction({
       type: 'rename',
       oldName: oldName,
       newName: newName,
@@ -209,7 +202,7 @@ export class FilesPanelComponent implements OnInit, AfterViewInit, OnDestroy {
       this.treeComponent.tree,
       event.node.id
     ).children;
-    this.filesEditingService.fireFileAction({
+    this.filesEditingService.fileAction({
       type: 'create',
       node: event.node.value,
       directory: isDirectory,
@@ -259,9 +252,5 @@ export class FilesPanelComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     return model;
-  }
-
-  ngOnDestroy() {
-    this.updateFileIdFiredSubscription.unsubscribe();
   }
 }

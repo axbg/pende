@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NavigationTab } from 'src/app/classes/NavigationTab';
-import { TabEditingServiceService } from 'src/app/services/tab-editing-service.service';
-import { FilesEditingService } from 'src/app/services/files-editing.service';
+import { TabService } from 'src/app/services/tab-service';
+import { FileService } from 'src/app/services/file-service';
 
 @Component({
   selector: 'app-tab-ribbon',
@@ -15,8 +15,8 @@ export class TabRibbonComponent implements OnInit {
   @Input() target: String;
   @Input() closable: number;
 
-  constructor(private tabEditingService: TabEditingServiceService, private fileEditingService: FilesEditingService) {
-    this.fileEditingService.checkIfFileOpenedOnDeletionOrRename$.subscribe(file => {
+  constructor(private tabEditingService: TabService, private fileEditingService: FileService) {
+    this.fileEditingService.closeTabOnFileChangeObservable$.subscribe(file => {
       if (this.closable) {
         for (let index = 0; index < this.tabs.length; index++) {
           if (this.tabs[index].getPath() === file['path'] && this.tabs[index].getTitle() === file['name']) {
@@ -87,7 +87,7 @@ export class TabRibbonComponent implements OnInit {
     if (this.tabs[index].getModified()) {
       if (confirm('Do you want to close this file?')) {
         if (confirm('Do you want to save the file before leaving?')) {
-          this.fileEditingService.saveFileShortcutCall();
+          this.fileEditingService.saveFileShortcut();
         }
         this.closeTabProcedure(index);
       }

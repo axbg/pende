@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class TabEditingServiceService {
+export class TabService {
   private newFileSource = new Subject<NavigationTab>();
   private currentFileSource = new Subject<NavigationTab>();
   private modifiedFileSource = new Subject<NavigationTab>();

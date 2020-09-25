@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavigationTab } from 'src/app/classes/NavigationTab';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { LayoutService } from 'src/app/services/layout.service';
+import { WebSocketsService } from 'src/app/services/web-sockets.service';
 
 @Component({
   selector: 'app-layout',
@@ -14,13 +15,14 @@ export class LayoutComponent implements OnInit {
   menuItems: [];
   themeColor: String;
 
-  constructor(private spinner: NgxSpinnerService, private layourService: LayoutService) {
+  constructor(private spinner: NgxSpinnerService, private layoutService: LayoutService,
+    webSocketService: WebSocketsService) {
     this.initProjectTabs();
-    this.layourService.loadedInitialData$.subscribe(() => {
+    this.layoutService.loadInitialDataObservable$.subscribe(() => {
       this.spinner.hide();
     });
 
-    this.layourService.settingsChanged$.subscribe((settings) => {
+    this.layoutService.changeSettingObservable$.subscribe((settings) => {
       if (settings.getProperty() === 'theme') {
         this.themeColor = settings.getColor();
       }
