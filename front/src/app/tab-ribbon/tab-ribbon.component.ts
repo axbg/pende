@@ -9,11 +9,11 @@ import { FilesEditingService } from '../files-editing.service';
   styleUrls: ['./tab-ribbon.component.css'],
 })
 export class TabRibbonComponent implements OnInit {
+  currentIndex: number;
 
   @Input() tabs: Array<NavigationTab>;
   @Input() target: String;
   @Input() closable: number;
-  currentIndex: number;
 
   constructor(private tabEditingService: TabEditingServiceService, private fileEditingService: FilesEditingService) {
     this.fileEditingService.checkIfFileOpenedOnDeletionOrRename$.subscribe(file => {
@@ -34,17 +34,14 @@ export class TabRibbonComponent implements OnInit {
 
     if (this.closable) {
       this.tabEditingService.newTab$.subscribe(tab => {
-        if (!this.tabs.some(existingTab => {
-          if (existingTab.getId() === tab.getId()) {
-            this.currentIndex = existingTab.getIndex();
-            return true;
-          }
-        })) {
+        const existingTab = this.tabs.find(fTab => fTab.getId() === tab.getId());
+
+        if (existingTab) {
+          this.tabChange(existingTab.getIndex());
+        } else {
           tab.setIndex(this.tabs.length);
           this.tabs.push(tab);
           this.tabChange(tab.getIndex());
-        } else {
-          this.renderTab();
         }
       });
     }
@@ -67,28 +64,18 @@ export class TabRibbonComponent implements OnInit {
     this.renderTab();
   }
 
-  closeTabProcedure(index) {
+  closeTabProcedure(index: any) {
     if (this.tabs.length > 1) {
       if (this.currentIndex === index && index !== 0) {
-        this.tabs.splice(index, 1);
-        this.tabChange(this.currentIndex - 1);
+        this.currentIndex--;
       } else if (this.currentIndex > index) {
-        // little bug here
-        // example
-        // when tab 4 is selected and tab 2 is deleted
-        // selection will jump to tab 3, instead of tab 4
-        this.tabs.splice(index, 1);
-        this.currentIndex = this.currentIndex - 1;
-
-      } else if (index === 0) {
-        this.tabs.splice(index, 1);
-        this.renderTab();
-      } else if (index === 0 && index === this.currentIndex) {
-        this.tabs.splice(index, 1);
-        this.renderTab();
-      } else {
-        this.tabs.splice(index, 1);
+        this.currentIndex--;
+        for (let i = index + 1; i < this.tabs.length; i++) {
+          this.tabs[i].setIndex(i - 1);
+        }
       }
+      this.tabs.splice(index, 1);
+      this.renderTab();
     } else {
       this.tabs.splice(index, 1);
       this.clearTarget();
