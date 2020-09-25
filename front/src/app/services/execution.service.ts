@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
-import { NavigationTab } from 'src/classes/NavigationTab';
+import { NavigationTab } from 'src/app/classes/NavigationTab';
 
 @Injectable({
   providedIn: 'root'

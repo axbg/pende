@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { TerminalComponent } from '../terminal/terminal.component';
-import { ExecutionService } from '../execution.service';
+import { TerminalComponent } from 'src/app/components/terminal/terminal.component';
+import { ExecutionService } from 'src/app/services/execution.service';
 import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
@@ -23,14 +23,14 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   @Input()
   private themeColor: String;
 
-  private fileId = 0;
-  private fileName = '';
+  private buttonsEnabled: Boolean = true;
   private newDataSubscription: ISubscription;
 
   constructor(private executionService: ExecutionService) {
     this.newDataSubscription = this.executionService.newDataReceived$.subscribe(
       (data) => {
         this.renderOutput(data);
+        this.toggleButtons(data);
       }
     );
   }
@@ -75,12 +75,7 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   }
 
   stopExec() {
-    const em = <HTMLElement>document.getElementById('run');
-    const em2 = <HTMLElement>document.getElementById('debug');
-    em.removeAttribute('disabled');
-    em.removeAttribute('style');
-    em2.removeAttribute('disabled');
-    em2.removeAttribute('style');
+    this.buttonsEnabled = true;
     TerminalComponent.writeTerminalCommand('stop　');
     this.executionService.stopExecution();
   }
@@ -95,6 +90,12 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
 
   renderOutput(data) {
     TerminalComponent.writeTerminalCommand(data);
+  }
+
+  toggleButtons(data) {
+    if(data === 'finished　') {
+      this.buttonsEnabled = true;
+    }
   }
 
   ngOnDestroy() {

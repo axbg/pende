@@ -5,10 +5,12 @@
 
 <ng-template #running>
   <div class="commands-wrapper" *ngIf="!isDebugging; else debugging">
-    <button id="run" class="pi pi-caret-right icon" [ngClass]="(themeColor==='white')?'white':'black'"
-      pTooltip="Run" tooltipPosition="bottom" (click)="runCode()"></button>
-    <button id="debug" class="pi pi-eye icon"[ngClass]="(themeColor==='white')?'white':'black'"
-      pTooltip="Debug" tooltipPosition="bottom" (click)="debugCode()"></button>
+    <button id="run" class="pi pi-caret-right icon"
+      [ngClass]="{white: themeColor === 'white', black: themeColor === 'black', disabled: !buttonsEnabled}"
+      [disabled]="!buttonsEnabled" pTooltip="Run" tooltipPosition="bottom" (click)="runCode()"></button>
+    <button id="debug" class="pi pi-eye icon"
+      [ngClass]="{white: themeColor === 'white', black: themeColor === 'black', disabled: !buttonsEnabled}"
+      [disabled]="!buttonsEnabled" pTooltip="Debug" tooltipPosition="bottom" (click)="debugCode()"></button>
     <button class="pi pi-ban icon" [ngClass]="(themeColor==='white')?'white':'black'" pTooltip="Stop"
       tooltipPosition="bottom" (click)="stopExec()"></button>
   </div>
@@ -20,10 +22,12 @@
 
 <ng-template #debugging>
   <div class="commands-wrapper">
-    <button id="run" class="pi pi-caret-right icon" [ngClass]="(themeColor==='white')?'white':'black'"
-      pTooltip="Run" tooltipPosition="bottom" (click)="runCode()"></button>
-    <button id="debug" class="pi pi-eye icon" [ngClass]="(themeColor==='white')?'white':'black'"
-      pTooltip="Debug" tooltipPosition="bottom" (click)="debugCode()"></button>
+    <button id="run" class="pi pi-caret-right icon"
+      [ngClass]="{white: themeColor === 'white', black: themeColor === 'black', disabled: !buttonsEnabled}"
+      [disabled]="!buttonsEnabled" pTooltip="Run" tooltipPosition="bottom" (click)="runCode()"></button>
+    <button id="debug" class="pi pi-eye icon"
+      [ngClass]="{white: themeColor === 'white', black: themeColor === 'black', disabled: !buttonsEnabled}"
+      [disabled]="!buttonsEnabled" pTooltip="Debug" tooltipPosition="bottom" (click)="debugCode()"></button>
     <button class="pi pi-ban icon" [ngClass]="(themeColor==='white')?'white':'black'" pTooltip="Stop"
       tooltipPosition="bottom" (click)="stopExec()"></button>
   </div>

@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { NgModule, AfterViewInit, AfterViewChecked, OnDestroy, Input, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { TerminalService } from './terminalservice';
+import { TerminalService } from 'src/app/services/terminal-service';
 import { Subscription } from 'rxjs';
 
 // this is a remake of the primeng terminal component
-// because the one present in the library is outdated..
+// because the one present in the library is outdated
 @Component({
     selector: 'app-prime-terminal',
     templateUrl: './prime-terminal.component.html',

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { TerminalService } from '../prime-terminal/terminalservice';
+import { TerminalService } from 'src/app/services/terminal-service';
 import { Subscription } from 'rxjs/Subscription';
-import { ExecutionService } from '../execution.service';
+import { ExecutionService } from 'src/app/services/execution.service';
 
 @Component({
   selector: 'app-terminal',

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Constants } from '../classes/Constants';
+import { Constants } from 'src/app/classes/Constants';
 import { Subject } from 'rxjs';
-import { DoubleData } from 'src/classes/DoubleData';
+import { DoubleData } from 'src/app/classes/DoubleData';
 
 @Injectable({
   providedIn: 'root'

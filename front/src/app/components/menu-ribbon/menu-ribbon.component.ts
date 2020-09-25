@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Router } from '@angular/router';
-import { LayoutService } from '../layout.service';
+import { LayoutService } from 'src/app/services/layout.service';
 
 @Component({
   selector: 'app-menu-ribbon',
