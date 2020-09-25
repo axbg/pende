@@ -6,3 +6,7 @@
 .files-container {
     height: 100%;
 }
+
+.hidden {
+    display: none;
+}

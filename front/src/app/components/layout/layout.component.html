@@ -1,7 +1,7 @@
 <div class="web-layout" [ngClass]="{'bgblacklayout' : themeColor === 'black'}">
   <div class="code-layout">
     <app-tab-ribbon [tabs]="fileTabs" target="code-editor" closable=1></app-tab-ribbon>
-    <app-ace-editor id="code-editor" class="code-editor" contenteditable="true"></app-ace-editor>
+    <app-ace-editor id="code-editor" class="code-editor" contenteditable="false"></app-ace-editor>
   </div>
   <div class="menu-layout">
     <app-menu-ribbon class="menu-ribbon"></app-menu-ribbon>

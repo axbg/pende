@@ -6,10 +6,7 @@ import { AuthLoginService } from './auth.service';
   providedIn: 'root'
 })
 export class AuthGuardService implements CanActivate {
-
-  constructor(private router: Router, private auth: AuthLoginService) {
-
-  }
+  constructor(private router: Router, private auth: AuthLoginService) { }
 
   canActivate(): boolean {
     if (!this.auth.getRedirectedFromLogin()) {

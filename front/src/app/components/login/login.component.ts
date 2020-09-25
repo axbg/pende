@@ -25,7 +25,6 @@ export class LoginComponent implements OnInit {
       .then((result) => {
         this.http.post(this.loginURL, { token: result.idToken })
           .subscribe(res => {
-            console.log(res);
             window.localStorage.setItem('token', res['token']);
             window.location.reload();
           }, error => {
