@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationTab } from '../../classes/NavigationTab';
+import { NavigationTab } from 'src/app/classes/NavigationTab';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { LayoutService } from '../layout.service';
+import { LayoutService } from 'src/app/services/layout.service';
 
 @Component({
   selector: 'app-layout',

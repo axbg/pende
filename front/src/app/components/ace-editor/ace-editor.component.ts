@@ -1,12 +1,12 @@
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
-import { TabEditingServiceService } from '../tab-editing-service.service';
-import { NavigationTab } from '../../classes/NavigationTab';
-import { ExecutionService } from '../execution.service';
-import { LayoutService } from '../layout.service';
-import { FilesEditingService } from '../files-editing.service';
+import { TabEditingServiceService } from 'src/app/services/tab-editing-service.service';
+import { NavigationTab } from 'src/app/classes/NavigationTab';
+import { ExecutionService } from 'src/app/services/execution.service';
+import { LayoutService } from 'src/app/services/layout.service';
+import { FilesEditingService } from 'src/app/services/files-editing.service';
 import * as FileSave from 'file-saver';
 import Formatter from 'auto-format';
-import { Constants } from 'src/classes/Constants';
+import { Constants } from 'src/app/classes/Constants';
 
 @Component({
   selector: 'app-ace-editor',

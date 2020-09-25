@@ -6,8 +6,8 @@ import {
   OnDestroy, AfterViewInit
 } from '@angular/core';
 import { TreeModel } from 'ng2-tree';
-import { TabEditingServiceService } from '../tab-editing-service.service';
-import { FilesEditingService } from '../files-editing.service';
+import { TabEditingServiceService } from 'src/app/services/tab-editing-service.service';
+import { FilesEditingService } from 'src/app/services/files-editing.service';
 import { ISubscription } from 'rxjs/Subscription';
 
 @Component({

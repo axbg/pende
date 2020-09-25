@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Subject, BehaviorSubject } from 'rxjs';
-import { DoubleData } from 'src/classes/DoubleData';
+import { Subject } from 'rxjs';
+import { DoubleData } from 'src/app/classes/DoubleData';
 
 @Injectable({
   providedIn: 'root'

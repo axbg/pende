@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { DoubleData } from 'src/classes/DoubleData';
-import { SettingsEditingServiceService } from '../settings-editing-service.service';
-import { SettingsConstants } from './constants';
+import { DoubleData } from 'src/app/classes/DoubleData';
+import { SettingsEditingServiceService } from 'src/app/services/settings-editing-service.service';
+import { SettingsConstants } from './settings-constants';
 
 @Component({
   selector: 'app-settings-panel',

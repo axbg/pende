@@ -1,4 +1,4 @@
-import { DoubleData } from 'src/classes/DoubleData';
+import { DoubleData } from 'src/app/classes/DoubleData';
 
 export class SettingsConstants {
   private static themes: DoubleData[] = [
