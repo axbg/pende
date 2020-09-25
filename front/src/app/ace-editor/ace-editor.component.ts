@@ -113,11 +113,13 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
       this.executionService.sendModifiedFile(this.currentTab);
     });
 
-    this.executionService.detectExecutionBreakpoints$.subscribe((data) => {
-      this.drawBreakpoints(true);
-      this.executionService.sendExecutionBreakpoints(
-        this.currentTab.getBreakpoints()
-      );
+    this.executionService.detectExecutionBreakpoints$.subscribe(() => {
+      if (this.showEditor) {
+        this.drawBreakpoints(true);
+        this.executionService.sendExecutionBreakpoints(
+          this.currentTab.getBreakpoints()
+        );
+      }
     });
 
     this.fileEditingService.saveFileShortcutFired$.subscribe(() => {
@@ -263,18 +265,20 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
   }
 
   drawBreakpoints(show: boolean) {
-    const gutters = document.querySelectorAll('.ace_gutter-cell');
+    if (this.showEditor) {
+      const gutters = document.querySelectorAll('.ace_gutter-cell');
 
-    for (let i = 0; i < gutters.length; i++) {
-      if (
-        this.currentTab
-          .getBreakpoints()
-          .includes(parseInt(gutters[i].textContent))
-      ) {
-        if (show) {
-          gutters[i].classList.add('breakpoint');
-        } else {
-          gutters[i].classList.remove('breakpoint');
+      for (let i = 0; i < gutters.length; i++) {
+        if (
+          this.currentTab
+            .getBreakpoints()
+            .includes(parseInt(gutters[i].textContent))
+        ) {
+          if (show) {
+            gutters[i].classList.add('breakpoint');
+          } else {
+            gutters[i].classList.remove('breakpoint');
+          }
         }
       }
     }

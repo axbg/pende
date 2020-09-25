@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
   private loginURL = Constants.BASE_URL + '/api/user/login';
 
   constructor(private googleAuthService: AuthService, private http: HttpClient,
-    private authService: AuthLoginService, private router: Router, 
+    private authService: AuthLoginService, private router: Router,
     private spinner: NgxSpinnerService) {
   }
 

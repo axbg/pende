@@ -107,10 +107,11 @@ export class NavigationTab {
   private addSetBuf(content: any) {
     const main = content.indexOf('main()');
     const substring = content.substring(main, content.indexOf('{', main) + 1);
+
     return content.replace(substring, substring + ' setbuf(stdout, NULL);');
   }
 
   private removeSetBuf(content: any) {
-    return content.replace('setbuf(stdout, NULL);', '');
+    return content.replace(' setbuf(stdout, NULL);', '');
   }
 }
