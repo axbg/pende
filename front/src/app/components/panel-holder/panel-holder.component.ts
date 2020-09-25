@@ -1,12 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { TabEditingServiceService } from '../tab-editing-service.service';
-import { DoubleData } from 'src/classes/DoubleData';
-import { SettingsEditingServiceService } from '../settings-editing-service.service';
-import { NavigationTab } from 'src/classes/NavigationTab';
-import { FilesEditingService } from '../files-editing.service';
-import { LayoutService } from '../layout.service';
-import { WsEvent } from 'src/classes/WsEvent';
-import { ExecutionService } from '../execution.service';
+import { TabEditingServiceService } from 'src/app/services/tab-editing-service.service';
+import { DoubleData } from 'src/app/classes/DoubleData';
+import { SettingsEditingServiceService } from 'src/app/services/settings-editing-service.service';
+import { NavigationTab } from 'src/app/classes/NavigationTab';
+import { FilesEditingService } from 'src/app/services/files-editing.service';
+import { LayoutService } from 'src/app/services/layout.service';
+import { WsEvent } from 'src/app/classes/WsEvent';
+import { ExecutionService } from 'src/app/services/execution.service';
 import { Socket } from 'ngx-socket-io';
 
 @Component({
@@ -62,6 +62,7 @@ export class PanelHolderComponent implements OnInit {
     });
 
     this.filesEditingService.actionFired$.subscribe((action) => {
+      console.log(action);
       this.files = action['files'];
       this.socket.emit(WsEvent.COMMON.SAVE_FILES, action['files']);
       switch (action['type']) {

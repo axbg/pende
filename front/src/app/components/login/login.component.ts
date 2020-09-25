@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService, GoogleLoginProvider } from 'angularx-social-login';
 import { HttpClient } from '@angular/common/http';
-import { AuthLoginService } from '../auth.service';
+import { AuthLoginService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
-import { Constants } from 'src/classes/Constants';
+import { Constants } from 'src/app/classes/Constants';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({

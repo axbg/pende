@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NavigationTab } from '../classes/NavigationTab';
+import { NavigationTab } from 'src/app/classes/NavigationTab';
 import { Subject } from 'rxjs';
 
 @Injectable({

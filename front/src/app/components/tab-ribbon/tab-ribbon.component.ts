@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { NavigationTab } from '../../classes/NavigationTab';
-import { TabEditingServiceService } from '../tab-editing-service.service';
-import { FilesEditingService } from '../files-editing.service';
+import { NavigationTab } from 'src/app/classes/NavigationTab';
+import { TabEditingServiceService } from 'src/app/services/tab-editing-service.service';
+import { FilesEditingService } from 'src/app/services/files-editing.service';
 
 @Component({
   selector: 'app-tab-ribbon',
