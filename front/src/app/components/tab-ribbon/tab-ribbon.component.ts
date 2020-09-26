@@ -33,15 +33,26 @@ export class TabRibbonComponent implements OnInit {
     this.renderTab();
 
     if (this.closable) {
-      this.tabEditingService.newTab$.subscribe(tab => {
+      this.tabEditingService.openNewTabObservable$.subscribe(tab => {
         const existingTab = this.tabs.find(fTab => fTab.getId() === tab.getId());
-
         if (existingTab) {
           this.tabChange(existingTab.getIndex());
         } else {
           tab.setIndex(this.tabs.length);
           this.tabs.push(tab);
           this.tabChange(tab.getIndex());
+        }
+      });
+
+      this.tabEditingService.notifyFileContentChangedObservable$.subscribe(status => {
+        if (status) {
+          (<HTMLElement>(
+            document.querySelector('.ui-tabview-selected')
+          )).style.backgroundColor = '#B71C1C';
+        } else {
+          (<HTMLElement>(
+            document.querySelector('.ui-tabview-selected')
+          )).removeAttribute('style');
         }
       });
     }

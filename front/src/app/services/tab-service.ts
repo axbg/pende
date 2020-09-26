@@ -6,42 +6,41 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class TabService {
-  private newFileSource = new Subject<NavigationTab>();
-  private currentFileSource = new Subject<NavigationTab>();
-  private modifiedFileSource = new Subject<NavigationTab>();
-  private modifiedMenuPanel = new Subject<String>();
-  private fileSourceModified = new Subject<Object>();
-  private lastTabClosed = new Subject<Boolean>();
+  private openNewTabSubject = new Subject<NavigationTab>();
+  private renderTabSubject = new Subject<NavigationTab>();
+  private renderMenuPanelSubject = new Subject<String>();
+  private notifyFileContentChangedSubject = new Subject<Boolean>();
+  private notifyFileChangedSubject = new Subject<Object>();
+  private notifyLastTabClosedSubject = new Subject<Boolean>();
 
-  newTab$ = this.newFileSource.asObservable();
-  tabOpened$ = this.currentFileSource.asObservable();
-  tabClosed$ = this.modifiedFileSource.asObservable();
-  menuPanel$ = this.modifiedMenuPanel.asObservable();
-  getFileSource$ = this.fileSourceModified.asObservable();
-  lastTabClosed$ = this.lastTabClosed.asObservable();
+  openNewTabObservable$ = this.openNewTabSubject.asObservable();
+  renderTabSubjectObservable$ = this.renderTabSubject.asObservable();
+  renderMenuPanelObservable$ = this.renderMenuPanelSubject.asObservable();
+  notifyFileContentChangedObservable$ = this.notifyFileContentChangedSubject.asObservable();
+  notifyFileChangedObservable$ = this.notifyFileChangedSubject.asObservable();
+  notifyLastTabClosedObservable$ = this.notifyLastTabClosedSubject.asObservable();
 
   openNewTab(tab: NavigationTab) {
-    this.newFileSource.next(tab);
+    this.openNewTabSubject.next(tab);
   }
 
   renderTabSource(tab: NavigationTab) {
-    this.currentFileSource.next(tab);
-  }
-
-  saveTabSource(tab: NavigationTab) {
-    this.modifiedFileSource.next(tab);
+    this.renderTabSubject.next(tab);
   }
 
   renderMenuPanel(panel: String) {
-    this.modifiedMenuPanel.next(panel);
+    this.renderMenuPanelSubject.next(panel);
   }
 
-  notifyFileStore(file: Object) {
-    this.fileSourceModified.next(file);
+  notifyFileContentChanged(status: Boolean) {
+    this.notifyFileContentChangedSubject.next(status);
+  }
+
+  notifyFileChanged(file: Object) {
+    this.notifyFileChangedSubject.next(file);
   }
 
   notifyLastTabClosed() {
-    this.lastTabClosed.next();
+    this.notifyLastTabClosedSubject.next();
   }
-
 }

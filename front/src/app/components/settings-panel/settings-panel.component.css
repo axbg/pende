@@ -19,3 +19,11 @@
 .setting-wrapper {
   margin: 20px;
 }
+
+.unsaved >>> button {
+  background-color: var(--button-unsaved-color);
+}
+
+.unsaved >>> button:hover {
+  background-color: var(--button-unsaved-hover);
+}

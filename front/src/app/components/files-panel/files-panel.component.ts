@@ -73,7 +73,7 @@ export class FilesPanelComponent implements AfterViewInit {
   public handleSelect(event) {
     if (!event.node.children) {
       const path = this.composeWholePath(event.node);
-      this.tabEditingService.notifyFileStore({
+      this.tabEditingService.notifyFileChanged({
         title: event.node.node.value,
         path: path,
         id: event.node.node.id,

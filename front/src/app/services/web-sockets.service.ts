@@ -84,9 +84,6 @@ export class WebSocketsService {
     this.socket.fromEvent(WsEvent.COMMON.STRUCTURED).subscribe((data: any) => {
       if (data['needToSave']) {
         this.socket.emit(WsEvent.COMMON.SAVE, data);
-        (<HTMLElement>(
-          document.querySelector('.ui-tabview-selected')
-        )).removeAttribute('style');
       } else if (!this.isDebugging) {
         this.executionService.changeButtonsStatus(false);
         switch (data['title'].split('.')[1]) {
@@ -151,7 +148,6 @@ export class WebSocketsService {
   }
 
   bindCppWsListeners() {
-    // c-run related
     this.socket.fromEvent(WsEvent.C.OUTPUT).subscribe((data) => {
       let stg = <string>data;
       stg = stg.replace(new RegExp('\r?\n', 'g'), 'ᚠ');
@@ -176,7 +172,6 @@ export class WebSocketsService {
       this.executionService.renderTerminalData('finished　');
     });
 
-    // c-debug-related
     this.socket.fromEvent(WsEvent.C.DEBUG_OUTPUT).subscribe((data) => {
       let stg = <string>data;
       if (!stg.includes('/back/controllers') && !stg.includes('/back/files/')) {
@@ -203,8 +198,7 @@ export class WebSocketsService {
 
     this.socket.fromEvent(WsEvent.C.DEBUG_VARIABLES).subscribe((data) => {
       const variables: Map<string, string> = new Map<string, string>();
-      const splitted: string[] = (<string>data)
-        .split(/=|\n/)
+      const splitted: string[] = (<string>data).split(/=|\n/)
         .filter((element) => element !== ' ' && element !== '');
       for (let i = 0; i < splitted.length; i += 2) {
         variables.set(splitted[i], splitted[i + 1]);
@@ -307,7 +301,7 @@ export class WebSocketsService {
   }
 
   bindTabServiceListeners() {
-    this.tabEditingService.getFileSource$.subscribe((file) => {
+    this.tabEditingService.notifyFileChangedObservable$.subscribe((file) => {
       this.socket.emit(WsEvent.COMMON.RETRIEVE_FILE, file);
     });
   }
