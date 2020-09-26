@@ -17,7 +17,7 @@ export class PanelHolderComponent {
     private tabEditingService: TabService,
     private layoutService: LayoutService
   ) {
-    this.tabEditingService.menuPanel$.subscribe((payload) => {
+    this.tabEditingService.renderMenuPanelObservable$.subscribe((payload) => {
       this.panel = payload;
     });
 

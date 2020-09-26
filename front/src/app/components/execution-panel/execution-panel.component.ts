@@ -27,7 +27,7 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
         this.toggleButtons(data);
       });
 
-    const tabOpenedSub = this.tabEditingService.tabOpened$.subscribe((tab) => {
+    const tabOpenedSub = this.tabEditingService.renderTabSubjectObservable$.subscribe((tab) => {
       if (tab) {
         this.initialized = true;
         tabOpenedSub.unsubscribe();

@@ -27,7 +27,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
     private layoutService: LayoutService,
     private fileEditingService: FileService
   ) {
-    this.tabEditingService.tabOpened$.subscribe((tab) => {
+    this.tabEditingService.renderTabSubjectObservable$.subscribe((tab) => {
       if (tab && tab.getId()) {
         if (this.showEditor === false) {
           this.showEditor = true;
@@ -39,7 +39,6 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
             this.editor.getEditor().selection.getCursor().row,
             this.editor.getEditor().selection.getCursor().column
           );
-          this.tabEditingService.saveTabSource(this.currentTab);
         }
 
         this.currentTab = tab;
@@ -77,7 +76,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.tabEditingService.lastTabClosed$.subscribe(() => {
+    this.tabEditingService.notifyLastTabClosedObservable$.subscribe(() => {
       this.showEditor = false;
     });
 
@@ -107,9 +106,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
     });
 
     this.executionService.checkFileStatusObservable$.subscribe((data) => {
-      (<HTMLElement>(
-        document.querySelector('.ui-tabview-selected')
-      )).style.backgroundColor = '#007AD9';
+      this.tabEditingService.notifyFileContentChanged(false);
       this.executionService.modifyFile(this.currentTab);
     });
 
@@ -252,9 +249,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
         }
 
         if (!this.currentTab.getModified()) {
-          (<HTMLElement>(
-            document.querySelector('.ui-tabview-selected')
-          )).style.backgroundColor = '#B71C1C';
+          this.tabEditingService.notifyFileContentChanged(true);
           this.currentTab.setModified(true);
         }
 
@@ -285,11 +280,8 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
   }
 
   saveFile() {
-    (<HTMLElement>(
-      document.querySelector('.ui-tabview-selected')
-    )).removeAttribute('style');
+    this.tabEditingService.notifyFileContentChanged(false);
     this.currentTab.setContent(this.editor.getEditor().getValue());
-    this.tabEditingService.saveTabSource(this.currentTab);
     this.currentTab.setModified(false);
 
     setTimeout(() => {
