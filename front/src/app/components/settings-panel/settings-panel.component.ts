@@ -14,8 +14,9 @@ export class SettingsPanelComponent {
   cursors: SettingData[];
   selectedTheme: SettingData;
   selectedCursor: SettingData;
-  fontSize = 24;
-  gutter = true;
+  fontSize: Number = 24;
+  gutter: Boolean = true;
+  unsaved: Boolean = false;
   settings: Object = {};
 
   @Input()
@@ -61,15 +62,13 @@ export class SettingsPanelComponent {
   }
 
   handlePropertyChange(event) {
-    (<HTMLElement>document.querySelector('.ui-button')).style.backgroundColor =
-      '#B71C1C';
+    this.unsaved = true;
     this.layoutService.changeSettings(event.value);
     Object.assign(this.settings, { ...this.settings, [event.value.property]: event.value });
   }
 
   saveSettings() {
-    (<HTMLElement>document.querySelector('.ui-button')).style.backgroundColor =
-      '#007AD9';
+    this.unsaved = false;
     this.settingsEditingService.saveSettings(this.settings);
   }
 }
