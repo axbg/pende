@@ -20,14 +20,14 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   @Input()
   private themeColor: String;
 
-  constructor(private executionService: ExecutionService, private tabEditingService: TabService) {
+  constructor(private executionService: ExecutionService, private tabService: TabService) {
     this.newDataSubscription = this.executionService.renderTerminalDataObservable$.subscribe(
       (data) => {
         this.renderTerminalData(data);
         this.toggleButtons(data);
       });
 
-    const tabOpenedSub = this.tabEditingService.renderTabSubjectObservable$.subscribe((tab) => {
+    const tabOpenedSub = this.tabService.renderTabSubjectObservable$.subscribe((tab) => {
       if (tab) {
         this.initialized = true;
         tabOpenedSub.unsubscribe();
@@ -73,7 +73,7 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
     this.executionService.stopExecution();
     this.executionService.checkFileStatus();
 
-    TerminalComponent.writeTerminalCommand('run　');
+    TerminalComponent.writeTerminalCommand('--run　');
 
     this.isDebugging = false;
 
@@ -91,7 +91,7 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
     this.executionService.stopExecution();
     this.executionService.checkFileStatus();
 
-    TerminalComponent.writeTerminalCommand('debug　');
+    TerminalComponent.writeTerminalCommand('--debug　');
 
     this.isDebugging = true;
 
@@ -101,8 +101,11 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   }
 
   stopExec() {
-    this.buttonsEnabled = true;
     TerminalComponent.writeTerminalCommand('stop　');
+
+    this.buttonsEnabled = true;
+    this.clearDebugOutput();
+
     this.executionService.stopExecution();
   }
 

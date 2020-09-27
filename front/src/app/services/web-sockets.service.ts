@@ -16,9 +16,9 @@ export class WebSocketsService {
   private isDebugging: Boolean = false;
   private breakpoints: number[];
 
-  constructor(private filesEditingService: FileService, private socket: Socket,
-    private layoutService: LayoutService, private settingsEditingService: SettingService,
-    private executionService: ExecutionService, private tabEditingService: TabService) {
+  constructor(private fileService: FileService, private socket: Socket,
+    private layoutService: LayoutService, private settingsService: SettingService,
+    private executionService: ExecutionService, private tabService: TabService) {
     this.bindStatefulListeners();
     this.bindCommonWsListeners();
     this.bindCppWsListeners();
@@ -61,12 +61,12 @@ export class WebSocketsService {
           files = data['data']['files'];
         }
 
-        this.settingsEditingService.loadSettings(settings);
+        this.settingsService.loadSettings(settings);
         Object.keys(settings).map(setting => {
           this.layoutService.changeSettings(settings[setting]);
         });
 
-        this.filesEditingService.loadFiles(files);
+        this.fileService.loadFiles(files);
         setTimeout(() => this.layoutService.loadInitialData(), 1000);
       });
 
@@ -78,7 +78,7 @@ export class WebSocketsService {
         data['file']['path'],
         0
       );
-      this.tabEditingService.openNewTab(navTab);
+      this.tabService.openNewTab(navTab);
     });
 
     this.socket.fromEvent(WsEvent.COMMON.STRUCTURED).subscribe((data: any) => {
@@ -215,7 +215,7 @@ export class WebSocketsService {
   }
 
   bindFileServiceListeners() {
-    this.filesEditingService.fileActionObservable$.subscribe((action) => {
+    this.fileService.fileActionObservable$.subscribe((action) => {
       this.socket.emit(WsEvent.COMMON.SAVE_FILES, action['files']);
       switch (action['type']) {
         case 'create':
@@ -231,7 +231,7 @@ export class WebSocketsService {
             name: action['node'],
             path: action['path'],
           });
-          this.filesEditingService.closeTabOnFileChange({
+          this.fileService.closeTabOnFileChange({
             path: action['path'],
             name: action['node'],
           });
@@ -242,7 +242,7 @@ export class WebSocketsService {
             newName: action['newName'],
             path: action['path'],
           });
-          this.filesEditingService.closeTabOnFileChange({
+          this.fileService.closeTabOnFileChange({
             path: action['path'],
             name: action['node'],
           });
@@ -252,7 +252,7 @@ export class WebSocketsService {
       }
     });
 
-    this.filesEditingService.saveFileObservable$.subscribe((file) => {
+    this.fileService.saveFileObservable$.subscribe((file) => {
       this.socket.emit(WsEvent.COMMON.SAVE_FILE, {
         name: file['title'],
         path: file['path'],
@@ -263,7 +263,7 @@ export class WebSocketsService {
   }
 
   bindSettingServiceListeners() {
-    this.settingsEditingService.saveSettingsObservable$.subscribe((settings) => {
+    this.settingsService.saveSettingsObservable$.subscribe((settings) => {
       this.socket.emit(WsEvent.COMMON.SAVE_SETTINGS, { ...settings });
     });
   }
@@ -301,7 +301,7 @@ export class WebSocketsService {
   }
 
   bindTabServiceListeners() {
-    this.tabEditingService.notifyFileChangedObservable$.subscribe((file) => {
+    this.tabService.notifyFileChangedObservable$.subscribe((file) => {
       this.socket.emit(WsEvent.COMMON.RETRIEVE_FILE, file);
     });
   }

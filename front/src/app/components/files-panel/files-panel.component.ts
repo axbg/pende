@@ -46,10 +46,10 @@ export class FilesPanelComponent implements AfterViewInit {
   treeComponent;
 
   constructor(
-    private tabEditingService: TabService,
-    private filesEditingService: FileService
+    private tabService: TabService,
+    private fileService: FileService
   ) {
-    this.filesEditingService.loadFilesObservable$.subscribe(data => {
+    this.fileService.loadFilesObservable$.subscribe(data => {
       this.files = data;
       this.tree.children = this.files;
       this.filesLoaded = true;
@@ -73,7 +73,7 @@ export class FilesPanelComponent implements AfterViewInit {
   public handleSelect(event) {
     if (!event.node.children) {
       const path = this.composeWholePath(event.node);
-      this.tabEditingService.notifyFileChanged({
+      this.tabService.notifyFileChanged({
         title: event.node.node.value,
         path: path,
         id: event.node.node.id,
@@ -97,7 +97,7 @@ export class FilesPanelComponent implements AfterViewInit {
           this.treeComponent.tree,
           -1
         ).children;
-        this.filesEditingService.fileAction({
+        this.fileService.fileAction({
           type: 'delete',
           node: event.node.value,
           files: this.files,
@@ -144,7 +144,7 @@ export class FilesPanelComponent implements AfterViewInit {
       this.treeComponent.tree,
       event.node.id
     ).children;
-    this.filesEditingService.fileAction({
+    this.fileService.fileAction({
       type: 'rename',
       oldName: oldName,
       newName: newName,
@@ -202,7 +202,7 @@ export class FilesPanelComponent implements AfterViewInit {
       this.treeComponent.tree,
       event.node.id
     ).children;
-    this.filesEditingService.fileAction({
+    this.fileService.fileAction({
       type: 'create',
       node: event.node.value,
       directory: isDirectory,

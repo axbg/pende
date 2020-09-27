@@ -10,7 +10,7 @@
 }
 
 .panel {
-    background-color: #F1F1F1;
+    background-color: var(--label-white);;
     height: 100%;
     text-align: center;
 }
@@ -29,9 +29,9 @@
     width: 60%;
     margin: 0 auto;
     text-align: center;
-    background-color: white;
+    background-color: var(--label-white);
     padding: 30px;
-    border: 1px solid rgba(0, 0, 0, .12);
+    border: 1px solid var(--panel-border);
 }
 
 .footer {
@@ -39,4 +39,8 @@
     position: absolute;
     bottom: 0;
     margin-bottom: 10px;
+}
+
+.white {
+    color: var(--label-white);
 }

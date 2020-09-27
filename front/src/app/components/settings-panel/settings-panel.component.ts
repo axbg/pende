@@ -23,12 +23,12 @@ export class SettingsPanelComponent {
   themeColor: String;
 
   constructor(
-    private settingsEditingService: SettingService, private layoutService: LayoutService
+    private settingsService: SettingService, private layoutService: LayoutService
   ) {
     this.themes = SettingsConstants.getThemes();
     this.cursors = SettingsConstants.getCursors();
 
-    settingsEditingService.loadSettingsObservable$.subscribe(data => {
+    settingsService.loadSettingsObservable$.subscribe(data => {
       this.settings = data;
       this.loadSelectedSettings();
     });
@@ -69,6 +69,6 @@ export class SettingsPanelComponent {
 
   saveSettings() {
     this.unsaved = false;
-    this.settingsEditingService.saveSettings(this.settings);
+    this.settingsService.saveSettings(this.settings);
   }
 }
