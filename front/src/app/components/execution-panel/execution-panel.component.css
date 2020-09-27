@@ -2,7 +2,7 @@
   background-color: white;
   height: 100%;
   text-align: center;
-  border: 1px solid rgba(0, 0, 0, .12);
+  border: 1px solid var(--panel-border);
 }
 
 .icon {
@@ -39,10 +39,10 @@
 }
 
 .debug-extra-container {
-  border: 1px solid #c8c8c8;
+  border: 1px solid var(--inside-border);
   height: 100%;
   margin-top: -20px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .section-name {
@@ -66,18 +66,13 @@ hr {
 }
 
 .white {
-  background-color: white !important;
-  color: black !important;
+  background-color: var(--label-white);
+  color: var(--label-black);
 }
 
 .black {
-  background-color: #282A36 !important;
-  color: white !important;
-}
-
-.black>label {
-  background-color: #282A36;
-  color: white;
+  background-color: var(--label-black);
+  color: var(--label-white) !important;
 }
 
 .debug-control button {
@@ -85,6 +80,6 @@ hr {
 }
 
 .disabled {
-  color: #666666 !important;
-  border: 1px solid #999999;
+  color: var(--label-disabled) !important;
+  border: 1px solid var(--label-border);
 }

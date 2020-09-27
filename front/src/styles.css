@@ -1,7 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
 :root {
   --button-unsaved-color: #B71C1C;
   --button-unsaved-hover: #801313;
+  --label-black: #282A36;
+  --label-white: white;
+  --label-disabled: #666666;
+  --label-border: #999999;
+  --panel-border: rgba(0, 0, 0, .12);
+  --layout-border: rgba(255, 255, 255, .25);
+  --inside-border: #c8c8c8;
+  --button-hover: #989898;
+  --shortcut-gray:  #e2e2e2;
 }
 
 html, body {
@@ -15,24 +23,8 @@ html, body {
   width: 5px;
 }
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
 .ui-tabview-panels {
   display: none;
-}
-
-button:disabled {
-  background-color: blue !important;
 }
 
 .ui-tabview-nav, .ui-menubar-root-list {
@@ -43,10 +35,6 @@ button:disabled {
   text-align: center;
   width: 1fr !important;
   grid-row: 1;
-}
-
-.ui-menuitem :hover {
-  background-color: #989898 !important;
 }
 
 .ui-menubar:after {
@@ -101,13 +89,13 @@ li[role="presentation"] {
 
 .bgblacklayout {
   background-color: #2D2D2D !important;
-  border: 1px solid rgba(255, 255, 255, .25) !important;
+  border: 1px solid var(--layout-border) !important;
 }
 
 .bgblack {
   background-color: #141414 !important;
-  color: white !important;
-  border: 1px solid rgba(255, 255, 255, .25) !important;
+  color: var(--label-white) !important;
+  border: 1px solid var(--layout-border) !important;
 }
 
 .panel-title {

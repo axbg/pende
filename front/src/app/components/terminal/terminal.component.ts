@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { TerminalService } from 'src/app/services/terminal-service';
 import { Subscription } from 'rxjs/Subscription';
 import { ExecutionService } from 'src/app/services/execution.service';
@@ -9,11 +9,15 @@ import { ExecutionService } from 'src/app/services/execution.service';
   styleUrls: ['./terminal.component.css'],
   providers: [TerminalService]
 })
-export class TerminalComponent implements OnInit, OnDestroy {
+export class TerminalComponent implements OnDestroy {
+  private messages: String[] = ['Welcome to pendë', 'Be as light as a pendë', 'Code as fast as a rocket'];
+  private message: String = '';
+  private subscription: Subscription;
+  private mode: string;
 
   constructor(private terminalService: TerminalService, private executionService: ExecutionService) {
+    this.message = this.messages[Math.floor(Math.random() * this.messages.length)];
     this.terminalService.sendCommandObservable$.subscribe(command => {
-
       if (command.includes('　')) {
         const c = command.replace('　', '');
         switch (c) {
@@ -34,24 +38,16 @@ export class TerminalComponent implements OnInit, OnDestroy {
     });
   }
 
-  private subscription: Subscription;
-  prompt = '';
-  mode: string;
-
   static writeTerminalCommand(command: any) {
     const terminalInput = <HTMLInputElement>document.querySelector('.ui-terminal-input');
-    const keyboardEvent = new KeyboardEvent('keydown', { code: 'enter' });
     terminalInput.value = command.toString();
     terminalInput.dispatchEvent(new Event('input'));
-    terminalInput.dispatchEvent(keyboardEvent);
+    terminalInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'enter' }));
     terminalInput.value = '';
+
     setTimeout(() => {
       document.querySelector('.ui-terminal').scrollTop = document.querySelector('.ui-terminal').scrollHeight;
     }, 10);
-  }
-
-  ngOnInit() {
-
   }
 
   ngOnDestroy() {
@@ -59,5 +55,4 @@ export class TerminalComponent implements OnInit, OnDestroy {
       this.subscription.unsubscribe();
     }
   }
-
 }

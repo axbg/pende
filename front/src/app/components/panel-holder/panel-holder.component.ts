@@ -14,10 +14,10 @@ export class PanelHolderComponent {
   themeColor: String = 'white';
 
   constructor(
-    private tabEditingService: TabService,
+    private tabService: TabService,
     private layoutService: LayoutService
   ) {
-    this.tabEditingService.renderMenuPanelObservable$.subscribe((payload) => {
+    this.tabService.renderMenuPanelObservable$.subscribe((payload) => {
       this.panel = payload;
     });
 

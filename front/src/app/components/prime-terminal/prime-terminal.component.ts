@@ -5,32 +5,29 @@ import { CommonModule } from '@angular/common';
 import { TerminalService } from 'src/app/services/terminal-service';
 import { Subscription } from 'rxjs';
 
-// this is a remake of the primeng terminal component
-// because the one present in the library is outdated
 @Component({
     selector: 'app-prime-terminal',
     templateUrl: './prime-terminal.component.html',
     styleUrls: ['./prime-terminal.component.css'],
 })
 export class PrimeTerminalComponent implements AfterViewInit, AfterViewChecked, OnDestroy {
-
-    @Input() welcomeMessage: string;
-
-    @Input() prompt: string;
-
-    @Input() style: any;
-
-    @Input() styleClass: string;
-
     commands: any[] = [];
-
     command: string;
-
     container: Element;
-
     commandProcessed: boolean;
-
     subscription: Subscription;
+
+    @Input()
+    welcomeMessage: string;
+
+    @Input()
+    prompt: string;
+
+    @Input()
+    style: any;
+
+    @Input()
+    styleClass: string;
 
     constructor(public el: ElementRef, public terminalService: TerminalService) {
         this.subscription = terminalService.sendResponseObservable$.subscribe(response => {

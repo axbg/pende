@@ -25,3 +25,7 @@
 .menu-ribbon {
     margin-top: 4px;
 }
+
+.white {
+    color: var(--label-white);
+}

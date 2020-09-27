@@ -3,10 +3,10 @@
 }
 
 .files {
-  background-color: white;
+  background-color: var(--label-white);
   height: 100%;
   text-align: center;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--panel-border);
 }
 
 .files-holder {
@@ -22,5 +22,5 @@ h3 {
 
 .bgblack >>> .node-name,
 .bgblack >>> .node-template {
-  color: white;
+  color: var(--label-white);
 }

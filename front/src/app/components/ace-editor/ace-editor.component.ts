@@ -22,12 +22,12 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
   darkTheme = false;
 
   constructor(
-    private tabEditingService: TabService,
+    private tabService: TabService,
     private executionService: ExecutionService,
     private layoutService: LayoutService,
-    private fileEditingService: FileService
+    private fileService: FileService
   ) {
-    this.tabEditingService.renderTabSubjectObservable$.subscribe((tab) => {
+    this.tabService.renderTabSubjectObservable$.subscribe((tab) => {
       if (tab && tab.getId()) {
         if (this.showEditor === false) {
           this.showEditor = true;
@@ -76,7 +76,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.tabEditingService.notifyLastTabClosedObservable$.subscribe(() => {
+    this.tabService.notifyLastTabClosedObservable$.subscribe(() => {
       this.showEditor = false;
     });
 
@@ -106,7 +106,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
     });
 
     this.executionService.checkFileStatusObservable$.subscribe((data) => {
-      this.tabEditingService.notifyFileContentChanged(false);
+      this.tabService.notifyFileContentChanged(false);
       this.executionService.modifyFile(this.currentTab);
     });
 
@@ -119,7 +119,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
       }
     });
 
-    this.fileEditingService.saveFileShortcutObservable$.subscribe(() => {
+    this.fileService.saveFileShortcutObservable$.subscribe(() => {
       this.saveFile();
     });
   }
@@ -249,7 +249,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
         }
 
         if (!this.currentTab.getModified()) {
-          this.tabEditingService.notifyFileContentChanged(true);
+          this.tabService.notifyFileContentChanged(true);
           this.currentTab.setModified(true);
         }
 
@@ -280,12 +280,12 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
   }
 
   saveFile() {
-    this.tabEditingService.notifyFileContentChanged(false);
+    this.tabService.notifyFileContentChanged(false);
     this.currentTab.setContent(this.editor.getEditor().getValue());
     this.currentTab.setModified(false);
 
     setTimeout(() => {
-      this.fileEditingService.saveFile(this.currentTab);
+      this.fileService.saveFile(this.currentTab);
     }, 50);
   }
 
