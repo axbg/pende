@@ -15,8 +15,8 @@ export class TabRibbonComponent implements OnInit {
   @Input() target: String;
   @Input() closable: number;
 
-  constructor(private tabEditingService: TabService, private fileEditingService: FileService) {
-    this.fileEditingService.closeTabOnFileChangeObservable$.subscribe(file => {
+  constructor(private tabService: TabService, private fileService: FileService) {
+    this.fileService.closeTabOnFileChangeObservable$.subscribe(file => {
       if (this.closable) {
         for (let index = 0; index < this.tabs.length; index++) {
           if (this.tabs[index].getPath() === file['path'] && this.tabs[index].getTitle() === file['name']) {
@@ -33,7 +33,7 @@ export class TabRibbonComponent implements OnInit {
     this.renderTab();
 
     if (this.closable) {
-      this.tabEditingService.openNewTabObservable$.subscribe(tab => {
+      this.tabService.openNewTabObservable$.subscribe(tab => {
         const existingTab = this.tabs.find(fTab => fTab.getId() === tab.getId());
         if (existingTab) {
           this.tabChange(existingTab.getIndex());
@@ -44,7 +44,7 @@ export class TabRibbonComponent implements OnInit {
         }
       });
 
-      this.tabEditingService.notifyFileContentChangedObservable$.subscribe(status => {
+      this.tabService.notifyFileContentChangedObservable$.subscribe(status => {
         if (status) {
           (<HTMLElement>(
             document.querySelector('.ui-tabview-selected')
@@ -60,14 +60,14 @@ export class TabRibbonComponent implements OnInit {
 
   renderTab() {
     if (this.closable) {
-      this.tabEditingService.renderTabSource(this.tabs[this.currentIndex]);
+      this.tabService.renderTabSource(this.tabs[this.currentIndex]);
     } else {
-      this.tabEditingService.renderMenuPanel(this.tabs[this.currentIndex].getTitle());
+      this.tabService.renderMenuPanel(this.tabs[this.currentIndex].getTitle());
     }
   }
 
   clearTarget() {
-    this.tabEditingService.renderTabSource(new NavigationTab('', '', '', '', 0));
+    this.tabService.renderTabSource(new NavigationTab('', '', '', '', 0));
   }
 
   tabChange(index) {
@@ -90,7 +90,7 @@ export class TabRibbonComponent implements OnInit {
     } else {
       this.tabs.splice(index, 1);
       this.clearTarget();
-      this.tabEditingService.notifyLastTabClosed();
+      this.tabService.notifyLastTabClosed();
     }
   }
 
@@ -98,7 +98,7 @@ export class TabRibbonComponent implements OnInit {
     if (this.tabs[index].getModified()) {
       if (confirm('Do you want to close this file?')) {
         if (confirm('Do you want to save the file before leaving?')) {
-          this.fileEditingService.saveFileShortcut();
+          this.fileService.saveFileShortcut();
         }
         this.closeTabProcedure(index);
       }

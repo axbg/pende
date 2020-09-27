@@ -2,8 +2,9 @@
   <div class="files-holder">
     <h3 class="panel-title">Files</h3>
     <div>
-      <tree *ngIf="filesLoaded" #treeComponent [tree]="tree" (nodeSelected)="handleSelect($event)" (nodeRemoved)="handleRemove($event)"
-        (nodeRenamed)="handleRename($event)" (nodeCreated)="handleCreate($event)" (nodeMoved)="handleMoved($event)">
+      <tree *ngIf="filesLoaded" #treeComponent [tree]="tree" (nodeSelected)="handleSelect($event)"
+        (nodeRemoved)="handleRemove($event)" (nodeRenamed)="handleRename($event)" (nodeCreated)="handleCreate($event)"
+        (nodeMoved)="handleMoved($event)">
       </tree>
     </div>
   </div>
