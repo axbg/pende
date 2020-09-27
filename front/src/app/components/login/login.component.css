@@ -27,18 +27,12 @@
 
 .panel-center {
     width: 60%;
+    max-width: 350px;
     margin: 0 auto;
     text-align: center;
     background-color: var(--label-white);
     padding: 30px;
     border: 1px solid var(--panel-border);
-}
-
-.footer {
-    width: 37vw;
-    position: absolute;
-    bottom: 0;
-    margin-bottom: 10px;
 }
 
 .white {
