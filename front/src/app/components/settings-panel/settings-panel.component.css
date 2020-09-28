@@ -1,0 +1,29 @@
+.settings {
+  background-color: white;
+  height: 100%;
+  text-align: center;
+  border: 1px solid var(--panel-border);
+}
+
+.settings-holder {
+  margin: 0 auto;
+  padding: 30px;
+  text-align: left;
+  height: 80%;
+}
+
+.property-label {
+  margin-right: 30px;
+}
+
+.setting-wrapper {
+  margin: 20px;
+}
+
+.unsaved >>> button {
+  background-color: var(--button-unsaved-color);
+}
+
+.unsaved >>> button:hover {
+  background-color: var(--button-unsaved-hover);
+}

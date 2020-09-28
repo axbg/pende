@@ -1,0 +1,59 @@
+<div class="execution" [ngClass]="{'bgblack' : themeColor === 'black'}">
+  <ng-template *ngIf="!isDebugging;then running; else debugging">
+  </ng-template>
+</div>
+
+<ng-template #running>
+  <div class="commands-wrapper" *ngIf="!isDebugging; else debugging">
+    <button id="run" class="pi pi-caret-right icon"
+      [ngClass]="{white: themeColor === 'white', black: themeColor === 'black', disabled: !buttonsEnabled}"
+      [disabled]="!buttonsEnabled" pTooltip="Run" tooltipPosition="bottom" (click)="runCode()"></button>
+    <button id="debug" class="pi pi-eye icon"
+      [ngClass]="{white: themeColor === 'white', black: themeColor === 'black', disabled: !buttonsEnabled}"
+      [disabled]="!buttonsEnabled" pTooltip="Debug" tooltipPosition="bottom" (click)="debugCode()"></button>
+    <button class="pi pi-ban icon" [ngClass]="(themeColor==='white')?'white':'black'" pTooltip="Stop"
+      tooltipPosition="bottom" (click)="stopExec()"></button>
+  </div>
+  <div class="output-wrapper">
+    <h3 class="section-name">Output</h3>
+    <app-terminal class="terminal"></app-terminal>
+  </div>
+</ng-template>
+
+<ng-template #debugging>
+  <div class="commands-wrapper">
+    <button id="run" class="pi pi-caret-right icon"
+      [ngClass]="{white: themeColor === 'white', black: themeColor === 'black', disabled: !buttonsEnabled}"
+      [disabled]="!buttonsEnabled" pTooltip="Run" tooltipPosition="bottom" (click)="runCode()"></button>
+    <button id="debug" class="pi pi-eye icon"
+      [ngClass]="{white: themeColor === 'white', black: themeColor === 'black', disabled: !buttonsEnabled}"
+      [disabled]="!buttonsEnabled" pTooltip="Debug" tooltipPosition="bottom" (click)="debugCode()"></button>
+    <button class="pi pi-ban icon" [ngClass]="(themeColor==='white')?'white':'black'" pTooltip="Stop"
+      tooltipPosition="bottom" (click)="stopExec()"></button>
+  </div>
+  <div class="debug-wrapper">
+    <h3 class="section-name">Debugging</h3>
+    <app-terminal class="terminal"></app-terminal>
+  </div>
+  <div class="debug-control">
+    <button pButton type="button" label="Continue" (click)="continueDebug()"></button>
+  </div>
+  <div class="debug-extra-wrapper">
+    <h3 class="section-name">Variables</h3>
+    <div id="variables" class="debug-extra-container">
+      <div *ngFor="let variable of variables | keyvalue">
+        <p class="line">{{variable.key}} : {{variable.value}}</p>
+        <hr>
+      </div>
+    </div>
+  </div>
+  <div class="debug-extra-wrapper">
+    <h3 class="section-name">Callstack</h3>
+    <div id="callstack" class="debug-extra-container">
+      <div *ngFor="let line of callstack">
+        <p class="line">{{line}}</p>
+        <hr>
+      </div>
+    </div>
+  </div>
+</ng-template>

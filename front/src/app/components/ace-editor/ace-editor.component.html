@@ -1,0 +1,6 @@
+<div class="full-height" [ngClass]="{'bgblack' : darkTheme}">
+  <ace-editor #editor class="full-height" [style.visibility]="showEditor ? 'visible' : 'hidden'"></ace-editor>
+  <div class="welcome-text" *ngIf="!showEditor">
+    <h3 disabeld>Open a file and let's start hacking</h3>
+  </div>
+</div>

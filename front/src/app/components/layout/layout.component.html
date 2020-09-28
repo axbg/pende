@@ -1,0 +1,15 @@
+<div class="web-layout" [ngClass]="{'bgblacklayout' : themeColor === 'black'}">
+  <div class="code-layout">
+    <app-tab-ribbon [tabs]="fileTabs" target="code-editor" closable=1></app-tab-ribbon>
+    <app-ace-editor id="code-editor" class="code-editor" contenteditable="false"></app-ace-editor>
+  </div>
+  <div class="menu-layout">
+    <app-menu-ribbon class="menu-ribbon"></app-menu-ribbon>
+    <app-tab-ribbon [tabs]="projectTabs" target="menu-panel"></app-tab-ribbon>
+    <app-panel-holder id="menu-panel" class="code-editor" panel="Files"></app-panel-holder>
+  </div>
+</div>
+
+<ngx-spinner bdOpacity=0.9 bdColor="#333" size="large" color="#fff" type="triangle-skew-spin" fullScreen="true">
+  <p class="white"> Compiling... </p>
+</ngx-spinner>

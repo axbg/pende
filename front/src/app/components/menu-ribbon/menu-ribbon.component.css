@@ -1,0 +1,17 @@
+.container {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.contact-point {
+    margin: 20px;
+}
+
+.shortcut-key {
+    margin: 0 8px;
+    min-width: 1.5em;
+    padding: 1px 4px 2px;
+    border-radius: 2px;
+    background: var(--shortcut-gray);
+    font-weight: 600;
+}

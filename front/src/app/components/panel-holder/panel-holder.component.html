@@ -1,0 +1,9 @@
+<div class="container">
+  <div class="files-container" [ngClass]="{'hidden' : panel !== 'Files'}">
+    <app-files-panel [themeColor]="themeColor"></app-files-panel>
+  </div>
+  <app-execution-panel [themeColor]="themeColor" [ngClass]="{'hidden' : panel !== 'Execute'}">
+  </app-execution-panel>
+  <app-settings-panel [themeColor]="themeColor" [ngClass]="{'hidden' : panel !== 'Settings'}">
+  </app-settings-panel>
+</div>

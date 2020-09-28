@@ -1,0 +1,26 @@
+.panel-title {
+  font-size: 25px;
+}
+
+.files {
+  background-color: var(--label-white);
+  height: 100%;
+  text-align: center;
+  border: 1px solid var(--panel-border);
+}
+
+.files-holder {
+  margin: 0 auto;
+  text-align: left;
+  height: 100%;
+  font-size: 1.2em;
+}
+
+h3 {
+  text-align: center;
+}
+
+.bgblack >>> .node-name,
+.bgblack >>> .node-template {
+  color: var(--label-white);
+}

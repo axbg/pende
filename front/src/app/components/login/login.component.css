@@ -1,0 +1,40 @@
+.container {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    height: 100%;
+}
+
+.photo {
+    width: 100%;
+    height: 100%
+}
+
+.panel {
+    background-color: var(--label-white);;
+    height: 100%;
+    text-align: center;
+}
+
+.panel-content {
+    margin: 0 auto;
+    margin-top: 20vh;
+    width: 100%;
+}
+
+.panel-logo {
+    margin: 40px;
+}
+
+.panel-center {
+    width: 60%;
+    max-width: 350px;
+    margin: 0 auto;
+    text-align: center;
+    background-color: var(--label-white);
+    padding: 30px;
+    border: 1px solid var(--panel-border);
+}
+
+.white {
+    color: var(--label-white);
+}
