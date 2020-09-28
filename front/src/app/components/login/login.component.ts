@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
             this.spinner.hide();
             alert('An error occurred during login');
           });
-      }).catch(err => {
+      }).catch(error => {
         this.spinner.hide();
         alert('An error occurred during Google authentication');
       });
@@ -43,5 +43,4 @@ export class LoginComponent implements OnInit {
       this.router.navigateByUrl('/ide');
     }
   }
-
 }

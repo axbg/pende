@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { TerminalComponent } from 'src/app/components/terminal/terminal.component';
 import { ExecutionService } from 'src/app/services/execution.service';
 import { ISubscription } from 'rxjs/Subscription';
@@ -9,11 +9,11 @@ import { TabService } from 'src/app/services/tab-service';
   templateUrl: './execution-panel.component.html',
   styleUrls: ['./execution-panel.component.css'],
 })
-export class ExecutionPanelComponent implements OnInit, OnDestroy {
+export class ExecutionPanelComponent implements OnInit {
   private isDebugging = false;
-  private variables: Map<string, string> = new Map<string, string>();
-  private callstack: string[] = [];
   private initialized: Boolean = false;
+  private callstack: string[] = [];
+  private variables: Map<string, string> = new Map<string, string>();
   private buttonsEnabled: Boolean = true;
   private newDataSubscription: ISubscription;
 
@@ -131,9 +131,5 @@ export class ExecutionPanelComponent implements OnInit, OnDestroy {
   clearDebugOutput() {
     this.variables.clear();
     this.callstack = [];
-  }
-
-  ngOnDestroy() {
-    this.newDataSubscription.unsubscribe();
   }
 }
