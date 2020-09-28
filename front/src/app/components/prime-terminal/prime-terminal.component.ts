@@ -1,21 +1,17 @@
 import { Component } from '@angular/core';
-import { NgModule, AfterViewInit, AfterViewChecked, OnDestroy, Input, ElementRef } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { AfterViewInit, AfterViewChecked, Input, ElementRef } from '@angular/core';
 import { TerminalService } from 'src/app/services/terminal-service';
-import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-prime-terminal',
     templateUrl: './prime-terminal.component.html',
     styleUrls: ['./prime-terminal.component.css'],
 })
-export class PrimeTerminalComponent implements AfterViewInit, AfterViewChecked, OnDestroy {
+export class PrimeTerminalComponent implements AfterViewInit, AfterViewChecked {
     commands: any[] = [];
     command: string;
     container: Element;
     commandProcessed: boolean;
-    subscription: Subscription;
 
     @Input()
     welcomeMessage: string;
@@ -30,7 +26,7 @@ export class PrimeTerminalComponent implements AfterViewInit, AfterViewChecked, 
     styleClass: string;
 
     constructor(public el: ElementRef, public terminalService: TerminalService) {
-        this.subscription = terminalService.sendResponseObservable$.subscribe(response => {
+        terminalService.sendResponseObservable$.subscribe(response => {
             this.commands[this.commands.length - 1].response = response;
             this.commandProcessed = true;
         });
@@ -75,17 +71,4 @@ export class PrimeTerminalComponent implements AfterViewInit, AfterViewChecked, 
     focus(element: HTMLElement) {
         element.focus();
     }
-
-    ngOnDestroy() {
-        if (this.subscription) {
-            this.subscription.unsubscribe();
-        }
-    }
-
 }
-@NgModule({
-    imports: [CommonModule, FormsModule],
-    exports: [PrimeTerminalComponent],
-    declarations: [PrimeTerminalComponent]
-})
-export class TerminalModule { }
