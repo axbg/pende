@@ -1,0 +1,37 @@
+const WsEvent = {
+  NULL: '',
+  COMMON: {
+    LOADED_INITIAL_DATA: 'loaded-initial-data',
+    STRUCTURE: 'structure',
+    STRUCTURED: 'structured',
+    SAVE_FILE: 'save-file',
+    SAVE_FILES: 'save-files',
+    SAVE_SETTINGS: 'save-settings',
+    SAVE: 'save',
+    SAVED: 'saved',
+    RETRIEVE_FILE: 'retrieve-file',
+    RETRIEVED_FILE: 'retrieved-file',
+    RENAME_FILE: 'rename-file',
+    DELETE_FILE: 'delete-file',
+    DISCONNECT: 'disconnect',
+    ERROR: 'error',
+    ERROR_FILE: 'error-file',
+  },
+  C: {
+    RUN: 'c-run',
+    INPUT: 'c-input',
+    COMPILATION_ERROR: 'c-compilation-error',
+    OUTPUT: 'c-output',
+    ERROR: 'c-error',
+    FINISHED: 'c-finished',
+    DEBUG: 'c-debug',
+    DEBUG_INPUT: 'c-debug-input',
+    DEBUG_STACK: 'c-debug-stack',
+    DEBUG_VARIABLES: 'c-debug-variables',
+    DEBUG_OUTPUT: 'c-debug-output',
+    DEBUG_FINISHED: 'c-debug-finish',
+    STOP: 'c-stop',
+  },
+};
+
+module.exports = WsEvent;
