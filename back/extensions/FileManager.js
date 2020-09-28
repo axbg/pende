@@ -25,9 +25,9 @@ class C extends AbstractExtension {
       this.socket.emit(WsEvent.COMMON.SAVED, payload);
     });
 
-    this.socket.on(WsEvent.COMMON.SAVE_SETTINGS, (SettingDatas) => {
+    this.socket.on(WsEvent.COMMON.SAVE_SETTINGS, (settings) => {
       User.findOne({ mail: this.username }).then((user) => {
-        user.SettingDatas = SettingDatas;
+        user.settings = settings;
         user.save();
       });
     });
