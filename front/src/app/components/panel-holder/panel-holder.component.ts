@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { TabService } from 'src/app/services/tab-service';
 import { LayoutService } from 'src/app/services/layout.service';
-import { WsEvent } from 'src/app/classes/WsEvent';
 
 @Component({
   selector: 'app-panel-holder',
@@ -9,14 +8,12 @@ import { WsEvent } from 'src/app/classes/WsEvent';
   styleUrls: ['./panel-holder.component.css'],
 })
 export class PanelHolderComponent {
-  @Input() panel: String;
-
   themeColor: String = 'white';
 
-  constructor(
-    private tabService: TabService,
-    private layoutService: LayoutService
-  ) {
+  @Input()
+  panel: String;
+
+  constructor(private tabService: TabService, private layoutService: LayoutService) {
     this.tabService.renderMenuPanelObservable$.subscribe((payload) => {
       this.panel = payload;
     });

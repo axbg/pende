@@ -10,6 +10,8 @@
   --inside-border: #c8c8c8;
   --button-hover: #989898;
   --shortcut-gray:  #e2e2e2;
+  --black-theme-background: #141414;
+  --black-theme-layout: #2D2D2D;
 }
 
 html, body {
@@ -88,12 +90,12 @@ li[role="presentation"] {
 }
 
 .bgblacklayout {
-  background-color: #2D2D2D !important;
+  background-color: var(--black-theme-layout) !important;
   border: 1px solid var(--layout-border) !important;
 }
 
 .bgblack {
-  background-color: #141414 !important;
+  background-color: var(--black-theme-background) !important;
   color: var(--label-white) !important;
   border: 1px solid var(--layout-border) !important;
 }

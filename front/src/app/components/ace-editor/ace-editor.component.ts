@@ -7,7 +7,6 @@ import { FileService } from 'src/app/services/file-service';
 import * as FileSave from 'file-saver';
 import Formatter from 'auto-format';
 import { Constants } from 'src/app/classes/Constants';
-
 @Component({
   selector: 'app-ace-editor',
   templateUrl: './ace-editor.component.html',
@@ -173,7 +172,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
       bindKey: 'Ctrl-s',
       exec: (editor) => {
         this.saveFile();
-      },
+      }
     });
 
     this.editor.getEditor().commands.addCommand({
@@ -181,7 +180,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
       bindKey: 'Ctrl-d',
       exec: (editor) => {
         this.downloadFile();
-      },
+      }
     });
 
     this.editor.getEditor().commands.addCommand({
@@ -191,7 +190,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
         this.drawBreakpoints(false);
         this.showBreakpoints = true;
         this.currentTab.setBreakpoints([]);
-      },
+      }
     });
 
     this.editor.getEditor().commands.addCommand({
@@ -204,7 +203,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
         } else {
           this.drawBreakpoints(false);
         }
-      },
+      }
     });
 
     this.editor.getEditor().commands.addCommand({

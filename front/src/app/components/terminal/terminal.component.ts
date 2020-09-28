@@ -1,6 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { TerminalService } from 'src/app/services/terminal-service';
-import { Subscription } from 'rxjs/Subscription';
 import { ExecutionService } from 'src/app/services/execution.service';
 
 @Component({
@@ -9,10 +8,9 @@ import { ExecutionService } from 'src/app/services/execution.service';
   styleUrls: ['./terminal.component.css'],
   providers: [TerminalService]
 })
-export class TerminalComponent implements OnDestroy {
+export class TerminalComponent {
   private messages: String[] = ['Welcome to pendë', 'Be as light as a pendë', 'Code as fast as a rocket'];
   private message: String = '';
-  private subscription: Subscription;
   private mode: string;
 
   constructor(private terminalService: TerminalService, private executionService: ExecutionService) {
@@ -48,11 +46,5 @@ export class TerminalComponent implements OnDestroy {
     setTimeout(() => {
       document.querySelector('.ui-terminal').scrollTop = document.querySelector('.ui-terminal').scrollHeight;
     }, 10);
-  }
-
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
   }
 }

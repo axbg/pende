@@ -22,9 +22,7 @@ export class SettingsPanelComponent {
   @Input()
   themeColor: String;
 
-  constructor(
-    private settingsService: SettingService, private layoutService: LayoutService
-  ) {
+  constructor(private settingsService: SettingService, private layoutService: LayoutService) {
     this.themes = SettingsConstants.getThemes();
     this.cursors = SettingsConstants.getCursors();
 

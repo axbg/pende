@@ -106,5 +106,4 @@ export class TabRibbonComponent implements OnInit {
       this.closeTabProcedure(index);
     }
   }
-
 }

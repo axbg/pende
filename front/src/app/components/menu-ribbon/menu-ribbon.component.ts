@@ -23,7 +23,6 @@ export class MenuRibbonComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.items = [
       {
         label: 'Shortcuts',

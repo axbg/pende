@@ -1,9 +1,4 @@
-import {
-  Component,
-  Input,
-  ViewChild,
-  AfterViewInit
-} from '@angular/core';
+import { Component, Input, ViewChild, AfterViewInit } from '@angular/core';
 import { TreeModel } from 'ng2-tree';
 import { TabService } from 'src/app/services/tab-service';
 import { FileService } from 'src/app/services/file-service';
@@ -45,10 +40,7 @@ export class FilesPanelComponent implements AfterViewInit {
   @ViewChild('treeComponent')
   treeComponent;
 
-  constructor(
-    private tabService: TabService,
-    private fileService: FileService
-  ) {
+  constructor(private tabService: TabService, private fileService: FileService) {
     this.fileService.loadFilesObservable$.subscribe(data => {
       this.files = data;
       this.tree.children = this.files;
