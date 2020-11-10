@@ -1,0 +1,12 @@
+front/node_modules/
+back/node_modules/
+files/
+!files/.gitkeep
+logs/
+!logs/.gitkeep
+dist
+Dockerfile
+docker-compose.yaml
+build.sh
+.dockerignore
+.git/
