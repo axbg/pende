@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Constants } from 'src/app/classes/Constants';
 import { SettingData } from 'src/app/classes/SettingData';
 import { LayoutService } from 'src/app/services/layout.service';
 import { SettingService } from 'src/app/services/setting-service';
@@ -34,10 +35,10 @@ export class SettingsPanelComponent {
 
   loadSelectedSettings() {
     if (this.settings) {
-      this.fontSize = this.settings['fontSize'].getValue();
-      this.gutter = this.settings['gutter'].getValue();
-      this.selectedTheme = this.settings['theme'];
-      this.selectedCursor = this.settings['cursor'];
+      this.fontSize = this.settings['fontSize'] ? this.settings['fontSize'].getValue() : Constants.DEFAULT_FONT_SIZE;
+      this.gutter = this.settings['gutter'] ? this.settings['gutter'].getValue() : Constants.DEFAULT_GUTTER;
+      this.selectedTheme = this.settings['theme'] ? this.settings['theme'] : null;
+      this.selectedCursor = this.settings['cursor'] ? this.settings['cursor'] : null;
     }
   }
 
