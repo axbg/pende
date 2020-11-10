@@ -8,6 +8,10 @@ RUN npm install
 
 COPY ./back/ ./
 
+RUN apt update
+
+RUN apt install -y gdb
+
 CMD ["npm", "start"]
 
 EXPOSE 8080
