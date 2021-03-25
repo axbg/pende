@@ -3,7 +3,7 @@ import { AuthService, GoogleLoginProvider } from 'angularx-social-login';
 import { HttpClient } from '@angular/common/http';
 import { AuthLoginService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
-import { Constants } from 'src/app/classes/Constants';
+import { environment } from '../../../environments/environment';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -12,7 +12,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  private loginURL = Constants.BASE_URL + '/api/user/login';
+  private loginURL = environment.BASE_URL + '/api/user/login';
 
   constructor(private googleAuthService: AuthService, private http: HttpClient,
     private authService: AuthLoginService, private router: Router,

@@ -10,15 +10,16 @@ import { TabService } from 'src/app/services/tab-service';
   styleUrls: ['./execution-panel.component.css'],
 })
 export class ExecutionPanelComponent implements OnInit {
-  private isDebugging = false;
   private initialized: Boolean = false;
   private callstack: string[] = [];
   private variables: Map<string, string> = new Map<string, string>();
   private buttonsEnabled: Boolean = true;
   private newDataSubscription: ISubscription;
-
+  
+  isDebugging = false;
+  
   @Input()
-  private themeColor: String;
+  themeColor: String;
 
   constructor(private executionService: ExecutionService, private tabService: TabService) {
     this.newDataSubscription = this.executionService.renderTerminalDataObservable$.subscribe(
