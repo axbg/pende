@@ -10,9 +10,10 @@ import { ExecutionService } from 'src/app/services/execution.service';
 })
 export class TerminalComponent {
   private messages: String[] = ['Welcome to pendë', 'Be as light as a pendë', 'Code as fast as a rocket'];
-  private message: String = '';
   private mode: string;
-
+  
+  message: String = '';
+  
   constructor(private terminalService: TerminalService, private executionService: ExecutionService) {
     this.message = this.messages[Math.floor(Math.random() * this.messages.length)];
     this.terminalService.sendCommandObservable$.subscribe(command => {

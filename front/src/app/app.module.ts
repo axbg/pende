@@ -36,10 +36,9 @@ import { AuthGuardService } from './services/auth-guard.service';
 import { SocialLoginModule, AuthServiceConfig, GoogleLoginProvider, LoginOpt } from 'angularx-social-login';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { Constants } from './classes/Constants';
 
 const config: SocketIoConfig = {
-  url: Constants.BASE_URL, options: {
+  url: environment.BASE_URL, options: {
     query: {
       token:
         window.localStorage.getItem('token')
@@ -60,7 +59,7 @@ export function provideConfig() {
   const provConfig = new AuthServiceConfig([
     {
       id: GoogleLoginProvider.PROVIDER_ID,
-      provider: new GoogleLoginProvider(Constants.GOOGLE_CLIENT_ID, googleLoginOptions)
+      provider: new GoogleLoginProvider(environment.GOOGLE_CLIENT_ID, googleLoginOptions)
     }
   ]);
 

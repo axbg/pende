@@ -1,5 +1,4 @@
 export class SettingData {
-
     private value: String;
     private label: String;
     private property: String;
