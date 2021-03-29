@@ -1,6 +1,6 @@
 <p-menubar [model]="items" styleClass="menucus" [ngClass]="{'bgblack' : themeColor === 'black'}">
 </p-menubar>
-<p-dialog header="Shortcuts" [(visible)]="shortVisible" [responsive]="true" [maximizable]="true" closeOnEscape="true">
+<p-dialog header="Shortcuts" [(visible)]="shortVisible" [responsive]="true" [maximizable]="true" [closeOnEscape]="true">
     <div class="container">
         <h3>Useful shortuts. More to come.</h3>
         <div>
@@ -13,7 +13,7 @@
         </div>
     </div>
 </p-dialog>
-<p-dialog header="Contact" [(visible)]="contactVisible" [responsive]="true" [maximizable]="true" closeOnEscape="true">
+<p-dialog header="Contact" [(visible)]="contactVisible" [responsive]="true" [maximizable]="true" [closeOnEscape]="true">
     <div class="container">
         <h3>Created by Alex Bișag @ BUES, 2019</h3>
         <h4>Find me on</h4>

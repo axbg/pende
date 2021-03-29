@@ -3,65 +3,35 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "front": {
+    "pende": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
       "root": "",
       "sourceRoot": "src",
-      "projectType": "application",
       "prefix": "app",
-      "schematics": {},
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/front",
+            "outputPath": "dist/pende",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.app.json",
+            "tsConfig": "tsconfig.app.json",
+            "aot": true,
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              {
-                "glob": "worker-javascript.js",
-                "input": "./node_modules/ace-builds/src-min/",
-                "output": "/"
-              },
-              {
-                "glob": "worker-css.js",
-                "input": "./node_modules/ace-builds/src-min/",
-                "output": "/"
-              },
-              {
-                "glob": "worker-json.js",
-                "input": "./node_modules/ace-builds/src-min/",
-                "output": "/"
-              },
               "src/manifest.webmanifest"
             ],
             "styles": [
-              "src/styles.css",
-              "node_modules/primeicons/primeicons.css",
-              "node_modules/primeng/resources/themes/nova-light/theme.css",
-              "node_modules/primeng/resources/primeng.min.css",
-              "node_modules/ng2-tree/styles.css"
+              "src/styles.css"
             ],
-            "scripts": [
-              "node_modules/ace-builds/src-min/ace.js",
-              "node_modules/ace-builds/src-min/theme-eclipse.js",
-              "node_modules/ace-builds/src-min/theme-dracula.js",
-              "node_modules/ace-builds/src-min/theme-twilight.js",
-              "node_modules/ace-builds/src-min/theme-xcode.js",
-              "node_modules/ace-builds/src-min/theme-cobalt.js",
-              "node_modules/ace-builds/src-min/theme-ambiance.js",
-              "node_modules/ace-builds/src-min/theme-chrome.js",
-              "node_modules/ace-builds/src-min/mode-java.js",
-              "node_modules/ace-builds/src-min/mode-html.js",
-              "node_modules/ace-builds/src-min/mode-c_cpp.js",
-              "node_modules/ace-builds/src-min/ext-language_tools.js",
-              "node_modules/ace-builds/src-min/ext-searchbox.js",
-              "node_modules/ace-builds/src-min/keybinding-emacs.js",
-              "node_modules/ace-builds/src-min/keybinding-vim.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -74,38 +44,42 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
                 }
               ],
-              "serviceWorker": true
+              "serviceWorker": true,
+              "ngswConfigPath": "ngsw-config.json"
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "front:build"
+            "browserTarget": "pende:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "front:build:production"
+              "browserTarget": "pende:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "front:build"
+            "browserTarget": "pende:build"
           }
         },
         "test": {
@@ -113,60 +87,46 @@
           "options": {
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.spec.json",
-            "karmaConfig": "src/karma.conf.js",
-            "styles": [
-              "src/styles.css"
-            ],
-            "scripts": [],
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
             "assets": [
               "src/favicon.ico",
               "src/assets",
               "src/manifest.webmanifest"
-            ]
+            ],
+            "styles": [
+              "src/styles.css"
+            ],
+            "scripts": []
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
+              "tsconfig.app.json",
+              "tsconfig.spec.json",
+              "e2e/tsconfig.json"
             ],
             "exclude": [
               "**/node_modules/**"
             ]
           }
-        }
-      }
-    },
-    "front-e2e": {
-      "root": "e2e/",
-      "projectType": "application",
-      "prefix": "",
-      "architect": {
+        },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "front:serve"
+            "devServerTarget": "pende:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "front:serve:production"
+              "devServerTarget": "pende:serve:production"
             }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         }
       }
     }
   },
-  "defaultProject": "front"
+  "defaultProject": "pende"
 }

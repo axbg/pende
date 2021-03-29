@@ -9,15 +9,15 @@ import { LayoutService } from 'src/app/services/layout.service';
   styleUrls: ['./menu-ribbon.component.css']
 })
 export class MenuRibbonComponent implements OnInit {
-  shortVisible = false;
-  contactVisible = false;
-  items: MenuItem[];
-  themeColor: String;
+  shortVisible: boolean = false;
+  contactVisible: boolean = false;
+  items: MenuItem[] = [];
+  themeColor: String = "";
 
   constructor(private router: Router, private layoutService: LayoutService) {
     layoutService.changeSettingObservable$.subscribe((settings) => {
       if (settings.getProperty() === 'theme') {
-        this.themeColor = settings.getColor();
+        this.themeColor = settings.getColor()!;
       }
     });
   }
@@ -39,7 +39,7 @@ export class MenuRibbonComponent implements OnInit {
     ];
   }
 
-  showDialog(modal) {
+  showDialog(modal: any) {
     if (modal === 'short') {
       this.shortVisible = true;
     } else {

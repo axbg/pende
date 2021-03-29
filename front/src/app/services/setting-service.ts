@@ -13,11 +13,11 @@ export class SettingService {
 
   constructor() { }
 
-  loadSettings(settings) {
+  loadSettings(settings: any) {
     this.loadSettingsSubject.next(settings);
   }
 
-  saveSettings(settings) {
+  saveSettings(settings: any) {
     this.saveSettingsSubject.next(settings);
   }
 }

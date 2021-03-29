@@ -1,6 +1,6 @@
 <div class="web-layout" [ngClass]="{'bgblacklayout' : themeColor === 'black'}">
   <div class="code-layout">
-    <app-tab-ribbon [tabs]="fileTabs" target="code-editor" closable=1></app-tab-ribbon>
+    <app-tab-ribbon [tabs]="fileTabs" target="code-editor" [closable]="true"></app-tab-ribbon>
     <app-ace-editor id="code-editor" class="code-editor" contenteditable="false"></app-ace-editor>
   </div>
   <div class="menu-layout">
@@ -10,6 +10,6 @@
   </div>
 </div>
 
-<ngx-spinner bdOpacity=0.9 bdColor="#333" size="large" color="#fff" type="triangle-skew-spin" fullScreen="true">
+<ngx-spinner bdOpacity=0.9 bdColor="#333" size="large" color="#fff" type="triangle-skew-spin" [fullScreen]="true">
   <p class="white"> Compiling... </p>
 </ngx-spinner>

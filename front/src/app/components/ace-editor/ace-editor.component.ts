@@ -5,7 +5,7 @@ import { ExecutionService } from 'src/app/services/execution.service';
 import { LayoutService } from 'src/app/services/layout.service';
 import { FileService } from 'src/app/services/file-service';
 import * as FileSave from 'file-saver';
-import Formatter from 'auto-format';
+import * as Formatter from 'js-beautify';
 import { Constants } from 'src/app/classes/Constants';
 @Component({
   selector: 'app-ace-editor',
@@ -13,9 +13,9 @@ import { Constants } from 'src/app/classes/Constants';
   styleUrls: ['./ace-editor.component.css'],
 })
 export class AceEditorComponent implements OnInit, AfterViewInit {
-  @ViewChild('editor') editor;
+  @ViewChild('editor') editor: any;
 
-  currentTab: NavigationTab;
+  currentTab?: NavigationTab;
   showEditor = false;
   showBreakpoints = false;
   darkTheme = false;
@@ -106,14 +106,14 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
 
     this.executionService.checkFileStatusObservable$.subscribe((data) => {
       this.tabService.notifyFileContentChanged(false);
-      this.executionService.modifyFile(this.currentTab);
+      this.executionService.modifyFile(this.currentTab!);
     });
 
     this.executionService.showBreakpointsObservable$.subscribe(() => {
       if (this.showEditor) {
         this.drawBreakpoints(true);
         this.executionService.executionBreakpoints(
-          this.currentTab.getBreakpoints()
+          this.currentTab!.getBreakpoints()
         );
       }
     });
@@ -131,21 +131,21 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
     const gutt = document.querySelector('.ace_layer');
     const ref = this;
 
-    function addOrRemoveBreakpoint(e) {
+    function addOrRemoveBreakpoint(e: any) {
       const line = e.target.innerText;
 
       if (e.target.classList.contains('breakpoint')) {
         e.target.classList.remove('breakpoint');
-        ref.currentTab.removeBreakpoint(line);
+        ref.currentTab!.removeBreakpoint(line);
         ref.executionService.executionBreakpoints(
-          ref.currentTab.getBreakpoints()
+          ref.currentTab!.getBreakpoints()
         );
       } else {
         e.target.classList.add('breakpoint');
-        if (ref.currentTab.getBreakpoints().indexOf(parseInt(line)) === -1) {
-          ref.currentTab.addBreakpoint(parseInt(line));
+        if (ref.currentTab!.getBreakpoints().indexOf(parseInt(line)) === -1) {
+          ref.currentTab!.addBreakpoint(parseInt(line));
           ref.executionService.executionBreakpoints(
-            ref.currentTab.getBreakpoints()
+            ref.currentTab!.getBreakpoints()
           );
         }
 
@@ -155,9 +155,9 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
       }
     }
 
-    gutt.addEventListener('DOMNodeInserted', (e) => {
-      e.target.removeEventListener('click', addOrRemoveBreakpoint);
-      e.target.addEventListener('click', addOrRemoveBreakpoint);
+    gutt!.addEventListener('DOMNodeInserted', (e) => {
+      e.target!.removeEventListener('click', addOrRemoveBreakpoint);
+      e.target!.addEventListener('click', addOrRemoveBreakpoint);
     });
   }
 
@@ -170,7 +170,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
     this.editor.getEditor().commands.addCommand({
       name: 'save',
       bindKey: 'Ctrl-s',
-      exec: (editor) => {
+      exec: () => {
         this.saveFile();
       }
     });
@@ -178,7 +178,7 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
     this.editor.getEditor().commands.addCommand({
       name: 'download',
       bindKey: 'Ctrl-d',
-      exec: (editor) => {
+      exec: () => {
         this.downloadFile();
       }
     });
@@ -186,17 +186,17 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
     this.editor.getEditor().commands.addCommand({
       name: 'clearBreakpoints',
       bindKey: 'Ctrl-g',
-      exec: (editor) => {
+      exec: () => {
         this.drawBreakpoints(false);
         this.showBreakpoints = true;
-        this.currentTab.setBreakpoints([]);
+        this.currentTab!.setBreakpoints([]);
       }
     });
 
     this.editor.getEditor().commands.addCommand({
       name: 'showBreakpoints',
       bindKey: 'Ctrl-b',
-      exec: (editor) => {
+      exec: () => {
         this.showBreakpoints = !this.showBreakpoints;
         if (this.showBreakpoints) {
           this.drawBreakpoints(true);
@@ -209,32 +209,32 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
     this.editor.getEditor().commands.addCommand({
       name: 'formatCode',
       bindKey: 'Ctrl-l',
-      exec: (editor) => {
-        const codeFormatter = Formatter.createJavaFormatter('   ');
+      exec: () => {
         this.editor
           .getEditor()
           .setValue(
-            codeFormatter.format(this.editor.getEditor().getValue()).join('\n')
+            // Formatter.js_beautify(this.editor.getEditor().getValue()).join('\n')
+            Formatter.js_beautify(this.editor.getEditor().getValue())
           );
       },
     });
 
     const typingInterval = 800;
-    let typingTimer;
+    let typingTimer: any;
 
     const doneTyping = () => {
       this.drawBreakpoints(true);
     };
 
-    this.editor.getEditor().session.on('change', (delta) => {
+    this.editor.getEditor().session.on('change', (delta: any) => {
       if (
         !(delta.start.row === 0 && delta.end.row === delta.lines.length - 1)
       ) {
         if (delta.end.row - delta.start.row !== 0) {
-          const newBreakpoints = this.currentTab.getBreakpoints();
+          const newBreakpoints = this.currentTab!.getBreakpoints();
           for (
             let index = 0;
-            index < this.currentTab.getBreakpoints().length;
+            index < this.currentTab!.getBreakpoints().length;
             index++
           ) {
             if (newBreakpoints[index] >= delta.end.row) {
@@ -247,9 +247,9 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
           }
         }
 
-        if (!this.currentTab.getModified()) {
+        if (!this.currentTab!.getModified()) {
           this.tabService.notifyFileContentChanged(true);
-          this.currentTab.setModified(true);
+          this.currentTab!.setModified(true);
         }
 
         clearTimeout(typingTimer);
@@ -264,9 +264,9 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
 
       for (let i = 0; i < gutters.length; i++) {
         if (
-          this.currentTab
+          this.currentTab!
             .getBreakpoints()
-            .includes(parseInt(gutters[i].textContent))
+            .includes(parseInt(gutters[i].textContent!))
         ) {
           if (show) {
             gutters[i].classList.add('breakpoint');
@@ -280,8 +280,8 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
 
   saveFile() {
     this.tabService.notifyFileContentChanged(false);
-    this.currentTab.setContent(this.editor.getEditor().getValue());
-    this.currentTab.setModified(false);
+    this.currentTab!.setContent(this.editor.getEditor().getValue());
+    this.currentTab!.setModified(false);
 
     setTimeout(() => {
       this.fileService.saveFile(this.currentTab);
@@ -289,10 +289,10 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
   }
 
   downloadFile() {
-    const blob = new Blob([<BlobPart>this.currentTab.getContent()], {
+    const blob = new Blob([<BlobPart>this.currentTab!.getContent()], {
       type: 'plain/text;charset=utf-8',
     });
 
-    FileSave.saveAs(blob, <string>this.currentTab.getTitle());
+    FileSave.saveAs(blob, <string>this.currentTab!.getTitle());
   }
 }

@@ -17,7 +17,7 @@ export class FileService {
   saveFileShortcutObservable$ = this.saveFileShortcutSubject.asObservable();
   closeTabOnFileChangeObservable$ = this.closeTabOnFileChangeSubject.asObservable();
 
-  loadFiles(files) {
+  loadFiles(files: any[]) {
     this.loadFilesSubject.next(files);
   }
 
@@ -25,7 +25,7 @@ export class FileService {
     this.fileActionSubject.next(action);
   }
 
-  saveFile(file) {
+  saveFile(file: any) {
     this.saveFileSubject.next(file);
   }
 
@@ -33,7 +33,7 @@ export class FileService {
     this.saveFileShortcutSubject.next();
   }
 
-  closeTabOnFileChange(file) {
+  closeTabOnFileChange(file: any) {
     this.closeTabOnFileChangeSubject.next(file);
   }
 

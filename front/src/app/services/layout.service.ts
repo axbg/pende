@@ -21,7 +21,6 @@ export class LayoutService {
       case 'theme':
         const color = Constants.WHITE_THEMES.includes(setting.getValue()) ? 'white' : 'black';
         setting.setColor(color);
-      // tslint:disable-next-line: no-switch-case-fall-through
       case 'cursor':
       case 'fontSize':
       case 'gutter':

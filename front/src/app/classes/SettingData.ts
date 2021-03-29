@@ -4,7 +4,7 @@ export class SettingData {
     private property: String;
     private color?: String;
 
-    constructor(value, label, property, color = null) {
+    constructor(value: String, label: String, property: String, color?: String) {
         this.value = value;
         this.label = label;
         this.property = property;
@@ -27,12 +27,11 @@ export class SettingData {
         this.color = color;
     }
 
-    public getColor(): String {
+    public getColor(): String | undefined  {
         return this.color;
     }
 
     public toString(): String {
         return this.label;
     }
-
 }

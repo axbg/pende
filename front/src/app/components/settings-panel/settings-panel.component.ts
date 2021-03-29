@@ -13,15 +13,15 @@ import { SettingsConstants } from './settings-constants';
 export class SettingsPanelComponent {
   themes: SettingData[];
   cursors: SettingData[];
-  selectedTheme: SettingData;
-  selectedCursor: SettingData;
+  selectedTheme?: SettingData;
+  selectedCursor?: SettingData;
   fontSize: Number = 24;
   gutter: Boolean = true;
   unsaved: Boolean = false;
-  settings: Object = {};
+  settings: any = {};
 
   @Input()
-  themeColor: String;
+  themeColor: String = "";
 
   constructor(private settingsService: SettingService, private layoutService: LayoutService) {
     this.themes = SettingsConstants.getThemes();
@@ -42,7 +42,7 @@ export class SettingsPanelComponent {
     }
   }
 
-  transformSliderData(event) {
+  transformSliderData(event: any) {
     const property: String = event.event.target.parentNode.parentNode.getAttribute(
       'property'
     );
@@ -51,7 +51,7 @@ export class SettingsPanelComponent {
     });
   }
 
-  transformSwitchData(event) {
+  transformSwitchData(event: any) {
     const property: String = event.originalEvent.target.parentNode.parentNode.getAttribute(
       'property'
     );
@@ -60,7 +60,7 @@ export class SettingsPanelComponent {
     });
   }
 
-  handlePropertyChange(event) {
+  handlePropertyChange(event: any) {
     this.unsaved = true;
     this.layoutService.changeSettings(event.value);
     Object.assign(this.settings, { ...this.settings, [event.value.property]: event.value });

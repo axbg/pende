@@ -1,7 +1,7 @@
 export class NavigationTab {
   private id: String;
   private title: String;
-  private content: String;
+  private content: String = "";
   private index: number;
   private path: String;
   private cursorLine: number;
@@ -9,7 +9,7 @@ export class NavigationTab {
   private modified: boolean;
   private breakpoints: number[] = [];
 
-  constructor(id, title, content, path, index) {
+  constructor(id: String, title: string, content: String, path: String, index: number) {
     this.id = id;
     this.title = title;
     this.setContent(content);
@@ -24,11 +24,11 @@ export class NavigationTab {
     return this.id;
   }
 
-  public getTitle(): String {
-    return this.title;
+  public getTitle(): string {
+    return this.title.toString();
   }
 
-  public setContent(content) {
+  public setContent(content: String) {
     if (!content.includes('setbuf(stdout, NULL);')) {
       content = this.addSetBuf(content);
     }

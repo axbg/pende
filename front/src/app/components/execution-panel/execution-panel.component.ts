@@ -10,16 +10,17 @@ import { TabService } from 'src/app/services/tab-service';
   styleUrls: ['./execution-panel.component.css'],
 })
 export class ExecutionPanelComponent implements OnInit {
+  buttonsEnabled: Boolean = true;
+  callstack: string[] = [];
+  variables: Map<string, string> = new Map<string, string>();
+  
   private initialized: Boolean = false;
-  private callstack: string[] = [];
-  private variables: Map<string, string> = new Map<string, string>();
-  private buttonsEnabled: Boolean = true;
   private newDataSubscription: ISubscription;
   
   isDebugging = false;
   
   @Input()
-  themeColor: String;
+  themeColor: String = '';
 
   constructor(private executionService: ExecutionService, private tabService: TabService) {
     this.newDataSubscription = this.executionService.renderTerminalDataObservable$.subscribe(
@@ -119,11 +120,11 @@ export class ExecutionPanelComponent implements OnInit {
     this.executionService.debuggingOptions('c');
   }
 
-  renderTerminalData(data) {
+  renderTerminalData(data: any) {
     TerminalComponent.writeTerminalCommand(data);
   }
 
-  toggleButtons(data) {
+  toggleButtons(data: any) {
     if (data === 'finished　') {
       this.buttonsEnabled = true;
     }

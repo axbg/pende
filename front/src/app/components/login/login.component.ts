@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService, GoogleLoginProvider } from 'angularx-social-login';
+import { SocialAuthService, GoogleLoginProvider } from 'angularx-social-login';
 import { HttpClient } from '@angular/common/http';
 import { AuthLoginService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
@@ -14,7 +14,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class LoginComponent implements OnInit {
   private loginURL = environment.BASE_URL + '/api/user/login';
 
-  constructor(private googleAuthService: AuthService, private http: HttpClient,
+  constructor(private googleAuthService: SocialAuthService, private http: HttpClient,
     private authService: AuthLoginService, private router: Router,
     private spinner: NgxSpinnerService) {
   }
@@ -22,16 +22,16 @@ export class LoginComponent implements OnInit {
   signInWithGoogle(): void {
     this.spinner.show();
     this.googleAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
-      .then((result) => {
+      .then((result: any) => {
         this.http.post(this.loginURL, { token: result.idToken })
-          .subscribe(res => {
+          .subscribe((res: any) => {
             window.localStorage.setItem('token', res['token']);
             window.location.reload();
-          }, error => {
+          }, () => {
             this.spinner.hide();
             alert('An error occurred during login');
           });
-      }).catch(error => {
+      }).catch(() => {
         this.spinner.hide();
         alert('An error occurred during Google authentication');
       });

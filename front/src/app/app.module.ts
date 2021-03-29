@@ -3,38 +3,39 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { FormsModule } from '@angular/forms';
+
+import { TabViewModule } from 'primeng/tabview';
+import { MenubarModule } from 'primeng/menubar';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { SliderModule } from 'primeng/slider';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { TooltipModule } from 'primeng/tooltip';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+
+import { AceEditorModule } from 'ng2-ace-editor';
+import { TreeModule } from 'ng2-tree';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { SocialLoginModule, SocialAuthServiceConfig, GoogleLoginProvider } from 'angularx-social-login';
 
 import { AppComponent } from './app.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { TabRibbonComponent } from './components/tab-ribbon/tab-ribbon.component';
 import { MenuRibbonComponent } from './components/menu-ribbon/menu-ribbon.component';
-
-import { TabViewModule } from 'primeng/tabview';
-import { MenubarModule } from 'primeng/menubar';
-import { InputTextModule } from 'primeng/inputtext';
-
-import { AceEditorModule } from 'ng2-ace-editor';
 import { AceEditorComponent } from './components/ace-editor/ace-editor.component';
 import { PanelHolderComponent } from './components/panel-holder/panel-holder.component';
 import { SettingsPanelComponent } from './components/settings-panel/settings-panel.component';
-import { FormsModule } from '@angular/forms';
-import { DropdownModule } from 'primeng/dropdown';
-import { SliderModule } from 'primeng/slider';
-import { InputSwitchModule } from 'primeng/inputswitch';
-import { TooltipModule } from 'primeng/tooltip';
 import { ExecutionPanelComponent } from './components/execution-panel/execution-panel.component';
 import { TerminalComponent } from './components/terminal/terminal.component';
 import { PrimeTerminalComponent } from './components/prime-terminal/prime-terminal.component';
 import { FilesPanelComponent } from './components/files-panel/files-panel.component';
-import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
-import { TreeModule } from 'ng2-tree';
-import { NgxSpinnerModule } from 'ngx-spinner';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { LoginComponent } from './components/login/login.component';
 import { AuthGuardService } from './services/auth-guard.service';
-import { SocialLoginModule, AuthServiceConfig, GoogleLoginProvider, LoginOpt } from 'angularx-social-login';
-import { ServiceWorkerModule } from '@angular/service-worker';
+
 import { environment } from '../environments/environment';
 
 const config: SocketIoConfig = {
@@ -51,20 +52,9 @@ const routes: Routes = [
   { path: 'ide', component: LayoutComponent, canActivate: [AuthGuardService] }
 ];
 
-const googleLoginOptions: LoginOpt = {
+const googleLoginOptions = {
   scope: 'profile email'
 };
-
-export function provideConfig() {
-  const provConfig = new AuthServiceConfig([
-    {
-      id: GoogleLoginProvider.PROVIDER_ID,
-      provider: new GoogleLoginProvider(environment.GOOGLE_CLIENT_ID, googleLoginOptions)
-    }
-  ]);
-
-  return provConfig;
-}
 
 @NgModule({
   declarations: [
@@ -105,8 +95,16 @@ export function provideConfig() {
   ],
   providers: [
     {
-      provide: AuthServiceConfig,
-      useFactory: provideConfig
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(environment.GOOGLE_CLIENT_ID, googleLoginOptions)
+          }
+        ]
+      } as SocialAuthServiceConfig,
     }
   ],
   bootstrap: [AppComponent]

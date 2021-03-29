@@ -9,7 +9,7 @@ import { FileService } from 'src/app/services/file-service';
   styleUrls: ['./files-panel.component.css'],
 })
 export class FilesPanelComponent implements AfterViewInit {
-  private tree: TreeModel = {
+  tree: TreeModel = {
     value: 'projects',
     path: '',
     settings: {
@@ -35,10 +35,10 @@ export class FilesPanelComponent implements AfterViewInit {
   currentFilePath: any;
 
   @Input()
-  themeColor: String;
+  themeColor: String = "";
 
   @ViewChild('treeComponent')
-  treeComponent;
+  treeComponent: any;
 
   constructor(private tabService: TabService, private fileService: FileService) {
     this.fileService.loadFilesObservable$.subscribe(data => {
@@ -55,14 +55,14 @@ export class FilesPanelComponent implements AfterViewInit {
   stopItemsDragging() {
     const items: any = document.querySelectorAll('.value-container');
 
-    items.forEach(node => {
+    items.forEach((node: HTMLElement) => {
       const n: HTMLElement = node;
       n.setAttribute('draggable', 'false');
       n.style.userSelect = 'none';
     });
   }
 
-  public handleSelect(event) {
+  public handleSelect(event: any) {
     if (!event.node.children) {
       const path = this.composeWholePath(event.node);
       this.tabService.notifyFileChanged({
@@ -74,7 +74,7 @@ export class FilesPanelComponent implements AfterViewInit {
     }
   }
 
-  public handleRemove(event) {
+  public handleRemove(event: any) {
     if (event.node.value) {
       const currentNode = event.node;
 
@@ -101,7 +101,7 @@ export class FilesPanelComponent implements AfterViewInit {
     }
   }
 
-  public handleRename(event) {
+  public handleRename(event: any) {
     const oldName = event.oldValue;
     const newName = event.newValue;
     const currentId = event.node.node.id;
@@ -145,7 +145,7 @@ export class FilesPanelComponent implements AfterViewInit {
     });
   }
 
-  public handleCreate(event) {
+  public handleCreate(event: any) {
     const [filename, extension] = event.node.value.split('.');
     let isDirectory = false;
 
@@ -205,7 +205,10 @@ export class FilesPanelComponent implements AfterViewInit {
     });
   }
 
-  composeWholePath(node) {
+  handleMoved(event: any) {
+  }
+
+  composeWholePath(node: any) {
     let path = '';
 
     if (node.value !== 'projects') {
@@ -222,7 +225,7 @@ export class FilesPanelComponent implements AfterViewInit {
     return path;
   }
 
-  updateTreeModelAndAppendPath(tree, id) {
+  updateTreeModelAndAppendPath(tree: any, id: any) {
     const model: TreeModel = {
       value: '',
     };
@@ -238,8 +241,8 @@ export class FilesPanelComponent implements AfterViewInit {
     model['id'] = tree.node['id'];
     if (tree.children) {
       model['children'] = [];
-      tree.children.forEach((child) => {
-        model['children'].push(this.updateTreeModelAndAppendPath(child, id));
+      tree.children.forEach((child: any) => {
+        model['children']?.push(this.updateTreeModelAndAppendPath(child, id));
       });
     }
 

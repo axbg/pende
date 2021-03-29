@@ -9,14 +9,14 @@ import { FileService } from 'src/app/services/file-service';
   styleUrls: ['./tab-ribbon.component.css'],
 })
 export class TabRibbonComponent implements OnInit {
-  currentIndex: number;
+  currentIndex: number = 0;
 
-  @Input() tabs: Array<NavigationTab>;
-  @Input() target: String;
-  @Input() closable: number;
+  @Input() tabs: Array<NavigationTab> = [];
+  @Input() target: string = "";
+  @Input() closable: boolean = true;
 
   constructor(private tabService: TabService, private fileService: FileService) {
-    this.fileService.closeTabOnFileChangeObservable$.subscribe(file => {
+    this.fileService.closeTabOnFileChangeObservable$.subscribe((file: any) => {
       if (this.closable) {
         for (let index = 0; index < this.tabs.length; index++) {
           if (this.tabs[index].getPath() === file['path'] && this.tabs[index].getTitle() === file['name']) {
@@ -70,7 +70,7 @@ export class TabRibbonComponent implements OnInit {
     this.tabService.renderTabSource(new NavigationTab('', '', '', '', 0));
   }
 
-  tabChange(index) {
+  tabChange(index: number) {
     this.currentIndex = index;
     this.renderTab();
   }
@@ -94,7 +94,7 @@ export class TabRibbonComponent implements OnInit {
     }
   }
 
-  closeTab(index) {
+  closeTab(index: number) {
     if (this.tabs[index].getModified()) {
       if (confirm('Do you want to close this file?')) {
         if (confirm('Do you want to save the file before leaving?')) {

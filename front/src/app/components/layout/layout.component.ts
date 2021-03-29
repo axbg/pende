@@ -12,7 +12,7 @@ import { WebSocketsService } from 'src/app/services/web-sockets.service';
 export class LayoutComponent implements OnInit {
   fileTabs: Array<NavigationTab> = [];
   projectTabs: Array<NavigationTab> = [];
-  themeColor: String;
+  themeColor: String = "";
 
   constructor(private spinner: NgxSpinnerService, private layoutService: LayoutService, webSocketService: WebSocketsService) {
     this.initProjectTabs();
@@ -22,7 +22,7 @@ export class LayoutComponent implements OnInit {
 
     this.layoutService.changeSettingObservable$.subscribe((settings) => {
       if (settings.getProperty() === 'theme') {
-        this.themeColor = settings.getColor();
+        this.themeColor = settings.getColor()!;
       }
     });
   }
@@ -32,8 +32,8 @@ export class LayoutComponent implements OnInit {
   }
 
   initProjectTabs() {
-    this.projectTabs.push(new NavigationTab(0, 'Files', '', '', 0));
-    this.projectTabs.push(new NavigationTab(0, 'Execute', '', '', 1));
-    this.projectTabs.push(new NavigationTab(0, 'Settings', '', '', 2));
+    this.projectTabs.push(new NavigationTab('0', 'Files', '', '', 0));
+    this.projectTabs.push(new NavigationTab('0', 'Execute', '', '', 1));
+    this.projectTabs.push(new NavigationTab('0', 'Settings', '', '', 2));
   }
 }

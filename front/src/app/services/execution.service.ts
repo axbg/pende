@@ -60,35 +60,35 @@ export class ExecutionService {
     this.executionBreakpointsSubject.next(breakpoints);
   }
 
-  renderTerminalData(data) {
+  renderTerminalData(data: any) {
     this.renderTerminalDataSubject.next(data);
   }
 
-  inputData(data) {
+  inputData(data: any) {
     this.inputDataSubject.next(data);
   }
 
-  runOrDebug(data) {
+  runOrDebug(data: any) {
     this.runOrDebugSubject.next(data);
   }
 
-  debuggingOptions(data) {
+  debuggingOptions(data: any) {
     this.debuggingOptionsSubject.next(data);
   }
 
   stopExecution() {
+
     this.stopExecutionSubject.next();
   }
 
   changeButtonsStatus(status: Boolean) {
     this.changeButtonsStatusSubject.next(status);
   }
-
   passVariables(data: Map<string, string>) {
     this.passVariablesSubject.next(data);
   }
 
-  passCallstack(data) {
+  passCallstack(data: any) {
     this.passCallstackSubject.next(data);
   }
 
