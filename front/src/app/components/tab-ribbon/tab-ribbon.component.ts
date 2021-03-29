@@ -9,17 +9,17 @@ import { FileService } from 'src/app/services/file-service';
   styleUrls: ['./tab-ribbon.component.css'],
 })
 export class TabRibbonComponent implements OnInit {
-  currentIndex: number = 0;
+  currentIndex = 0;
 
   @Input() tabs: Array<NavigationTab> = [];
-  @Input() target: string = "";
-  @Input() closable: boolean = true;
+  @Input() target = '';
+  @Input() closable = true;
 
   constructor(private tabService: TabService, private fileService: FileService) {
     this.fileService.closeTabOnFileChangeObservable$.subscribe((file: any) => {
       if (this.closable) {
         for (let index = 0; index < this.tabs.length; index++) {
-          if (this.tabs[index].getPath() === file['path'] && this.tabs[index].getTitle() === file['name']) {
+          if (this.tabs[index].getPath() === file.path && this.tabs[index].getTitle() === file.name) {
             this.closeTabProcedure(index);
             break;
           }
@@ -46,13 +46,13 @@ export class TabRibbonComponent implements OnInit {
 
       this.tabService.notifyFileContentChangedObservable$.subscribe(status => {
         if (status) {
-          (<HTMLElement>(
+          ((
             document.querySelector('.ui-tabview-selected')
-          )).style.backgroundColor = '#B71C1C';
+          ) as HTMLElement).style.backgroundColor = '#B71C1C';
         } else {
-          (<HTMLElement>(
+          ((
             document.querySelector('.ui-tabview-selected')
-          )).removeAttribute('style');
+          ) as HTMLElement).removeAttribute('style');
         }
       });
     }

@@ -15,8 +15,8 @@ export class LoginComponent implements OnInit {
   private loginURL = environment.BASE_URL + '/api/user/login';
 
   constructor(private googleAuthService: SocialAuthService, private http: HttpClient,
-    private authService: AuthLoginService, private router: Router,
-    private spinner: NgxSpinnerService) {
+              private authService: AuthLoginService, private router: Router,
+              private spinner: NgxSpinnerService) {
   }
 
   signInWithGoogle(): void {
@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
       .then((result: any) => {
         this.http.post(this.loginURL, { token: result.idToken })
           .subscribe((res: any) => {
-            window.localStorage.setItem('token', res['token']);
+            window.localStorage.setItem('token', res.token);
             window.location.reload();
           }, () => {
             this.spinner.hide();

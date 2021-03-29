@@ -13,12 +13,12 @@ export class ExecutionPanelComponent implements OnInit {
   buttonsEnabled: Boolean = true;
   callstack: string[] = [];
   variables: Map<string, string> = new Map<string, string>();
-  
+
   private initialized: Boolean = false;
   private newDataSubscription: ISubscription;
-  
+
   isDebugging = false;
-  
+
   @Input()
   themeColor: String = '';
 

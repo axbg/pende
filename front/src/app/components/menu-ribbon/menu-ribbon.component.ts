@@ -9,10 +9,10 @@ import { LayoutService } from 'src/app/services/layout.service';
   styleUrls: ['./menu-ribbon.component.css']
 })
 export class MenuRibbonComponent implements OnInit {
-  shortVisible: boolean = false;
-  contactVisible: boolean = false;
+  shortVisible = false;
+  contactVisible = false;
   items: MenuItem[] = [];
-  themeColor: String = "";
+  themeColor: String = '';
 
   constructor(private router: Router, private layoutService: LayoutService) {
     layoutService.changeSettingObservable$.subscribe((settings) => {

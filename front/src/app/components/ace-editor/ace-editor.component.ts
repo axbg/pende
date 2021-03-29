@@ -289,10 +289,10 @@ export class AceEditorComponent implements OnInit, AfterViewInit {
   }
 
   downloadFile() {
-    const blob = new Blob([<BlobPart>this.currentTab!.getContent()], {
+    const blob = new Blob([this.currentTab!.getContent() as BlobPart], {
       type: 'plain/text;charset=utf-8',
     });
 
-    FileSave.saveAs(blob, <string>this.currentTab!.getTitle());
+    FileSave.saveAs(blob, this.currentTab!.getTitle() as string);
   }
 }

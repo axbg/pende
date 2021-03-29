@@ -9,21 +9,21 @@ import { TerminalService } from 'src/app/services/terminal-service';
 })
 export class PrimeTerminalComponent implements AfterViewInit, AfterViewChecked {
     commands: any[] = [];
-    command: string = "";
+    command = '';
     container?: Element;
-    commandProcessed: boolean = false;
+    commandProcessed = false;
 
     @Input()
-    welcomeMessage: String = "";
+    welcomeMessage: String = '';
 
     @Input()
-    prompt: String = "";
+    prompt: String = '';
 
     @Input()
     style: any;
 
     @Input()
-    styleClass: string = "";
+    styleClass = '';
 
     constructor(public el: ElementRef, public terminalService: TerminalService) {
         terminalService.sendResponseObservable$.subscribe(response => {
@@ -33,7 +33,7 @@ export class PrimeTerminalComponent implements AfterViewInit, AfterViewChecked {
     }
 
     ngAfterViewInit() {
-        this.container = <Element>document.querySelector('.ui-terminal');
+        this.container = (document.querySelector('.ui-terminal') as Element);
     }
 
     ngAfterViewChecked() {

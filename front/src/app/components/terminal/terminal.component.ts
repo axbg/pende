@@ -9,10 +9,10 @@ import { ExecutionService } from 'src/app/services/execution.service';
   providers: [TerminalService]
 })
 export class TerminalComponent {
-  private messages: String[] = ['Welcome to pendë', 'Be as light as a pendë', 'Code as fast as a rocket'];
+  private messages: string[] = ['Welcome to pendë', 'Be as light as a pendë', 'Code as fast as a rocket'];
   private mode?: string;
 
-  message: String = '';
+  message = '';
 
   constructor(private terminalService: TerminalService, private executionService: ExecutionService) {
     this.message = this.messages[Math.floor(Math.random() * this.messages.length)];
@@ -32,13 +32,13 @@ export class TerminalComponent {
             break;
         }
       } else {
-        this.executionService.inputData({ command: command, mode: this.mode });
+        this.executionService.inputData({ command, mode: this.mode });
       }
     });
   }
 
   static writeTerminalCommand(command: any) {
-    const terminalInput = <HTMLInputElement>document.querySelector('.ui-terminal-input');
+    const terminalInput = document.querySelector('.ui-terminal-input') as HTMLInputElement;
     terminalInput.value = command.toString();
     terminalInput.dispatchEvent(new Event('input'));
     terminalInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'enter' }));

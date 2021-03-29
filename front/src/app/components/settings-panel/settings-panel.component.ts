@@ -21,7 +21,7 @@ export class SettingsPanelComponent {
   settings: any = {};
 
   @Input()
-  themeColor: String = "";
+  themeColor: String = '';
 
   constructor(private settingsService: SettingService, private layoutService: LayoutService) {
     this.themes = SettingsConstants.getThemes();
@@ -35,10 +35,10 @@ export class SettingsPanelComponent {
 
   loadSelectedSettings() {
     if (this.settings) {
-      this.fontSize = this.settings['fontSize'] ? this.settings['fontSize'].getValue() : Constants.DEFAULT_FONT_SIZE;
-      this.gutter = this.settings['gutter'] ? this.settings['gutter'].getValue() : Constants.DEFAULT_GUTTER;
-      this.selectedTheme = this.settings['theme'] ? this.settings['theme'] : null;
-      this.selectedCursor = this.settings['cursor'] ? this.settings['cursor'] : null;
+      this.fontSize = this.settings.fontSize ? this.settings.fontSize.getValue() : Constants.DEFAULT_FONT_SIZE;
+      this.gutter = this.settings.gutter ? this.settings.gutter.getValue() : Constants.DEFAULT_GUTTER;
+      this.selectedTheme = this.settings.theme ? this.settings.theme : null;
+      this.selectedCursor = this.settings.cursor ? this.settings.cursor : null;
     }
   }
 

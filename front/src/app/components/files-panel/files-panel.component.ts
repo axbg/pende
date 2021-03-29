@@ -35,7 +35,7 @@ export class FilesPanelComponent implements AfterViewInit {
   currentFilePath: any;
 
   @Input()
-  themeColor: String = "";
+  themeColor: String = '';
 
   @ViewChild('treeComponent')
   treeComponent: any;
@@ -67,7 +67,7 @@ export class FilesPanelComponent implements AfterViewInit {
       const path = this.composeWholePath(event.node);
       this.tabService.notifyFileChanged({
         title: event.node.node.value,
-        path: path,
+        path,
         id: event.node.node.id,
         hasChildren: event.node.children,
       });
@@ -93,7 +93,7 @@ export class FilesPanelComponent implements AfterViewInit {
           type: 'delete',
           node: event.node.value,
           files: this.files,
-          path: path,
+          path,
         });
       } else {
         currentNode.parent.addChild(currentNode);
@@ -138,8 +138,8 @@ export class FilesPanelComponent implements AfterViewInit {
     ).children;
     this.fileService.fileAction({
       type: 'rename',
-      oldName: oldName,
-      newName: newName,
+      oldName,
+      newName,
       path: this.currentFilePath,
       files: this.files,
     });
@@ -232,17 +232,17 @@ export class FilesPanelComponent implements AfterViewInit {
 
     model.value = tree.node.value;
 
-    model['path'] = this.composeWholePath(tree);
+    model.path = this.composeWholePath(tree);
 
-    if (tree.node['id'] === id) {
+    if (tree.node.id === id) {
       this.currentFilePath = this.composeWholePath(tree);
     }
 
-    model['id'] = tree.node['id'];
+    model.id = tree.node.id;
     if (tree.children) {
-      model['children'] = [];
+      model.children = [];
       tree.children.forEach((child: any) => {
-        model['children']?.push(this.updateTreeModelAndAppendPath(child, id));
+        model.children?.push(this.updateTreeModelAndAppendPath(child, id));
       });
     }
 

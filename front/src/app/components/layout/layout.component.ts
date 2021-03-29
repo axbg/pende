@@ -12,7 +12,7 @@ import { WebSocketsService } from 'src/app/services/web-sockets.service';
 export class LayoutComponent implements OnInit {
   fileTabs: Array<NavigationTab> = [];
   projectTabs: Array<NavigationTab> = [];
-  themeColor: String = "";
+  themeColor: String = '';
 
   constructor(private spinner: NgxSpinnerService, private layoutService: LayoutService, webSocketService: WebSocketsService) {
     this.initProjectTabs();

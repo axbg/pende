@@ -11,7 +11,7 @@ export class PanelHolderComponent {
   themeColor: String = 'white';
 
   @Input()
-  panel: String = "";
+  panel: String = '';
 
   constructor(private tabService: TabService, private layoutService: LayoutService) {
     this.tabService.renderMenuPanelObservable$.subscribe((payload) => {

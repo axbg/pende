@@ -1,7 +1,7 @@
 export class NavigationTab {
   private id: String;
   private title: String;
-  private content: String = "";
+  private content: String = '';
   private index: number;
   private path: String;
   private cursorLine: number;

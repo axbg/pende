@@ -17,8 +17,8 @@ export class WebSocketsService {
   private breakpoints: number[] = [];
 
   constructor(private fileService: FileService, private socket: Socket,
-    private layoutService: LayoutService, private settingsService: SettingService,
-    private executionService: ExecutionService, private tabService: TabService) {
+              private layoutService: LayoutService, private settingsService: SettingService,
+              private executionService: ExecutionService, private tabService: TabService) {
     this.bindStatefulListeners();
     this.bindCommonWsListeners();
     this.bindCppWsListeners();
@@ -46,19 +46,19 @@ export class WebSocketsService {
         let files: any[] = [];
         const settings: any[] = [];
 
-        if (data['data']['settings']) {
-          Object.keys(data['data']['settings']).forEach((key) => {
+        if (data.data.settings) {
+          Object.keys(data.data.settings).forEach((key) => {
             const em = new SettingData(
-              data['data']['settings'][key]['value'],
-              data['data']['settings'][key]['label'],
-              data['data']['settings'][key]['property']
+              data.data.settings[key].value,
+              data.data.settings[key].label,
+              data.data.settings[key].property
             );
             Object.assign(settings, { ...settings, [key]: em });
           });
         }
 
-        if (data['data']['files']) {
-          files = data['data']['files'];
+        if (data.data.files) {
+          files = data.data.files;
         }
 
         this.settingsService.loadSettings(settings);
@@ -72,21 +72,21 @@ export class WebSocketsService {
 
     this.socket.fromEvent(WsEvent.COMMON.RETRIEVED_FILE).subscribe((data: any) => {
       const navTab = new NavigationTab(
-        data['file']['id'],
-        data['file']['title'],
-        data['content'],
-        data['file']['path'],
+        data.file.id,
+        data.file.title,
+        data.content,
+        data.file.path,
         0
       );
       this.tabService.openNewTab(navTab);
     });
 
     this.socket.fromEvent(WsEvent.COMMON.STRUCTURED).subscribe((data: any) => {
-      if (data['needToSave']) {
+      if (data.needToSave) {
         this.socket.emit(WsEvent.COMMON.SAVE, data);
       } else if (!this.isDebugging) {
         this.executionService.changeButtonsStatus(false);
-        switch (data['title'].split('.')[1]) {
+        switch (data.title.split('.')[1]) {
           case 'c':
           case 'cpp':
             this.socket.emit(WsEvent.C.RUN, data);
@@ -98,7 +98,7 @@ export class WebSocketsService {
         this.executionService.changeButtonsStatus(false);
         this.executionService.clearDebugOutput();
         Object.assign(data, { ...data, breakpoints: this.breakpoints });
-        switch (data['title'].split('.')[1]) {
+        switch (data.title.split('.')[1]) {
           case 'c':
           case 'cpp':
             this.socket.emit(WsEvent.C.DEBUG, data);
@@ -113,7 +113,7 @@ export class WebSocketsService {
       if (!this.isDebugging) {
         this.executionService.changeButtonsStatus(false);
 
-        switch (data['title'].split('.')[1]) {
+        switch (data.title.split('.')[1]) {
           case 'c':
           case 'cpp':
             this.socket.emit(WsEvent.C.RUN, data);
@@ -127,7 +127,7 @@ export class WebSocketsService {
 
         Object.assign(data, { ...data, breakpoints: this.breakpoints });
 
-        switch (data['title'].split('.')[1]) {
+        switch (data.title.split('.')[1]) {
           case 'c':
           case 'cpp':
             this.socket.emit(WsEvent.C.DEBUG, data);
@@ -149,7 +149,7 @@ export class WebSocketsService {
 
   bindCppWsListeners() {
     this.socket.fromEvent(WsEvent.C.OUTPUT).subscribe((data) => {
-      let stg = <string>data;
+      let stg = data as string;
       stg = stg.replace(new RegExp('\r?\n', 'g'), 'ᚠ');
       this.executionService.renderTerminalData(stg + '　');
     });
@@ -159,7 +159,7 @@ export class WebSocketsService {
     });
 
     this.socket.fromEvent(WsEvent.C.COMPILATION_ERROR).subscribe((data) => {
-      (<Array<any>>data).forEach((element, index) => {
+      (data as Array<any>).forEach((element, index) => {
         if (index === 0) {
           element = 'error' + element;
         }
@@ -173,7 +173,7 @@ export class WebSocketsService {
     });
 
     this.socket.fromEvent(WsEvent.C.DEBUG_OUTPUT).subscribe((data) => {
-      let stg = <string>data;
+      let stg = data as string;
       if (!stg.includes('/back/controllers') && !stg.includes('/back/files/')) {
         stg = stg.replace(new RegExp('\r?\n', 'g'), 'ᚠ');
         this.executionService.renderTerminalData(stg + '　');
@@ -189,8 +189,8 @@ export class WebSocketsService {
 
     this.socket.fromEvent(WsEvent.C.DEBUG_STACK).subscribe((data) => {
       const callstack: any[] = [];
-      (<Array<any>>data).forEach((element) => {
-        callstack.push(<string>element);
+      (data as Array<any>).forEach((element) => {
+        callstack.push(element as string);
       });
 
       this.executionService.passCallstack(callstack);
@@ -198,7 +198,7 @@ export class WebSocketsService {
 
     this.socket.fromEvent(WsEvent.C.DEBUG_VARIABLES).subscribe((data) => {
       const variables: Map<string, string> = new Map<string, string>();
-      const splitted: string[] = (<string>data).split(/=|\n/)
+      const splitted: string[] = (data as string).split(/=|\n/)
         .filter((element) => element !== ' ' && element !== '');
       for (let i = 0; i < splitted.length; i += 2) {
         variables.set(splitted[i], splitted[i + 1]);
@@ -216,35 +216,35 @@ export class WebSocketsService {
 
   bindFileServiceListeners() {
     this.fileService.fileActionObservable$.subscribe((action: any) => {
-      this.socket.emit(WsEvent.COMMON.SAVE_FILES, action['files']);
-      switch (action['type']) {
+      this.socket.emit(WsEvent.COMMON.SAVE_FILES, action.files);
+      switch (action.type) {
         case 'create':
           this.socket.emit(WsEvent.COMMON.SAVE_FILE, {
-            name: action['node'],
-            path: action['path'],
-            content: action['content'],
-            directory: action['directory'],
+            name: action.node,
+            path: action.path,
+            content: action.content,
+            directory: action.directory,
           });
           break;
         case 'delete':
           this.socket.emit(WsEvent.COMMON.DELETE_FILE, {
-            name: action['node'],
-            path: action['path'],
+            name: action.node,
+            path: action.path,
           });
           this.fileService.closeTabOnFileChange({
-            path: action['path'],
-            name: action['node'],
+            path: action.path,
+            name: action.node,
           });
           break;
         case 'rename':
           this.socket.emit(WsEvent.COMMON.RENAME_FILE, {
-            oldName: action['oldName'],
-            newName: action['newName'],
-            path: action['path'],
+            oldName: action.oldName,
+            newName: action.newName,
+            path: action.path,
           });
           this.fileService.closeTabOnFileChange({
-            path: action['path'],
-            name: action['node'],
+            path: action.path,
+            name: action.node,
           });
           break;
         default:
@@ -254,9 +254,9 @@ export class WebSocketsService {
 
     this.fileService.saveFileObservable$.subscribe((file: any) => {
       this.socket.emit(WsEvent.COMMON.SAVE_FILE, {
-        name: file['title'],
-        path: file['path'],
-        content: file['content'],
+        name: file.title,
+        path: file.path,
+        content: file.content,
         directory: false,
       });
     });
@@ -284,7 +284,7 @@ export class WebSocketsService {
     });
 
     this.executionService.inputDataObservable$.subscribe((input: any) => {
-      if (input['mode'] === 'run') {
+      if (input.mode === 'run') {
         this.socket.emit(WsEvent.C.INPUT, input);
       } else {
         this.socket.emit(WsEvent.C.DEBUG_INPUT, input);
