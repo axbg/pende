@@ -10,7 +10,8 @@ const router = require('./routes/index');
 
 const app = express();
 const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+const socketOptions = PROD ? {} : { cors: true, origins: ["http://localhost:4200"] }
+const io = require('socket.io')(server, socketOptions);
 const wsController = require('./controllers/ws').handleWS;
 
 app.use(cors());
