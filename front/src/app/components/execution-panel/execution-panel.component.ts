@@ -124,7 +124,7 @@ export class ExecutionPanelComponent implements OnInit {
   }
 
   toggleButtons(data) {
-    if (data === 'finished　') {
+    if (data === '--finished　') {
       this.buttonsEnabled = true;
     }
   }

@@ -30,21 +30,13 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TreeModule } from 'ng2-tree';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { SocketIoModule } from 'ngx-socket-io';
 import { LoginComponent } from './components/login/login.component';
 import { AuthGuardService } from './services/auth-guard.service';
 import { SocialLoginModule, AuthServiceConfig, GoogleLoginProvider, LoginOpt } from 'angularx-social-login';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-
-const config: SocketIoConfig = {
-  url: environment.BASE_URL, options: {
-    query: {
-      token:
-        window.localStorage.getItem('token')
-    }
-  }
-};
+import { SocketOne } from './services/web-socket-config';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -98,16 +90,17 @@ export function provideConfig() {
     ButtonModule,
     DialogModule,
     NgxSpinnerModule,
-    SocketIoModule.forRoot(config),
+    SocketIoModule,
     RouterModule.forRoot(routes),
     SocialLoginModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   providers: [
+    SocketOne,
     {
       provide: AuthServiceConfig,
       useFactory: provideConfig
-    }
+    },
   ],
   bootstrap: [AppComponent]
 })

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
 import { SettingData } from '../classes/SettingData';
 import { NavigationTab } from '../classes/NavigationTab';
 import { WsEvent } from '../classes/WsEvent';
@@ -8,6 +7,7 @@ import { FileService } from './file-service';
 import { LayoutService } from './layout.service';
 import { SettingService } from './setting-service';
 import { TabService } from './tab-service';
+import { SocketOne } from './web-socket-config';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class WebSocketsService {
   private isDebugging: Boolean = false;
   private breakpoints: number[];
 
-  constructor(private fileService: FileService, private socket: Socket,
+  constructor(private fileService: FileService, private socket: SocketOne,
     private layoutService: LayoutService, private settingsService: SettingService,
     private executionService: ExecutionService, private tabService: TabService) {
     this.bindStatefulListeners();
@@ -169,7 +169,7 @@ export class WebSocketsService {
 
     this.socket.fromEvent(WsEvent.C.FINISHED).subscribe((data) => {
       this.executionService.changeButtonsStatus(true);
-      this.executionService.renderTerminalData('finished　');
+      this.executionService.renderTerminalData('--finished　');
     });
 
     this.socket.fromEvent(WsEvent.C.DEBUG_OUTPUT).subscribe((data) => {
@@ -209,7 +209,7 @@ export class WebSocketsService {
 
     this.socket.fromEvent(WsEvent.C.DEBUG_FINISHED).subscribe((data) => {
       this.executionService.changeButtonsStatus(true);
-      this.executionService.renderTerminalData('finished　');
+      this.executionService.renderTerminalData('--finished　');
       this.executionService.clearDebugOutput();
     });
   }
