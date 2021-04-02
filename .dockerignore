@@ -1,10 +1,12 @@
 front/node_modules/
 back/node_modules/
+back/.env
 files/
 !files/.gitkeep
 logs/
 !logs/.gitkeep
-dist
+front/dist/
+back/dist/
 Dockerfile
 docker-compose.yaml
 build.sh

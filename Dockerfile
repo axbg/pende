@@ -1,17 +1,19 @@
 FROM node:14
-
-WORKDIR /usr/pende
-
-COPY ./back/package*.json ./
-
-RUN npm install
-
-COPY ./back/ ./
-
-RUN apt update
-
-RUN apt install -y gdb
-
-CMD ["npm", "start"]
-
 EXPOSE 8080
+
+# Prepare env
+RUN apt update && apt install -y gdb
+
+# Build front-end
+WORKDIR /usr/pende/front
+COPY ./front ./
+RUN npm install && npm run prod
+
+# Build back-end
+WORKDIR /usr/pende/back
+COPY ./back/ ./
+RUN npm install
+RUN mkdir -p dist && mv ../front/dist/* dist && rm -rf ../front
+
+# Run
+ENTRYPOINT ["npm", "start"]
