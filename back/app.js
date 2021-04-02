@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const winston = require('./logger');
 const process = require('process');
 const cors = require('cors');
+const injector = require('./injector');
 
 const PORT = require('./config').PORT;
 const PROD = require('./config').PROD;
@@ -25,8 +26,15 @@ io.on('connection', wsController);
 app.use('/api', router);
 
 if (PROD) {
-  app.use('/', express.static('dist/front'));
-  app.get('/ide', (req, res) => res.sendFile(__dirname + '/dist/front/index.html'));
+  console.log("prod run");
+
+  const CLIENT_ID_PLACEHOLDER = require('./config').CLIENT_ID_PLACEHOLDER;
+  const GOOGLE_CLIENT_ID = require('./config').GOOGLE_CLIENT_ID;
+
+  injector('dist/', CLIENT_ID_PLACEHOLDER, GOOGLE_CLIENT_ID);
+
+  app.use('/', express.static('dist'));
+  app.get('/ide', (req, res) => res.sendFile(__dirname + '/dist/index.html'));
 }
 
 app.use((err, req, res, next) => {
@@ -42,5 +50,5 @@ process.on('uncaughtException', (err) => {
 });
 
 server.listen(PORT, () => {
-  console.log('pende-back started on http://localhost:' + PORT);
+  console.log('\npende-back started on http://localhost:' + PORT);
 });
